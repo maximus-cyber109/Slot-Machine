@@ -1,0 +1,16 @@
+{
+  "name": "pb-days-arcade",
+  "version": "1.0.0",
+  "description": "Professional slot machine for PB Days promotion",
+  "main": "main.html",
+  "scripts": {
+    "build": "echo 'No build step required'",
+    "dev": "netlify dev"
+  },
+  "dependencies": {
+    "@octokit/rest": "^20.0.2"
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.0.0"
+  }
+}
