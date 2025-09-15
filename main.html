@@ -353,7 +353,6 @@
             <p class="tagline">Auto-Detecting Premium Rewards</p>
         </div>
 
-        <!-- Email Prompt (shown if no auto-detection) -->
         <div class="email-prompt" id="emailPrompt">
             <h3>🎰 Welcome to PB Days Arcade!</h3>
             <p>Enter your email to find your recent orders:</p>
@@ -403,7 +402,6 @@
     </div>
 
     <script>
-        // Professional slot machine symbols
         const symbols = [
             { name: 'DIAMOND', emoji: '💎', color: '#00ffff', prize: '50% OFF', rarity: 2, code: 'DIAMOND50' },
             { name: 'CROWN', emoji: '👑', color: '#ffd700', prize: '40% OFF', rarity: 3, code: 'CROWN40' },
@@ -415,7 +413,6 @@
             { name: 'LEMON', emoji: '🍋', color: '#ffeb3b', prize: 'FREE SHIPPING', rarity: 25, code: 'FREESHIP' }
         ];
 
-        // User session data
         let userSession = {
             orderId: null,
             email: null,
@@ -429,8 +426,6 @@
         };
 
         let isSpinning = false;
-
-        // Audio context
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
         function playSound(frequency, type = 'sine', duration = 0.1, volume = 0.1) {
@@ -450,247 +445,94 @@
             oscillator.stop(audioContext.currentTime + duration);
         }
 
-        // ENHANCED MAGENTO AUTO-DETECTION SYSTEM
         async function initializeAutoDetection() {
-            userSession.sessionId = 'AUTO_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            userSession.sessionId = 'IFRAME_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
             userSession.startTime = new Date().toISOString();
             
-            console.log('🎯 Starting comprehensive Magento auto-detection...');
+            console.log('🎯 Starting iframe-compatible auto-detection...');
+            console.log('📱 Running in iframe:', window !== window.top);
             
-            // Try multiple detection methods in sequence
-            const detected = await tryMultipleDetectionMethods();
+            // Method 1: URL parameters from Magento
+            const urlParams = new URLSearchParams(window.location.search);
+            const email = urlParams.get('email');
+            const name = urlParams.get('name');
+            const source = urlParams.get('source');
             
-            if (!detected) {
-                console.log('❌ All detection methods failed, showing email prompt');
-                showEmailPrompt();
+            if (email && email.includes('@')) {
+                console.log('✅ Customer detected from Magento:', email);
+                userSession.email = email;
+                userSession.customerName = name || 'Customer';
+                userSession.detectionMethod = source || 'magento_iframe';
+                
+                document.getElementById('emailPrompt').classList.add('hidden');
+                
+                document.getElementById('orderStatus').innerHTML = 
+                    `🎉 Welcome back, ${userSession.customerName}!<br>
+                     <div class="loading"></div> Looking up your recent orders...`;
+                
+                // Notify parent window if in iframe
+                if (window !== window.top) {
+                    try {
+                        window.parent.postMessage({
+                            type: 'customer_detected',
+                            email: email,
+                            name: name
+                        }, '*');
+                    } catch (e) {}
+                }
+                
+                setTimeout(() => {
+                    lookupOrdersByEmail(email);
+                }, 1000);
+                
+                return;
             }
-        }
-
-        async function tryMultipleDetectionMethods() {
-            console.log('🔍 Trying multiple Magento detection methods...');
             
-            // Method 1: URL parameters (highest priority)
-            if (await tryURLParameterDetection()) return true;
-            
-            // Method 2: Magento customer model
-            if (await tryCustomerModelDetection()) return true;
-            
-            // Method 3: Magento customer-data
-            if (await tryCustomerDataDetection()) return true;
-            
-            // Method 4: localStorage
-            if (await tryLocalStorageDetection()) return true;
-            
-            // Method 5: sessionStorage
-            if (await trySessionStorageDetection()) return true;
-            
-            return false;
-        }
-
-        function tryURLParameterDetection() {
-            return new Promise((resolve) => {
-                const urlParams = new URLSearchParams(window.location.search);
-                const email = urlParams.get('email') || urlParams.get('e');
-                const name = urlParams.get('name') || urlParams.get('n');
-                const auto = urlParams.get('auto');
+            // Method 2: Check for returning customer
+            const savedEmail = localStorage.getItem('pb_customer_email');
+            if (savedEmail && savedEmail.includes('@')) {
+                console.log('✅ Returning customer detected:', savedEmail);
+                userSession.email = savedEmail;
+                userSession.customerName = localStorage.getItem('pb_customer_name') || 'Customer';
+                userSession.detectionMethod = 'returning_customer';
                 
-                if (email && email.includes('@')) {
-                    console.log('✅ Customer detected via URL parameters:', email);
-                    populateUserSession(email, name, 'url_parameters');
-                    resolve(true);
-                } else {
-                    console.log('❌ No valid email in URL parameters');
-                    resolve(false);
-                }
-            });
-        }
-
-        function tryCustomerModelDetection() {
-            return new Promise((resolve) => {
-                if (typeof require === 'undefined') {
-                    console.log('❌ RequireJS not available for customer model');
-                    resolve(false);
-                    return;
-                }
+                document.getElementById('emailPrompt').classList.add('hidden');
                 
-                try {
-                    require(['Magento_Customer/js/model/customer'], function(customer) {
-                        console.log('🔍 Checking customer model...');
-                        
-                        setTimeout(() => {
-                            if (customer && customer.isLoggedIn && customer.isLoggedIn()) {
-                                const customerData = customer.customerData || (customer.getCustomerInfo && customer.getCustomerInfo());
-                                const email = customerData?.email;
-                                const name = customerData?.firstname;
-                                
-                                if (email) {
-                                    console.log('✅ Customer detected via customer model:', email);
-                                    populateUserSession(email, name, 'customer_model');
-                                    resolve(true);
-                                    return;
-                                }
-                            }
-                            
-                            console.log('❌ Customer model method failed');
-                            resolve(false);
-                        }, 500);
-                    });
-                } catch (error) {
-                    console.log('❌ Customer model error:', error);
-                    resolve(false);
-                }
-            });
-        }
-
-        function tryCustomerDataDetection() {
-            return new Promise((resolve) => {
-                if (typeof require === 'undefined') {
-                    console.log('❌ RequireJS not available for customer-data');
-                    resolve(false);
-                    return;
-                }
+                document.getElementById('orderStatus').innerHTML = 
+                    `👋 Welcome back!<br>
+                     <div class="loading"></div> Looking up your recent orders...`;
                 
-                try {
-                    require(['jquery', 'Magento_Customer/js/customer-data'], function($, customerData) {
-                        let attempts = 0;
-                        const maxAttempts = 15;
-                        
-                        function checkCustomerData() {
-                            attempts++;
-                            console.log(`🔍 Customer-data attempt ${attempts}/${maxAttempts}`);
-                            
-                            // Force reload customer data
-                            customerData.invalidate(['customer']);
-                            customerData.reload(['customer']);
-                            
-                            setTimeout(() => {
-                                const customer = customerData.get('customer')();
-                                console.log('📊 Customer data received:', customer);
-                                
-                                if (customer && customer.email) {
-                                    console.log('✅ Customer detected via customer-data:', customer.email);
-                                    populateUserSession(customer.email, customer.firstname, 'customer_data');
-                                    resolve(true);
-                                    return;
-                                }
-                                
-                                if (attempts < maxAttempts) {
-                                    setTimeout(checkCustomerData, 500);
-                                } else {
-                                    console.log('❌ Customer-data method failed after all attempts');
-                                    resolve(false);
-                                }
-                            }, 300);
-                        }
-                        
-                        checkCustomerData();
-                    });
-                } catch (error) {
-                    console.log('❌ Customer-data error:', error);
-                    resolve(false);
-                }
-            });
-        }
-
-        function tryLocalStorageDetection() {
-            return new Promise((resolve) => {
-                console.log('🔍 Checking localStorage for customer data...');
+                setTimeout(() => {
+                    lookupOrdersByEmail(savedEmail);
+                }, 1000);
                 
-                const possibleKeys = [
-                    'mage-cache-storage',
-                    'customer_email',
-                    'pb_customer_email',
-                    'magento_customer_data',
-                    'customer-data'
-                ];
-                
-                for (const key of possibleKeys) {
-                    const stored = localStorage.getItem(key);
-                    if (stored) {
-                        try {
-                            let email = null;
-                            let name = null;
-                            
-                            if (key === 'mage-cache-storage') {
-                                const parsed = JSON.parse(stored);
-                                email = parsed.customer?.email;
-                                name = parsed.customer?.firstname;
-                            } else if (stored.includes('@')) {
-                                email = stored;
-                            } else {
-                                const parsed = JSON.parse(stored);
-                                email = parsed.email;
-                                name = parsed.firstname || parsed.name;
-                            }
-                            
-                            if (email && email.includes('@')) {
-                                console.log('✅ Customer detected via localStorage:', email);
-                                populateUserSession(email, name, 'localStorage');
-                                resolve(true);
-                                return;
-                            }
-                        } catch (e) {
-                            console.log('Error parsing localStorage key:', key, e);
-                        }
-                    }
-                }
-                
-                console.log('❌ No customer data found in localStorage');
-                resolve(false);
-            });
-        }
-
-        function trySessionStorageDetection() {
-            return new Promise((resolve) => {
-                console.log('🔍 Checking sessionStorage for customer data...');
-                
-                const possibleKeys = [
-                    'customer_email',
-                    'magento_customer',
-                    'user_session'
-                ];
-                
-                for (const key of possibleKeys) {
-                    const stored = sessionStorage.getItem(key);
-                    if (stored && stored.includes('@')) {
-                        console.log('✅ Customer detected via sessionStorage:', stored);
-                        populateUserSession(stored, null, 'sessionStorage');
-                        resolve(true);
-                        return;
-                    }
-                }
-                
-                console.log('❌ No customer data found in sessionStorage');
-                resolve(false);
-            });
-        }
-
-        function populateUserSession(email, name, method) {
-            userSession.email = email;
-            userSession.customerName = name || 'Customer';
-            userSession.detectionMethod = method;
+                return;
+            }
             
-            // Hide email prompt immediately
-            document.getElementById('emailPrompt').classList.add('hidden');
-            
-            // Show detection success
-            document.getElementById('orderStatus').innerHTML = 
-                `🎉 Welcome back, ${userSession.customerName}!<br>
-                 <div class="loading"></div> Looking up your recent orders...`;
-            
-            // Save for future visits
-            localStorage.setItem('pb_customer_email', email);
-            
-            // Auto-lookup orders
-            setTimeout(() => {
-                lookupOrdersByEmail(email);
-            }, 1000);
+            console.log('❌ No auto-detection possible, showing email prompt');
+            showEmailPrompt();
         }
 
         function showEmailPrompt() {
             document.getElementById('orderStatus').innerHTML = 
                 '🔍 Enter your email below to find your recent orders and start playing!';
             document.getElementById('emailPrompt').classList.remove('hidden');
+            
+            setTimeout(() => {
+                const emailInput = document.getElementById('customerEmail');
+                const savedEmail = localStorage.getItem('pb_customer_email');
+                if (savedEmail) {
+                    emailInput.value = savedEmail;
+                    emailInput.placeholder = `Welcome back! (${savedEmail.substring(0,3)}***)`;
+                }
+                
+                emailInput.addEventListener('input', function() {
+                    const email = this.value;
+                    if (email && email.includes('@') && email.includes('.')) {
+                        localStorage.setItem('pb_customer_email', email);
+                    }
+                });
+            }, 100);
         }
 
         async function lookupCustomerOrders() {
@@ -724,18 +566,16 @@
                     body: JSON.stringify({ 
                         email: email,
                         sessionId: userSession.sessionId,
-                        detectionMethod: userSession.detectionMethod
+                        detectionMethod: userSession.detectionMethod,
+                        source: 'iframe_embedded'
                     })
                 });
                 
-                console.log('📊 Response status:', response.status);
-                
                 if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    throw new Error(`HTTP ${response.status}`);
                 }
                 
                 const data = await response.json();
-                console.log('📋 Response data:', data);
                 
                 if (data.success && data.order) {
                     userSession.orderId = data.order.entity_id;
@@ -744,15 +584,26 @@
                     userSession.customerName = data.order.customer_firstname;
                     
                     localStorage.setItem('pb_customer_email', email);
+                    localStorage.setItem('pb_customer_name', userSession.customerName);
                     
                     showOrderFound(data.order);
                     enableGame();
                     
+                    if (window !== window.top) {
+                        try {
+                            window.parent.postMessage({
+                                type: 'game_ready',
+                                customerName: userSession.customerName,
+                                orderId: data.order.increment_id
+                            }, '*');
+                        } catch (e) {}
+                    }
+                    
                     return true;
                 } else {
                     document.getElementById('orderStatus').innerHTML = 
-                        `❌ No eligible orders found for ${email.substring(0,3)}*** in the last 7 days<br>
-                         <small>Error: ${data.error || 'Unknown error'}</small>`;
+                        `❌ No eligible orders found for ${email.substring(0,3)}***<br>
+                         <small>Need an order of ₹500+ from last 7 days to play</small>`;
                     return false;
                 }
                 
@@ -760,7 +611,7 @@
                 console.error('Order lookup failed:', error);
                 document.getElementById('orderStatus').innerHTML = 
                     `⚠️ Unable to lookup orders: ${error.message}<br>
-                     <small>Check browser console for details</small>`;
+                     <small>Please check your connection and try again</small>`;
                 return false;
             }
         }
@@ -768,7 +619,6 @@
         function showOrderFound(order) {
             const customerName = order.customer_firstname ? `, ${order.customer_firstname}` : '';
             
-            // Fix date parsing
             let formattedDate = 'Recently';
             try {
                 if (order.created_at) {
@@ -936,19 +786,19 @@
         function determineResult() {
             const rand = Math.random() * 100;
             
-            if (rand < 2) return symbols[0];      // Diamond - 2%
-            if (rand < 5) return symbols[1];      // Crown - 3%
-            if (rand < 10) return symbols[2];     // Star - 5%
-            if (rand < 18) return symbols[3];     // Seven - 8%
-            if (rand < 30) return symbols[4];     // Bar - 12%
-            if (rand < 50) return symbols[5];     // Cherry - 20%
-            if (rand < 75) return symbols[6];     // Bell - 25%
-            return symbols[7];                    // Lemon - 25%
+            if (rand < 2) return symbols[0];
+            if (rand < 5) return symbols[1];
+            if (rand < 10) return symbols[2];
+            if (rand < 18) return symbols[3];
+            if (rand < 30) return symbols[4];
+            if (rand < 50) return symbols[5];
+            if (rand < 75) return symbols[6];
+            return symbols[7];
         }
 
         async function checkResult(finalSymbols) {
             const firstSymbol = finalSymbols[0];
-            const isWin = Math.random() < 0.75; // 75% win rate
+            const isWin = Math.random() < 0.75;
             
             if (isWin) {
                 await displayWin(firstSymbol);
@@ -1059,14 +909,12 @@
             }
         }
 
-        // Initialize game
         document.addEventListener('DOMContentLoaded', function() {
             createStars();
             initializeReels();
             initializeAutoDetection();
         });
 
-        // Enter key support for email input
         document.addEventListener('keypress', function(e) {
             if (e.key === 'Enter' && document.getElementById('customerEmail') === document.activeElement) {
                 lookupCustomerOrders();
