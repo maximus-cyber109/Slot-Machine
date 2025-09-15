@@ -1,7 +1,5 @@
 exports.handler = async (event, context) => {
     console.log('🎰 Enhanced function called with method:', event.httpMethod);
-    console.log('📧 Headers:', JSON.stringify(event.headers));
-    console.log('📦 Body:', event.body);
 
     const headers = {
         'Access-Control-Allow-Origin': '*',
@@ -14,7 +12,6 @@ exports.handler = async (event, context) => {
     }
 
     if (event.httpMethod !== 'POST') {
-        console.log('❌ Wrong method:', event.httpMethod);
         return {
             statusCode: 405,
             headers,
@@ -26,13 +23,11 @@ exports.handler = async (event, context) => {
     }
 
     try {
-        const { email, sessionId, detectionMethod } = JSON.parse(event.body || '{}');
+        const { email, sessionId, detectionMethod, source } = JSON.parse(event.body || '{}');
         console.log('🔍 Processing email:', email);
         console.log('🎯 Detection method:', detectionMethod);
-        console.log('🔧 Session ID:', sessionId);
 
         if (!email) {
-            console.log('❌ No email provided');
             return {
                 statusCode: 400,
                 headers,
@@ -43,7 +38,7 @@ exports.handler = async (event, context) => {
             };
         }
 
-        // SPECIAL TEST FOR YOUR EMAIL - ALWAYS WORKS
+        // TEST EMAIL - Always works for your testing
         if (email.toLowerCase() === 'syed.ahmed@theraoralcare.com') {
             console.log('✅ Test email detected, returning mock order');
             const mockOrder = {
@@ -70,7 +65,7 @@ exports.handler = async (event, context) => {
             };
         }
 
-        // For real customers, call Magento API
+        // Real Magento API call
         console.log('🛒 Calling Magento API for email:', email);
         const API_TOKEN = 't5xkjvxlgitd25cuhxixl9dflw008f4e';
         const BASE_URL = 'https://pinkblue.in/rest/V1';
@@ -92,7 +87,6 @@ exports.handler = async (event, context) => {
             `searchCriteria[sortOrders][0][direction]=DESC&` +
             `searchCriteria[pageSize]=1`;
 
-        console.log('🚀 Making Magento API request...');
         const response = await fetch(searchUrl, {
             headers: {
                 'Authorization': `Bearer ${API_TOKEN}`,
@@ -102,10 +96,8 @@ exports.handler = async (event, context) => {
 
         const orderData = await response.json();
         console.log('📊 Magento API response status:', response.status);
-        console.log('📋 Order count found:', orderData.total_count || 0);
 
         if (!response.ok) {
-            console.log('❌ Magento API error:', response.status, orderData);
             return {
                 statusCode: 200,
                 headers,
@@ -143,7 +135,6 @@ exports.handler = async (event, context) => {
                     })
                 };
             } else {
-                console.log('❌ Order amount too low:', recentOrder.grand_total);
                 return {
                     statusCode: 200,
                     headers,
@@ -154,7 +145,6 @@ exports.handler = async (event, context) => {
                 };
             }
         } else {
-            console.log('❌ No recent orders found');
             return {
                 statusCode: 200,
                 headers,
@@ -172,8 +162,7 @@ exports.handler = async (event, context) => {
             headers,
             body: JSON.stringify({
                 success: false,
-                error: `Internal error: ${error.message}`,
-                details: error.stack
+                error: `Internal error: ${error.message}`
             })
         };
     }
