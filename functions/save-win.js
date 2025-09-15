@@ -48,21 +48,24 @@ exports.handler = async (event, context) => {
             console.log('Creating new wins file');
         }
 
-        // Enhanced win data
+        // Enhanced win data with auto-detection info
         const enhancedWinData = {
             id: `WIN_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
             orderId: winData.orderId,
             customerEmail: winData.customerEmail,
             customerName: winData.customerName,
+            customerId: winData.customerId,
             sessionId: winData.sessionId,
             prize: winData.prize,
             prizeCode: winData.prizeCode,
             symbol: winData.symbol,
             timestamp: new Date().toISOString(),
             orderAmount: winData.orderAmount,
+            detectionMethod: winData.detectionMethod,
             ip: event.headers['x-forwarded-for'] || event.headers['client-ip'] || 'unknown',
             country: event.headers['cf-ipcountry'] || 'unknown',
-            source: 'auto_detection'
+            userAgent: event.headers['user-agent'] || 'unknown',
+            source: 'magento_auto_detection'
         };
 
         wins.push(enhancedWinData);
@@ -79,10 +82,13 @@ exports.handler = async (event, context) => {
             owner,
             repo,
             path,
-            message: `Auto Win: ${enhancedWinData.prize} - ${enhancedWinData.customerName || 'Customer'} - Order #${enhancedWinData.orderId}`,
+            message: `Auto Win: ${enhancedWinData.prize} - ${enhancedWinData.customerName || 'Customer'} - ${enhancedWinData.detectionMethod}`,
             content,
             sha: sha || undefined
         });
+
+        // Update Google Sheets if configured
+        await updateGoogleSheets(enhancedWinData);
 
         return {
             statusCode: 200,
@@ -106,3 +112,31 @@ exports.handler = async (event, context) => {
         };
     }
 };
+
+async function updateGoogleSheets(winData) {
+    const SHEET_URL = process.env.GOOGLE_SHEETS_WEBHOOK;
+    
+    if (!SHEET_URL) return;
+
+    try {
+        await fetch(SHEET_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                timestamp: winData.timestamp,
+                orderId: winData.orderId,
+                customerName: winData.customerName,
+                email: winData.customerEmail,
+                prize: winData.prize,
+                code: winData.prizeCode,
+                symbol: winData.symbol,
+                detectionMethod: winData.detectionMethod,
+                orderAmount: winData.orderAmount,
+                ip: winData.ip,
+                country: winData.country
+            })
+        });
+    } catch (error) {
+        console.error('Google Sheets update failed:', error);
+    }
+}
