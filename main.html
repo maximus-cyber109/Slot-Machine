@@ -1,1 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PB DAYS Arcade - Professional Slot Machine</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: 'Orbitron', monospace;
+            background: linear-gradient(135deg, #0c1445 0%, #1e3c72 50%, #2a5298 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        .arcade-container {
+            background: linear-gradient(145deg, #2c2c2c, #1a1a1a);
+            border: 8px solid #444;
+            border-radius: 25px;
+            box-shadow: 
+                0 0 50px rgba(0, 100, 255, 0.3),
+                inset 0 0 30px rgba(255, 255, 255, 0.1),
+                0 30px 60px rgba(0, 0, 0, 0.8);
+            padding: 40px 30px;
+            position: relative;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .machine-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            background: linear-gradient(45deg, #00d4ff, #0099cc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.2rem;
+            font-weight: 900;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            color: #888;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .order-status {
+            background: rgba(0, 50, 100, 0.8);
+            border: 2px solid #0099cc;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 25px;
+            text-align: center;
+            color: #00d4ff;
+            font-size: 0.85rem;
+        }
+
+        .slot-machine {
+            background: linear-gradient(145deg, #1a1a1a, #000);
+            border: 6px solid #333;
+            border-radius: 20px;
+            padding: 25px;
+            position: relative;
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.8);
+        }
+
+        .slot-screen {
+            background: #000;
+            border: 4px solid #666;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.9);
+        }
+
+        .reels-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .reel {
+            width: 100px;
+            height: 120px;
+            background: linear-gradient(145deg, #222, #111);
+            border: 3px solid #444;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.7);
+        }
+
+        .reel-content {
+            position: absolute;
+            width: 100%;
+            transition: transform 0.1s ease-out;
+        }
+
+        .symbol {
+            width: 100px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            border-bottom: 1px solid #333;
+            background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+        }
+
+        .symbol img {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+        }
+
+        .control-panel {
+            background: linear-gradient(145deg, #333, #222);
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .spin-button {
+            background: linear-gradient(145deg, #ff4757, #ff3742);
+            border: none;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            font-family: 'Orbitron', monospace;
+            font-size: 1rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 8px 16px rgba(255, 71, 87, 0.4),
+                inset 0 2px 5px rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            transform: perspective(1000px) rotateX(10deg);
+        }
+
+        .spin-button:hover {
+            transform: perspective(1000px) rotateX(0deg) scale(1.05);
+            box-shadow: 
+                0 12px 24px rgba(255, 71, 87, 0.6),
+                inset 0 2px 5px rgba(255, 255, 255, 0.3);
+        }
+
+        .spin-button:active {
+            transform: perspective(1000px) rotateX(15deg) scale(0.95);
+        }
+
+        .spin-button.spinning {
+            animation: spinButtonPulse 0.5s infinite;
+        }
+
+        @keyframes spinButtonPulse {
+            0%, 100% { box-shadow: 0 8px 16px rgba(255, 71, 87, 0.4); }
+            50% { box-shadow: 0 8px 16px rgba(255, 71, 87, 0.8); }
+        }
+
+        .credits-display {
+            background: #000;
+            border: 2px solid #666;
+            border-radius: 8px;
+            padding: 10px 15px;
+            color: #00d4ff;
+            font-weight: bold;
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .result-display {
+            text-align: center;
+            margin-top: 20px;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .win-text {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #00ff88;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.6);
+            animation: winGlow 1.5s ease-in-out infinite;
+        }
+
+        @keyframes winGlow {
+            0%, 100% { transform: scale(1); text-shadow: 0 0 20px rgba(0, 255, 136, 0.6); }
+            50% { transform: scale(1.05); text-shadow: 0 0 30px rgba(0, 255, 136, 0.9); }
+        }
+
+        .prize-code {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #000;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-weight: bold;
+            margin-top: 10px;
+            display: inline-block;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0, 212, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #00d4ff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .arcade-container { padding: 30px 20px; }
+            .logo { font-size: 1.8rem; }
+            .reel { width: 80px; height: 100px; }
+            .symbol { width: 80px; height: 33px; font-size: 1.4rem; }
+            .spin-button { width: 70px; height: 70px; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <div class="arcade-container">
+        <div class="machine-header">
+            <h1 class="logo">PB DAYS ARCADE</h1>
+            <p class="tagline">Premium Dental Rewards</p>
+        </div>
+
+        <div class="order-status" id="orderStatus">
+            <div class="loading"></div> Verifying order eligibility...
+        </div>
+
+        <div class="slot-machine">
+            <div class="slot-screen">
+                <div class="reels-container">
+                    <div class="reel" id="reel1">
+                        <div class="reel-content" id="reelContent1"></div>
+                    </div>
+                    <div class="reel" id="reel2">
+                        <div class="reel-content" id="reelContent2"></div>
+                    </div>
+                    <div class="reel" id="reel3">
+                        <div class="reel-content" id="reelContent3"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-panel">
+                <div class="credits-display">
+                    <div style="font-size: 0.7rem; color: #888;">ORDER</div>
+                    <div id="orderDisplay">#----</div>
+                </div>
+                
+                <button class="spin-button" id="spinButton" onclick="spin()">
+                    SPIN
+                </button>
+                
+                <div class="credits-display">
+                    <div style="font-size: 0.7rem; color: #888;">STATUS</div>
+                    <div id="statusDisplay">READY</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="result-display" id="resultDisplay"></div>
+    </div>
+
+    <script>
+        // Professional slot machine symbols with real imagery
+        const symbols = [
+            { 
+                name: 'DIAMOND', 
+                emoji: '💎', 
+                color: '#00ffff', 
+                prize: '50% OFF',
+                rarity: 5,
+                code: 'DIAMOND50'
+            },
+            { 
+                name: 'CROWN', 
+                emoji: '👑', 
+                color: '#ffd700', 
+                prize: '40% OFF',
+                rarity: 8,
+                code: 'CROWN40'
+            },
+            { 
+                name: 'STAR', 
+                emoji: '⭐', 
+                color: '#ffff00', 
+                prize: '30% OFF',
+                rarity: 12,
+                code: 'STAR30'
+            },
+            { 
+                name: 'SEVEN', 
+                emoji: '7️⃣', 
+                color: '#ff0000', 
+                prize: '25% OFF',
+                rarity: 15,
+                code: 'LUCKY25'
+            },
+            { 
+                name: 'BAR', 
+                emoji: '🔸', 
+                color: '#ff6b6b', 
+                prize: '20% OFF',
+                rarity: 20,
+                code: 'BAR20'
+            },
+            { 
+                name: 'CHERRY', 
+                emoji: '🍒', 
+                color: '#ff1744', 
+                prize: '15% OFF',
+                rarity: 25,
+                code: 'CHERRY15'
+            },
+            { 
+                name: 'BELL', 
+                emoji: '🔔', 
+                color: '#ffc107', 
+                prize: '10% OFF',
+                rarity: 30,
+                code: 'BELL10'
+            },
+            { 
+                name: 'LEMON', 
+                emoji: '🍋', 
+                color: '#ffeb3b', 
+                prize: 'FREE SHIPPING',
+                rarity: 35,
+                code: 'FREESHIP'
+            }
+        ];
+
+        let isSpinning = false;
+        let orderId = null;
+        let customerEmail = null;
+        let gameData = null;
+
+        // Audio context for professional sounds
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(frequency, type = 'sine', duration = 0.1, volume = 0.1) {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = frequency;
+            oscillator.type = type;
+            
+            gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
+            
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + duration);
+        }
+
+        // Initialize game
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeReels();
+            checkOrderEligibility();
+        });
+
+        function initializeReels() {
+            for (let i = 1; i <= 3; i++) {
+                const reelContent = document.getElementById(`reelContent${i}`);
+                let symbolsHTML = '';
+                
+                // Create extended reel with weighted distribution
+                for (let j = 0; j < 25; j++) {
+                    const symbol = getWeightedRandomSymbol();
+                    symbolsHTML += `<div class="symbol" style="color: ${symbol.color}">${symbol.emoji}</div>`;
+                }
+                
+                reelContent.innerHTML = symbolsHTML;
+            }
+        }
+
+        function getWeightedRandomSymbol() {
+            const rand = Math.random() * 100;
+            let cumulative = 0;
+            
+            for (const symbol of symbols) {
+                cumulative += symbol.rarity;
+                if (rand <= cumulative) {
+                    return symbol;
+                }
+            }
+            return symbols[symbols.length - 1];
+        }
+
+        async function checkOrderEligibility() {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                orderId = urlParams.get('order_id');
+                customerEmail = urlParams.get('email');
+
+                if (!orderId) {
+                    document.getElementById('orderStatus').innerHTML = 
+                        '⚠️ No order found. Complete a purchase to play!';
+                    document.getElementById('spinButton').disabled = true;
+                    return;
+                }
+
+                document.getElementById('orderDisplay').textContent = `#${orderId}`;
+                
+                // Validate order with your API
+                const response = await fetch(`/.netlify/functions/validate-order?order_id=${orderId}&email=${customerEmail}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('orderStatus').innerHTML = 
+                        `✅ Order verified! Amount: ₹${data.order_amount}`;
+                    document.getElementById('statusDisplay').textContent = 'READY';
+                    playSound(800, 'sine', 0.3, 0.05);
+                } else {
+                    document.getElementById('orderStatus').innerHTML = 
+                        '❌ Order verification failed';
+                    document.getElementById('spinButton').disabled = true;
+                }
+            } catch (error) {
+                // Demo mode for testing
+                document.getElementById('orderStatus').innerHTML = 
+                    '🔄 Demo Mode - Playing without order verification';
+                document.getElementById('statusDisplay').textContent = 'DEMO';
+                orderId = 'DEMO' + Math.floor(Math.random() * 10000);
+                playSound(600, 'sine', 0.2, 0.05);
+            }
+        }
+
+        async function spin() {
+            if (isSpinning) return;
+            
+            isSpinning = true;
+            const spinButton = document.getElementById('spinButton');
+            spinButton.disabled = true;
+            spinButton.classList.add('spinning');
+            document.getElementById('statusDisplay').textContent = 'SPINNING';
+            document.getElementById('resultDisplay').innerHTML = '';
+            
+            // Play spinning sound
+            playSpinningSound();
+            
+            const spinDuration = 3000;
+            const finalSymbols = [];
+            
+            // Spin each reel with staggered stops
+            for (let i = 1; i <= 3; i++) {
+                const reel = document.getElementById(`reelContent${i}`);
+                const finalSymbol = determineResult();
+                finalSymbols.push(finalSymbol);
+                
+                const finalPosition = -(Math.floor(Math.random() * 15) + 8) * 40;
+                
+                // Animate reel spinning
+                let currentPosition = 0;
+                const spinSpeed = 25;
+                const stopTime = spinDuration + (i * 400); // Staggered stops
+                
+                const spinInterval = setInterval(() => {
+                    currentPosition -= spinSpeed;
+                    reel.style.transform = `translateY(${currentPosition}px)`;
+                }, 50);
+                
+                setTimeout(() => {
+                    clearInterval(spinInterval);
+                    reel.style.transform = `translateY(${finalPosition}px)`;
+                    
+                    if (i === 3) {
+                        setTimeout(() => {
+                            checkResult(finalSymbols);
+                            isSpinning = false;
+                            spinButton.disabled = false;
+                            spinButton.classList.remove('spinning');
+                            document.getElementById('statusDisplay').textContent = 'READY';
+                        }, 500);
+                    }
+                }, stopTime);
+            }
+        }
+
+        function determineResult() {
+            // Professional probability distribution
+            const rand = Math.random() * 100;
+            
+            if (rand < 2) return symbols[0];      // Diamond - 2%
+            if (rand < 5) return symbols[1];      // Crown - 3%
+            if (rand < 10) return symbols[2];     // Star - 5%
+            if (rand < 18) return symbols[3];     // Seven - 8%
+            if (rand < 30) return symbols[4];     // Bar - 12%
+            if (rand < 50) return symbols[5];     // Cherry - 20%
+            if (rand < 75) return symbols[6];     // Bell - 25%
+            return symbols[7];                    // Lemon - 25%
+        }
+
+        async function checkResult(finalSymbols) {
+            const firstSymbol = finalSymbols[0];
+            const isWin = Math.random() < 0.65; // 65% win rate
+            
+            if (isWin) {
+                await displayWin(firstSymbol);
+            } else {
+                displayLoss();
+            }
+        }
+
+        async function displayWin(symbol) {
+            const resultDisplay = document.getElementById('resultDisplay');
+            const prizeCode = `${symbol.code}${Math.random().toString(36).substr(2, 4).toUpperCase()}`;
+            
+            resultDisplay.innerHTML = `
+                <div class="win-text">
+                    🎉 CONGRATULATIONS! 🎉<br>
+                    <span style="font-size: 2rem; margin: 10px 0; display: block;">${symbol.emoji}</span>
+                    You won: ${symbol.prize}
+                </div>
+                <div class="prize-code">CODE: ${prizeCode}</div>
+            `;
+            
+            // Play win sound and effects
+            playWinSound();
+            createWinParticles();
+            
+            // Save win to GitHub backend
+            await saveWinResult({
+                orderId,
+                customerEmail,
+                prize: symbol.prize,
+                prizeCode,
+                symbol: symbol.name,
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        function displayLoss() {
+            document.getElementById('resultDisplay').innerHTML = `
+                <div style="color: #ff6b6b; font-size: 1.1rem;">
+                    Try Again Tomorrow!<br>
+                    <small style="color: #888;">Better luck next time!</small>
+                </div>
+            `;
+            playSound(300, 'sawtooth', 0.5, 0.05);
+        }
+
+        function playSpinningSound() {
+            let frequency = 200;
+            const interval = setInterval(() => {
+                playSound(frequency, 'square', 0.1, 0.03);
+                frequency += 25;
+                if (frequency > 400) frequency = 200;
+            }, 100);
+            
+            setTimeout(() => clearInterval(interval), 3500);
+        }
+
+        function playWinSound() {
+            const winMelody = [523, 659, 784, 1047, 1319]; // C major scale
+            winMelody.forEach((note, index) => {
+                setTimeout(() => {
+                    playSound(note, 'sine', 0.4, 0.08);
+                }, index * 200);
+            });
+        }
+
+        function createWinParticles() {
+            const particles = document.getElementById('particles');
+            const colors = ['#ffd700', '#00ff88', '#00d4ff', '#ff6b6b'];
+            
+            for (let i = 0; i < 40; i++) {
+                const particle = document.createElement('div');
+                particle.style.cssText = `
+                    position: absolute;
+                    width: 8px;
+                    height: 8px;
+                    background: ${colors[Math.floor(Math.random() * colors.length)]};
+                    border-radius: 50%;
+                    left: ${Math.random() * window.innerWidth}px;
+                    top: ${window.innerHeight}px;
+                    pointer-events: none;
+                `;
+                
+                particles.appendChild(particle);
+                
+                particle.animate([
+                    { transform: 'translateY(0px) rotate(0deg)', opacity: 1 },
+                    { transform: `translateY(-${window.innerHeight + 100}px) rotate(720deg)`, opacity: 0 }
+                ], {
+                    duration: 3000,
+                    easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                }).addEventListener('finish', () => particle.remove());
+            }
+        }
+
+        async function saveWinResult(winData) {
+            try {
+                await fetch('/.netlify/functions/save-win', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(winData)
+                });
+            } catch (error) {
+                console.error('Failed to save win:', error);
+            }
+        }
+
+        // Add ambient sounds
+        setInterval(() => {
+            if (!isSpinning && Math.random() < 0.05) {
+                playSound(150 + Math.random() * 50, 'sine', 0.1, 0.01);
+            }
+        }, 3000);
+    </script>
+</body>
+</html>
