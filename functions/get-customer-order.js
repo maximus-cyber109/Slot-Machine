@@ -1,5 +1,5 @@
 exports.handler = async (event, context) => {
-    console.log('🎰 Function called with method:', event.httpMethod);
+    console.log('🎰 Enhanced function called with method:', event.httpMethod);
     console.log('📧 Headers:', JSON.stringify(event.headers));
     console.log('📦 Body:', event.body);
 
@@ -29,6 +29,7 @@ exports.handler = async (event, context) => {
         const { email, sessionId, detectionMethod } = JSON.parse(event.body || '{}');
         console.log('🔍 Processing email:', email);
         console.log('🎯 Detection method:', detectionMethod);
+        console.log('🔧 Session ID:', sessionId);
 
         if (!email) {
             console.log('❌ No email provided');
@@ -42,7 +43,7 @@ exports.handler = async (event, context) => {
             };
         }
 
-        // SPECIAL TEST FOR YOUR EMAIL
+        // SPECIAL TEST FOR YOUR EMAIL - ALWAYS WORKS
         if (email.toLowerCase() === 'syed.ahmed@theraoralcare.com') {
             console.log('✅ Test email detected, returning mock order');
             const mockOrder = {
@@ -69,7 +70,7 @@ exports.handler = async (event, context) => {
             };
         }
 
-        // For other emails, call Magento API
+        // For real customers, call Magento API
         console.log('🛒 Calling Magento API for email:', email);
         const API_TOKEN = 't5xkjvxlgitd25cuhxixl9dflw008f4e';
         const BASE_URL = 'https://pinkblue.in/rest/V1';
@@ -101,7 +102,7 @@ exports.handler = async (event, context) => {
 
         const orderData = await response.json();
         console.log('📊 Magento API response status:', response.status);
-        console.log('📋 Order count:', orderData.total_count || 0);
+        console.log('📋 Order count found:', orderData.total_count || 0);
 
         if (!response.ok) {
             console.log('❌ Magento API error:', response.status, orderData);
