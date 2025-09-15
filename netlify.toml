@@ -7,29 +7,21 @@
   to = "/.netlify/functions/:splat"
   status = 200
 
-[[redirects]]
-  from = "/arcade"
-  to = "/main.html"
-  status = 301
-
-[[redirects]]
-  from = "/play"
-  to = "/main.html"
-  status = 301
-
 [build.environment]
   NODE_VERSION = "18"
 
+# Allow iframe embedding
 [[headers]]
   for = "/*"
   [headers.values]
-    X-Frame-Options = "SAMEORIGIN"
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "ALLOWALL"
+    Content-Security-Policy = "frame-ancestors *"
 
 [[headers]]
   for = "/main.html"
   [headers.values]
+    X-Frame-Options = "ALLOWALL"
+    Content-Security-Policy = "frame-ancestors *"
     Cache-Control = "public, max-age=300"
 
 [[headers]]
