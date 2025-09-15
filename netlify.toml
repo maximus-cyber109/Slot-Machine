@@ -12,11 +12,6 @@
   to = "/main.html"
   status = 301
 
-[[redirects]]
-  from = "/play"
-  to = "/main.html"
-  status = 301
-
 [build.environment]
   NODE_VERSION = "18"
 
@@ -25,13 +20,6 @@
   [headers.values]
     X-Frame-Options = "ALLOWALL"
     Content-Security-Policy = "frame-ancestors *"
-
-[[headers]]
-  for = "/main.html"
-  [headers.values]
-    X-Frame-Options = "ALLOWALL"
-    Content-Security-Policy = "frame-ancestors *"
-    Cache-Control = "public, max-age=300"
 
 [[headers]]
   for = "/.netlify/functions/*"
