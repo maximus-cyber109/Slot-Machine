@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta http-equiv="X-Frame-Options" content="ALLOWALL">
-<meta http-equiv="Content-Security-Policy" content="frame-ancestors *">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PB DAYS Arcade - Auto-Detecting Slot Machine</title>
@@ -263,15 +261,6 @@
             cursor: not-allowed;
         }
 
-        .spin-button.spinning {
-            animation: spinButtonPulse 0.5s infinite;
-        }
-
-        @keyframes spinButtonPulse {
-            0%, 100% { box-shadow: 0 8px 16px rgba(255, 71, 87, 0.4); }
-            50% { box-shadow: 0 8px 16px rgba(255, 71, 87, 0.8); }
-        }
-
         .credits-display {
             background: #000;
             border: 2px solid #666;
@@ -345,38 +334,12 @@
             display: none;
         }
 
-        .auto-play-notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(45deg, #00ff88, #00d4ff);
-            color: #000;
-            padding: 15px 20px;
-            border-radius: 10px;
-            font-weight: bold;
-            z-index: 1000;
-            animation: slideIn 0.5s ease;
-            max-width: 300px;
-            text-align: center;
-        }
-
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
         @media (max-width: 768px) {
             .arcade-container { padding: 30px 20px; }
             .logo { font-size: 1.8rem; }
             .reel { width: 80px; height: 100px; }
             .symbol { width: 80px; height: 33px; font-size: 1.4rem; }
             .spin-button { width: 70px; height: 70px; font-size: 0.9rem; }
-            .auto-play-notification { 
-                top: 10px; 
-                right: 10px; 
-                left: 10px; 
-                max-width: none; 
-            }
         }
     </style>
 </head>
@@ -460,7 +423,6 @@
             customerId: null,
             orderAmount: null,
             sessionId: null,
-            fingerprint: null,
             startTime: null,
             hasPlayed: false,
             detectionMethod: null
@@ -488,127 +450,241 @@
             oscillator.stop(audioContext.currentTime + duration);
         }
 
-        // Enhanced Magento customer auto-detection
+        // ENHANCED MAGENTO AUTO-DETECTION SYSTEM
         async function initializeAutoDetection() {
             userSession.sessionId = 'AUTO_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
             userSession.startTime = new Date().toISOString();
             
-            console.log('🎰 Starting Magento customer auto-detection...');
+            console.log('🎯 Starting comprehensive Magento auto-detection...');
             
-            // Method 1: Direct Magento Customer Data Access (Most Powerful)
-            if (typeof require !== 'undefined') {
-                console.log('✅ Magento RequireJS detected, accessing customer data...');
+            // Try multiple detection methods in sequence
+            const detected = await tryMultipleDetectionMethods();
+            
+            if (!detected) {
+                console.log('❌ All detection methods failed, showing email prompt');
+                showEmailPrompt();
+            }
+        }
+
+        async function tryMultipleDetectionMethods() {
+            console.log('🔍 Trying multiple Magento detection methods...');
+            
+            // Method 1: URL parameters (highest priority)
+            if (await tryURLParameterDetection()) return true;
+            
+            // Method 2: Magento customer model
+            if (await tryCustomerModelDetection()) return true;
+            
+            // Method 3: Magento customer-data
+            if (await tryCustomerDataDetection()) return true;
+            
+            // Method 4: localStorage
+            if (await tryLocalStorageDetection()) return true;
+            
+            // Method 5: sessionStorage
+            if (await trySessionStorageDetection()) return true;
+            
+            return false;
+        }
+
+        function tryURLParameterDetection() {
+            return new Promise((resolve) => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const email = urlParams.get('email') || urlParams.get('e');
+                const name = urlParams.get('name') || urlParams.get('n');
+                const auto = urlParams.get('auto');
+                
+                if (email && email.includes('@')) {
+                    console.log('✅ Customer detected via URL parameters:', email);
+                    populateUserSession(email, name, 'url_parameters');
+                    resolve(true);
+                } else {
+                    console.log('❌ No valid email in URL parameters');
+                    resolve(false);
+                }
+            });
+        }
+
+        function tryCustomerModelDetection() {
+            return new Promise((resolve) => {
+                if (typeof require === 'undefined') {
+                    console.log('❌ RequireJS not available for customer model');
+                    resolve(false);
+                    return;
+                }
+                
+                try {
+                    require(['Magento_Customer/js/model/customer'], function(customer) {
+                        console.log('🔍 Checking customer model...');
+                        
+                        setTimeout(() => {
+                            if (customer && customer.isLoggedIn && customer.isLoggedIn()) {
+                                const customerData = customer.customerData || (customer.getCustomerInfo && customer.getCustomerInfo());
+                                const email = customerData?.email;
+                                const name = customerData?.firstname;
+                                
+                                if (email) {
+                                    console.log('✅ Customer detected via customer model:', email);
+                                    populateUserSession(email, name, 'customer_model');
+                                    resolve(true);
+                                    return;
+                                }
+                            }
+                            
+                            console.log('❌ Customer model method failed');
+                            resolve(false);
+                        }, 500);
+                    });
+                } catch (error) {
+                    console.log('❌ Customer model error:', error);
+                    resolve(false);
+                }
+            });
+        }
+
+        function tryCustomerDataDetection() {
+            return new Promise((resolve) => {
+                if (typeof require === 'undefined') {
+                    console.log('❌ RequireJS not available for customer-data');
+                    resolve(false);
+                    return;
+                }
                 
                 try {
                     require(['jquery', 'Magento_Customer/js/customer-data'], function($, customerData) {
-                        $(document).ready(function() {
-                            console.log('🔍 Checking Magento customer session...');
+                        let attempts = 0;
+                        const maxAttempts = 15;
+                        
+                        function checkCustomerData() {
+                            attempts++;
+                            console.log(`🔍 Customer-data attempt ${attempts}/${maxAttempts}`);
                             
-                            var customer = customerData.get('customer')();
-                            console.log('👤 Customer data:', customer);
+                            // Force reload customer data
+                            customerData.invalidate(['customer']);
+                            customerData.reload(['customer']);
                             
-                            if (customer && customer.email) {
-                                console.log('✅ Auto-detected logged-in customer:', customer.email);
+                            setTimeout(() => {
+                                const customer = customerData.get('customer')();
+                                console.log('📊 Customer data received:', customer);
                                 
-                                userSession.email = customer.email;
-                                userSession.customerName = customer.firstname || 'Customer';
-                                userSession.customerId = customer.entity_id;
-                                userSession.detectionMethod = 'magento_session';
+                                if (customer && customer.email) {
+                                    console.log('✅ Customer detected via customer-data:', customer.email);
+                                    populateUserSession(customer.email, customer.firstname, 'customer_data');
+                                    resolve(true);
+                                    return;
+                                }
                                 
-                                document.getElementById('emailPrompt').classList.add('hidden');
-                                
-                                document.getElementById('orderStatus').innerHTML = 
-                                    `🎉 Welcome back, ${customer.firstname || 'Customer'}!<br>
-                                     <div class="loading"></div> Looking up your recent orders...`;
-                                
-                                setTimeout(() => {
-                                    lookupOrdersByEmail(customer.email);
-                                }, 1000);
-                                
-                                return;
-                            } else {
-                                console.log('❌ No Magento customer session found');
-                                fallbackDetection();
-                            }
-                        });
+                                if (attempts < maxAttempts) {
+                                    setTimeout(checkCustomerData, 500);
+                                } else {
+                                    console.log('❌ Customer-data method failed after all attempts');
+                                    resolve(false);
+                                }
+                            }, 300);
+                        }
+                        
+                        checkCustomerData();
                     });
                 } catch (error) {
-                    console.log('❌ Magento customer data access failed:', error);
-                    fallbackDetection();
+                    console.log('❌ Customer-data error:', error);
+                    resolve(false);
                 }
-            } else {
-                console.log('❌ Magento RequireJS not available, trying fallback methods');
-                fallbackDetection();
-            }
+            });
         }
 
-        // Fallback detection methods
-        async function fallbackDetection() {
-            console.log('🔄 Trying fallback detection methods...');
-            
-            // Method 2: URL parameters
-            const urlParams = new URLSearchParams(window.location.search);
-            const emailParam = urlParams.get('email') || urlParams.get('e');
-            const nameParam = urlParams.get('name');
-            const autoParam = urlParams.get('auto');
-            
-            if (emailParam) {
-                console.log('📧 Email from URL:', emailParam);
-                userSession.email = emailParam;
-                userSession.customerName = nameParam || 'Customer';
-                userSession.detectionMethod = 'url_parameter';
+        function tryLocalStorageDetection() {
+            return new Promise((resolve) => {
+                console.log('🔍 Checking localStorage for customer data...');
                 
-                document.getElementById('emailPrompt').classList.add('hidden');
+                const possibleKeys = [
+                    'mage-cache-storage',
+                    'customer_email',
+                    'pb_customer_email',
+                    'magento_customer_data',
+                    'customer-data'
+                ];
                 
-                if (autoParam === 'true') {
-                    document.getElementById('orderStatus').innerHTML = 
-                        `🎯 Auto-redirected customer detected!<br>
-                         <div class="loading"></div> Looking up recent orders...`;
+                for (const key of possibleKeys) {
+                    const stored = localStorage.getItem(key);
+                    if (stored) {
+                        try {
+                            let email = null;
+                            let name = null;
+                            
+                            if (key === 'mage-cache-storage') {
+                                const parsed = JSON.parse(stored);
+                                email = parsed.customer?.email;
+                                name = parsed.customer?.firstname;
+                            } else if (stored.includes('@')) {
+                                email = stored;
+                            } else {
+                                const parsed = JSON.parse(stored);
+                                email = parsed.email;
+                                name = parsed.firstname || parsed.name;
+                            }
+                            
+                            if (email && email.includes('@')) {
+                                console.log('✅ Customer detected via localStorage:', email);
+                                populateUserSession(email, name, 'localStorage');
+                                resolve(true);
+                                return;
+                            }
+                        } catch (e) {
+                            console.log('Error parsing localStorage key:', key, e);
+                        }
+                    }
                 }
                 
-                return await lookupOrdersByEmail(emailParam);
-            }
-            
-            // Method 3: Saved customer data
-            const savedEmail = localStorage.getItem('pb_customer_email');
-            if (savedEmail) {
-                console.log('💾 Saved customer:', savedEmail.substring(0,3) + '***');
-                userSession.email = savedEmail;
-                userSession.detectionMethod = 'local_storage';
-                
-                document.getElementById('emailPrompt').classList.add('hidden');
-                document.getElementById('orderStatus').innerHTML = 
-                    `👋 Welcome back!<br>
-                     <div class="loading"></div> Looking up recent orders...`;
-                
-                return await lookupOrdersByEmail(savedEmail);
-            }
-            
-            // Method 4: Check for Magento cookies
-            const magentoEmail = getMagentoEmailFromCookies();
-            if (magentoEmail) {
-                console.log('🍪 Email from Magento cookies');
-                userSession.email = magentoEmail;
-                userSession.detectionMethod = 'magento_cookies';
-                
-                document.getElementById('emailPrompt').classList.add('hidden');
-                return await lookupOrdersByEmail(magentoEmail);
-            }
-            
-            console.log('❌ All auto-detection methods failed, showing email prompt');
-            showEmailPrompt();
+                console.log('❌ No customer data found in localStorage');
+                resolve(false);
+            });
         }
 
-        // Extract email from Magento cookies
-        function getMagentoEmailFromCookies() {
-            const cookies = document.cookie.split(';');
-            for (let cookie of cookies) {
-                const [name, value] = cookie.trim().split('=');
-                if (name === 'customer_email' || name === 'mage-customer-email') {
-                    return decodeURIComponent(value);
+        function trySessionStorageDetection() {
+            return new Promise((resolve) => {
+                console.log('🔍 Checking sessionStorage for customer data...');
+                
+                const possibleKeys = [
+                    'customer_email',
+                    'magento_customer',
+                    'user_session'
+                ];
+                
+                for (const key of possibleKeys) {
+                    const stored = sessionStorage.getItem(key);
+                    if (stored && stored.includes('@')) {
+                        console.log('✅ Customer detected via sessionStorage:', stored);
+                        populateUserSession(stored, null, 'sessionStorage');
+                        resolve(true);
+                        return;
+                    }
                 }
-            }
-            return null;
+                
+                console.log('❌ No customer data found in sessionStorage');
+                resolve(false);
+            });
+        }
+
+        function populateUserSession(email, name, method) {
+            userSession.email = email;
+            userSession.customerName = name || 'Customer';
+            userSession.detectionMethod = method;
+            
+            // Hide email prompt immediately
+            document.getElementById('emailPrompt').classList.add('hidden');
+            
+            // Show detection success
+            document.getElementById('orderStatus').innerHTML = 
+                `🎉 Welcome back, ${userSession.customerName}!<br>
+                 <div class="loading"></div> Looking up your recent orders...`;
+            
+            // Save for future visits
+            localStorage.setItem('pb_customer_email', email);
+            
+            // Auto-lookup orders
+            setTimeout(() => {
+                lookupOrdersByEmail(email);
+            }, 1000);
         }
 
         function showEmailPrompt() {
@@ -736,10 +812,22 @@
 
         function showAutoPlayNotification() {
             const notification = document.createElement('div');
-            notification.className = 'auto-play-notification';
-            notification.innerHTML = `
-                🎰 Ready to spin! Click SPIN or wait 3 seconds for auto-play
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(45deg, #00ff88, #00d4ff);
+                color: #000;
+                padding: 15px 20px;
+                border-radius: 10px;
+                font-weight: bold;
+                z-index: 1000;
+                animation: slideIn 0.5s ease;
+                max-width: 300px;
+                text-align: center;
             `;
+            
+            notification.innerHTML = `🎰 Ready to spin! Click SPIN or wait 3 seconds for auto-play`;
             
             document.body.appendChild(notification);
             
@@ -805,7 +893,6 @@
             
             const spinButton = document.getElementById('spinButton');
             spinButton.disabled = true;
-            spinButton.classList.add('spinning');
             document.getElementById('statusDisplay').textContent = 'SPINNING';
             document.getElementById('resultDisplay').innerHTML = '';
             
@@ -839,7 +926,6 @@
                             checkResult(finalSymbols);
                             isSpinning = false;
                             spinButton.disabled = false;
-                            spinButton.classList.remove('spinning');
                             document.getElementById('statusDisplay').textContent = 'COMPLETE';
                         }, 500);
                     }
