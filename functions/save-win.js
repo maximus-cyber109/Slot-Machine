@@ -22,7 +22,6 @@ exports.handler = async (event, context) => {
     try {
         const winData = JSON.parse(event.body);
 
-        // Initialize GitHub API
         const octokit = new Octokit({
             auth: process.env.GITHUB_TOKEN
         });
@@ -34,7 +33,6 @@ exports.handler = async (event, context) => {
         let wins = [];
         let sha = null;
 
-        // Get existing wins
         try {
             const { data } = await octokit.rest.repos.getContent({
                 owner,
@@ -48,7 +46,6 @@ exports.handler = async (event, context) => {
             console.log('Creating new wins file');
         }
 
-        // Enhanced win data with auto-detection info
         const enhancedWinData = {
             id: `WIN_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
             orderId: winData.orderId,
@@ -62,27 +59,25 @@ exports.handler = async (event, context) => {
             timestamp: new Date().toISOString(),
             orderAmount: winData.orderAmount,
             detectionMethod: winData.detectionMethod,
-            ip: event.headers['x-forwarded-for'] || event.headers['client-ip'] || 'unknown',
+            ip: event.headers['x-forwarded-for'] || 'unknown',
             country: event.headers['cf-ipcountry'] || 'unknown',
             userAgent: event.headers['user-agent'] || 'unknown',
-            source: 'magento_auto_detection_v2'
+            source: 'magento_iframe_integration'
         };
 
         wins.push(enhancedWinData);
 
-        // Keep only last 1000 wins
         if (wins.length > 1000) {
             wins = wins.slice(-1000);
         }
 
-        // Update GitHub file
         const content = Buffer.from(JSON.stringify(wins, null, 2)).toString('base64');
         
         await octokit.rest.repos.createOrUpdateFileContents({
             owner,
             repo,
             path,
-            message: `Enhanced Win: ${enhancedWinData.prize} - ${enhancedWinData.customerName || 'Customer'} - ${enhancedWinData.detectionMethod}`,
+            message: `Win: ${enhancedWinData.prize} - ${enhancedWinData.customerName || 'Customer'} - ${enhancedWinData.detectionMethod}`,
             content,
             sha: sha || undefined
         });
@@ -93,7 +88,7 @@ exports.handler = async (event, context) => {
             body: JSON.stringify({
                 success: true,
                 winId: enhancedWinData.id,
-                message: 'Win saved successfully with detection info'
+                message: 'Win saved successfully'
             })
         };
 
