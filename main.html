@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PB DAYS Arcade - Auto-Detecting Slot Machine</title>
+    <title>PB DAYS Arcade - Enhanced Auto-Detection</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         * {
@@ -350,7 +350,7 @@
     <div class="arcade-container">
         <div class="machine-header">
             <h1 class="logo">PB DAYS ARCADE</h1>
-            <p class="tagline">Auto-Detecting Premium Rewards</p>
+            <p class="tagline">Enhanced Auto-Detection System</p>
         </div>
 
         <div class="email-prompt" id="emailPrompt">
@@ -361,7 +361,7 @@
         </div>
 
         <div class="order-status" id="orderStatus">
-            <div class="loading"></div> Auto-detecting your recent orders...
+            <div class="loading"></div> Starting enhanced auto-detection...
         </div>
 
         <div class="slot-machine" id="slotMachine">
@@ -402,6 +402,7 @@
     </div>
 
     <script>
+        // Professional slot machine symbols
         const symbols = [
             { name: 'DIAMOND', emoji: '💎', color: '#00ffff', prize: '50% OFF', rarity: 2, code: 'DIAMOND50' },
             { name: 'CROWN', emoji: '👑', color: '#ffd700', prize: '40% OFF', rarity: 3, code: 'CROWN40' },
@@ -413,6 +414,7 @@
             { name: 'LEMON', emoji: '🍋', color: '#ffeb3b', prize: 'FREE SHIPPING', rarity: 25, code: 'FREESHIP' }
         ];
 
+        // User session data
         let userSession = {
             orderId: null,
             email: null,
@@ -445,111 +447,456 @@
             oscillator.stop(audioContext.currentTime + duration);
         }
 
+        // ENHANCED UNIVERSAL AUTO-DETECTION SYSTEM
         async function initializeAutoDetection() {
-            userSession.sessionId = 'IFRAME_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            userSession.sessionId = 'UNIVERSAL_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
             userSession.startTime = new Date().toISOString();
             
-            console.log('🎯 Starting iframe-compatible auto-detection...');
+            console.log('🎯 Starting universal auto-detection...');
             console.log('📱 Running in iframe:', window !== window.top);
+            console.log('🔍 User agent:', navigator.userAgent);
+            console.log('🌐 Referrer:', document.referrer);
             
-            // Method 1: URL parameters from Magento
-            const urlParams = new URLSearchParams(window.location.search);
-            const email = urlParams.get('email');
-            const name = urlParams.get('name');
-            const source = urlParams.get('source');
+            // Method 1: URL parameters (highest priority)
+            if (await tryURLParameterDetection()) return;
             
-            if (email && email.includes('@')) {
-                console.log('✅ Customer detected from Magento:', email);
-                userSession.email = email;
-                userSession.customerName = name || 'Customer';
-                userSession.detectionMethod = source || 'magento_iframe';
-                
-                document.getElementById('emailPrompt').classList.add('hidden');
-                
-                document.getElementById('orderStatus').innerHTML = 
-                    `🎉 Welcome back, ${userSession.customerName}!<br>
-                     <div class="loading"></div> Looking up your recent orders...`;
-                
-                // Notify parent window if in iframe
-                if (window !== window.top) {
-                    try {
-                        window.parent.postMessage({
-                            type: 'customer_detected',
-                            email: email,
-                            name: name
-                        }, '*');
-                    } catch (e) {}
-                }
-                
-                setTimeout(() => {
-                    lookupOrdersByEmail(email);
-                }, 1000);
-                
-                return;
-            }
+            // Method 2: Parent window communication (if in iframe)
+            if (await tryParentCommunication()) return;
             
-            // Method 2: Check for returning customer
-            const savedEmail = localStorage.getItem('pb_customer_email');
-            if (savedEmail && savedEmail.includes('@')) {
-                console.log('✅ Returning customer detected:', savedEmail);
-                userSession.email = savedEmail;
-                userSession.customerName = localStorage.getItem('pb_customer_name') || 'Customer';
-                userSession.detectionMethod = 'returning_customer';
-                
-                document.getElementById('emailPrompt').classList.add('hidden');
-                
-                document.getElementById('orderStatus').innerHTML = 
-                    `👋 Welcome back!<br>
-                     <div class="loading"></div> Looking up your recent orders...`;
-                
-                setTimeout(() => {
-                    lookupOrdersByEmail(savedEmail);
-                }, 1000);
-                
-                return;
-            }
+            // Method 3: Browser storage detection
+            if (await tryStorageDetection()) return;
             
-            console.log('❌ No auto-detection possible, showing email prompt');
+            // Method 4: Smart referrer detection
+            if (await tryReferrerDetection()) return;
+            
+            // Method 5: Browser autofill detection
+            if (await tryAutofillDetection()) return;
+            
+            console.log('❌ All auto-detection methods failed, showing email prompt');
             showEmailPrompt();
         }
 
-        function showEmailPrompt() {
-            document.getElementById('orderStatus').innerHTML = 
-                '🔍 Enter your email below to find your recent orders and start playing!';
-            document.getElementById('emailPrompt').classList.remove('hidden');
-            
-            setTimeout(() => {
-                const emailInput = document.getElementById('customerEmail');
-                const savedEmail = localStorage.getItem('pb_customer_email');
-                if (savedEmail) {
-                    emailInput.value = savedEmail;
-                    emailInput.placeholder = `Welcome back! (${savedEmail.substring(0,3)}***)`;
+        function tryURLParameterDetection() {
+            return new Promise((resolve) => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const email = urlParams.get('email') || urlParams.get('e');
+                const name = urlParams.get('name') || urlParams.get('n');
+                const source = urlParams.get('source') || 'url_parameters';
+                
+                console.log('🔍 Checking URL parameters...');
+                console.log('📧 Email param:', email);
+                console.log('👤 Name param:', name);
+                
+                if (email && email.includes('@')) {
+                    console.log('✅ Customer detected via URL parameters:', email);
+                    populateUserSession(email, name, source);
+                    resolve(true);
+                } else {
+                    console.log('❌ No valid email in URL parameters');
+                    resolve(false);
+                }
+            });
+        }
+
+        function tryParentCommunication() {
+            return new Promise((resolve) => {
+                if (window === window.top) {
+                    console.log('❌ Not in iframe, skipping parent communication');
+                    resolve(false);
+                    return;
                 }
                 
+                try {
+                    console.log('🔗 Requesting customer data from parent...');
+                    
+                    // Send request to parent
+                    window.parent.postMessage({
+                        type: 'request_customer_data',
+                        source: 'pb_slot_machine',
+                        timestamp: Date.now()
+                    }, '*');
+                    
+                    // Listen for response
+                    const messageHandler = (event) => {
+                        console.log('📨 Message received from parent:', event.data);
+                        
+                        if (event.data && event.data.type === 'customer_data_response') {
+                            window.removeEventListener('message', messageHandler);
+                            
+                            if (event.data.email && event.data.email.includes('@')) {
+                                console.log('✅ Customer data received from parent:', event.data.email);
+                                populateUserSession(event.data.email, event.data.name, 'parent_communication');
+                                resolve(true);
+                            } else {
+                                console.log('❌ No valid customer data from parent');
+                                resolve(false);
+                            }
+                        }
+                    };
+                    
+                    window.addEventListener('message', messageHandler);
+                    
+                    // Timeout after 3 seconds
+                    setTimeout(() => {
+                        window.removeEventListener('message', messageHandler);
+                        console.log('⏰ Parent communication timeout');
+                        resolve(false);
+                    }, 3000);
+                    
+                } catch (e) {
+                    console.log('❌ Parent communication failed:', e);
+                    resolve(false);
+                }
+            });
+        }
+
+        function tryStorageDetection() {
+            return new Promise((resolve) => {
+                console.log('🔍 Checking browser storage for customer data...');
+                
+                // Check localStorage
+                const localKeys = [
+                    'pb_customer_email',
+                    'customer_email',
+                    'user_email',
+                    'magento_customer',
+                    'apollo-cache-persist',
+                    'M2_VENIA_USER_TOKEN',
+                    'mage-cache-storage',
+                    'customer_data',
+                    'signin_token',
+                    'customerToken'
+                ];
+                
+                console.log('📦 Checking localStorage keys:', localKeys);
+                
+                for (const key of localKeys) {
+                    const stored = localStorage.getItem(key);
+                    if (stored) {
+                        console.log(`🔍 Found data for key "${key}":`, stored.substring(0, 50) + '...');
+                        const email = extractEmailFromData(stored, key);
+                        if (email) {
+                            console.log('✅ Customer detected in localStorage:', email);
+                            const name = localStorage.getItem('pb_customer_name') || 
+                                        localStorage.getItem('customer_name') ||
+                                        localStorage.getItem('customer_firstname');
+                            populateUserSession(email, name, 'localStorage_' + key);
+                            resolve(true);
+                            return;
+                        }
+                    }
+                }
+                
+                // Check sessionStorage
+                console.log('📦 Checking sessionStorage keys:', localKeys);
+                
+                for (const key of localKeys) {
+                    const stored = sessionStorage.getItem(key);
+                    if (stored) {
+                        console.log(`🔍 Found session data for key "${key}":`, stored.substring(0, 50) + '...');
+                        const email = extractEmailFromData(stored, key);
+                        if (email) {
+                            console.log('✅ Customer detected in sessionStorage:', email);
+                            populateUserSession(email, null, 'sessionStorage_' + key);
+                            resolve(true);
+                            return;
+                        }
+                    }
+                }
+                
+                console.log('❌ No customer data found in storage');
+                resolve(false);
+            });
+        }
+
+        function extractEmailFromData(data, key) {
+            try {
+                console.log(`🔍 Extracting email from key "${key}"`);
+                
+                // Direct email check
+                if (typeof data === 'string' && data.includes('@') && data.includes('.') && data.length < 100) {
+                    console.log('📧 Found direct email:', data);
+                    return data;
+                }
+                
+                // Try to parse as JSON
+                let parsed;
+                try {
+                    parsed = JSON.parse(data);
+                } catch (e) {
+                    console.log('❌ Data is not valid JSON');
+                    return null;
+                }
+                
+                // Common structures
+                if (parsed.email && parsed.email.includes('@')) {
+                    console.log('📧 Found email in .email property:', parsed.email);
+                    return parsed.email;
+                }
+                
+                if (parsed.customer && parsed.customer.email && parsed.customer.email.includes('@')) {
+                    console.log('📧 Found email in .customer.email:', parsed.customer.email);
+                    return parsed.customer.email;
+                }
+                
+                if (parsed.user && parsed.user.email && parsed.user.email.includes('@')) {
+                    console.log('📧 Found email in .user.email:', parsed.user.email);
+                    return parsed.user.email;
+                }
+                
+                // Apollo/GraphQL cache structure
+                if (parsed.ROOT_QUERY && parsed.ROOT_QUERY.customer && parsed.ROOT_QUERY.customer.email) {
+                    console.log('📧 Found email in Apollo cache:', parsed.ROOT_QUERY.customer.email);
+                    return parsed.ROOT_QUERY.customer.email;
+                }
+                
+                // Deep search in JSON string for email patterns
+                const jsonString = JSON.stringify(parsed);
+                const emailRegex = /"email":\s*"([^"]+@[^"]+\.[^"]+)"/g;
+                const matches = jsonString.match(emailRegex);
+                
+                if (matches && matches.length > 0) {
+                    console.log('📧 Found email patterns in JSON:', matches);
+                    const firstMatch = matches[0].match(/"([^"]+@[^"]+\.[^"]+)"/);
+                    if (firstMatch && firstMatch[1]) {
+                        console.log('📧 Using first email match:', firstMatch[1]);
+                        return firstMatch[1];
+                    }
+                }
+                
+                console.log('❌ No email found in data structure');
+                return null;
+                
+            } catch (e) {
+                console.log('❌ Error extracting email from data:', e);
+                return null;
+            }
+        }
+
+        function tryReferrerDetection() {
+            return new Promise((resolve) => {
+                const referrer = document.referrer;
+                console.log('🔍 Checking referrer:', referrer);
+                
+                if (referrer && (referrer.includes('pinkblue.in') || referrer.includes('pinkblue'))) {
+                    console.log('🔍 Came from PinkBlue site, checking for stored data...');
+                    
+                    // Enhanced storage check for referrer context
+                    const referrerKeys = [
+                        'pb_customer_email',
+                        'last_customer',
+                        'recent_customer',
+                        'customer_email'
+                    ];
+                    
+                    for (const key of referrerKeys) {
+                        const stored = localStorage.getItem(key) || sessionStorage.getItem(key);
+                        if (stored && stored.includes('@')) {
+                            console.log('✅ Customer detected via referrer context:', stored);
+                            populateUserSession(stored, null, 'referrer_storage');
+                            resolve(true);
+                            return;
+                        }
+                    }
+                    
+                    // Check if we have any recent customer activity
+                    const keys = Object.keys(localStorage);
+                    for (const key of keys) {
+                        if (key.toLowerCase().includes('customer') || key.toLowerCase().includes('user')) {
+                            const value = localStorage.getItem(key);
+                            if (value && value.includes('@')) {
+                                console.log('✅ Customer detected via referrer key search:', value);
+                                populateUserSession(value, null, 'referrer_key_search');
+                                resolve(true);
+                                return;
+                            }
+                        }
+                    }
+                }
+                
+                console.log('❌ No referrer-based detection');
+                resolve(false);
+            });
+        }
+
+        function tryAutofillDetection() {
+            return new Promise((resolve) => {
+                console.log('🔍 Checking for browser autofill data...');
+                
+                setTimeout(() => {
+                    const emailInputs = document.querySelectorAll('input[type="email"]');
+                    console.log('📧 Found email inputs:', emailInputs.length);
+                    
+                    for (const input of emailInputs) {
+                        console.log('📧 Checking input value:', input.value);
+                        if (input.value && input.value.includes('@')) {
+                            console.log('✅ Email detected from browser autofill:', input.value);
+                            populateUserSession(input.value, null, 'browser_autofill');
+                            resolve(true);
+                            return;
+                        }
+                    }
+                    
+                    console.log('❌ No autofill data detected');
+                    resolve(false);
+                }, 2000); // Wait for autofill to populate
+            });
+        }
+
+        function populateUserSession(email, name, method) {
+            console.log('🎉 Populating user session...');
+            console.log('📧 Email:', email);
+            console.log('👤 Name:', name);
+            console.log('🔧 Method:', method);
+            
+            userSession.email = email;
+            userSession.customerName = name || 'Customer';
+            userSession.detectionMethod = method;
+            
+            // Save for future visits
+            localStorage.setItem('pb_customer_email', email);
+            if (name) localStorage.setItem('pb_customer_name', name);
+            
+            // Hide email prompt
+            const emailPrompt = document.getElementById('emailPrompt');
+            if (emailPrompt) {
+                emailPrompt.classList.add('hidden');
+            }
+            
+            // Show welcome message
+            const orderStatus = document.getElementById('orderStatus');
+            if (orderStatus) {
+                orderStatus.innerHTML = 
+                    `🎉 Welcome back, ${userSession.customerName}!<br>
+                     <div class="loading"></div> Looking up your recent orders...`;
+            }
+            
+            // Notify parent if in iframe
+            if (window !== window.top) {
+                try {
+                    window.parent.postMessage({
+                        type: 'customer_detected',
+                        email: email,
+                        name: userSession.customerName,
+                        method: method,
+                        timestamp: Date.now()
+                    }, '*');
+                    console.log('📤 Notified parent window of customer detection');
+                } catch (e) {
+                    console.log('❌ Failed to notify parent window:', e);
+                }
+            }
+            
+            // Auto-lookup orders
+            console.log('🔍 Starting order lookup...');
+            setTimeout(() => {
+                lookupOrdersByEmail(email);
+            }, 1000);
+        }
+
+        // Enhanced email prompt for better UX
+        function showEmailPrompt() {
+            console.log('📧 Showing email prompt');
+            
+            const orderStatus = document.getElementById('orderStatus');
+            if (orderStatus) {
+                orderStatus.innerHTML = 
+                    '🔍 Enter your email below to find your recent orders and start playing!';
+            }
+            
+            const emailPrompt = document.getElementById('emailPrompt');
+            if (emailPrompt) {
+                emailPrompt.classList.remove('hidden');
+            }
+            
+            // Enhanced email input handling
+            setTimeout(() => {
+                const emailInput = document.getElementById('customerEmail');
+                if (!emailInput) {
+                    console.log('❌ Email input not found');
+                    return;
+                }
+                
+                // Pre-fill if we have partial data
+                const lastEmail = localStorage.getItem('pb_customer_email');
+                if (lastEmail && lastEmail.includes('@')) {
+                    emailInput.value = lastEmail;
+                    emailInput.placeholder = `Welcome back! (${lastEmail.substring(0,3)}***)`;
+                    console.log('📧 Pre-filled email input with saved email');
+                }
+                
+                // Smart email suggestions
+                const commonDomains = ['@gmail.com', '@yahoo.com', '@hotmail.com', '@outlook.com'];
+                
                 emailInput.addEventListener('input', function() {
-                    const email = this.value;
-                    if (email && email.includes('@') && email.includes('.')) {
-                        localStorage.setItem('pb_customer_email', email);
+                    const value = this.value;
+                    
+                    // Auto-save valid emails
+                    if (value && value.includes('@') && value.includes('.')) {
+                        localStorage.setItem('pb_customer_email', value);
+                        console.log('💾 Saved email to localStorage:', value);
+                    }
+                    
+                    // Domain auto-complete (basic)
+                    if (value.includes('@') && !value.includes('.')) {
+                        const atIndex = value.indexOf('@');
+                        const domain = value.substring(atIndex + 1);
+                        
+                        for (const commonDomain of commonDomains) {
+                            if (commonDomain.substring(1).startsWith(domain.toLowerCase())) {
+                                // Could show suggestion here
+                                console.log('💡 Potential domain suggestion:', commonDomain);
+                                break;
+                            }
+                        }
                     }
                 });
+                
+                // Auto-submit on Enter
+                emailInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        console.log('⌨️ Enter key pressed, submitting email');
+                        lookupCustomerOrders();
+                    }
+                });
+                
+                // Focus the input for better UX
+                emailInput.focus();
+                console.log('🎯 Focused email input');
+                
             }, 100);
         }
 
+        // Enhanced lookupCustomerOrders function with better error handling
         async function lookupCustomerOrders() {
-            const email = document.getElementById('customerEmail').value.trim();
+            const emailInput = document.getElementById('customerEmail');
+            if (!emailInput) {
+                console.log('❌ Email input not found');
+                return;
+            }
+            
+            const email = emailInput.value.trim();
             
             if (!email) {
                 alert('Please enter your email address');
+                emailInput.focus();
                 return;
             }
             
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
                 alert('Please enter a valid email address');
+                emailInput.focus();
                 return;
             }
             
+            console.log('📧 Manual email entry:', email);
+            userSession.email = email;
             userSession.detectionMethod = 'manual_entry';
+            
+            // Save the email for future use
+            localStorage.setItem('pb_customer_email', email);
+            
             await lookupOrdersByEmail(email);
         }
 
@@ -567,7 +914,7 @@
                         email: email,
                         sessionId: userSession.sessionId,
                         detectionMethod: userSession.detectionMethod,
-                        source: 'iframe_embedded'
+                        source: 'enhanced_detection'
                     })
                 });
                 
@@ -909,12 +1256,14 @@
             }
         }
 
+        // Initialize game
         document.addEventListener('DOMContentLoaded', function() {
             createStars();
             initializeReels();
             initializeAutoDetection();
         });
 
+        // Enter key support for email input
         document.addEventListener('keypress', function(e) {
             if (e.key === 'Enter' && document.getElementById('customerEmail') === document.activeElement) {
                 lookupCustomerOrders();
