@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PB DAYS Arcade - Professional Slot Machine</title>
+    <title>PB DAYS Arcade - Auto Slot Machine</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         * {
@@ -20,6 +20,29 @@
             justify-content: center;
             align-items: center;
             overflow-x: hidden;
+            position: relative;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
         }
 
         .arcade-container {
@@ -34,6 +57,7 @@
             position: relative;
             max-width: 500px;
             width: 90%;
+            z-index: 10;
         }
 
         .machine-header {
@@ -49,6 +73,12 @@
             font-weight: 900;
             text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
             margin-bottom: 10px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 20px #00d4ff); }
+            to { filter: drop-shadow(0 0 30px #00d4ff) drop-shadow(0 0 40px #00d4ff); }
         }
 
         .tagline {
@@ -69,6 +99,46 @@
             font-size: 0.85rem;
         }
 
+        .email-prompt {
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid #00d4ff;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            color: white;
+            margin-bottom: 25px;
+        }
+
+        .email-input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #333;
+            border-radius: 8px;
+            color: white;
+            font-family: 'Orbitron', monospace;
+            font-size: 1rem;
+            margin: 10px 0;
+        }
+
+        .email-input:focus {
+            outline: none;
+            border-color: #00d4ff;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+        }
+
+        .lookup-button {
+            background: linear-gradient(145deg, #00d4ff, #0099cc);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 25px;
+            font-family: 'Orbitron', monospace;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
         .slot-machine {
             background: linear-gradient(145deg, #1a1a1a, #000);
             border: 6px solid #333;
@@ -76,6 +146,32 @@
             padding: 25px;
             position: relative;
             box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.8);
+        }
+
+        .machine-top {
+            background: linear-gradient(145deg, #666, #333);
+            height: 30px;
+            border-radius: 15px 15px 0 0;
+            margin: -25px -25px 15px -25px;
+            border: 3px solid #888;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .machine-top::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 100%; }
         }
 
         .slot-screen {
@@ -122,12 +218,6 @@
             background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
         }
 
-        .symbol img {
-            width: 30px;
-            height: 30px;
-            object-fit: contain;
-        }
-
         .control-panel {
             background: linear-gradient(145deg, #333, #222);
             border-radius: 15px;
@@ -160,22 +250,11 @@
 
         .spin-button:hover {
             transform: perspective(1000px) rotateX(0deg) scale(1.05);
-            box-shadow: 
-                0 12px 24px rgba(255, 71, 87, 0.6),
-                inset 0 2px 5px rgba(255, 255, 255, 0.3);
         }
 
-        .spin-button:active {
-            transform: perspective(1000px) rotateX(15deg) scale(0.95);
-        }
-
-        .spin-button.spinning {
-            animation: spinButtonPulse 0.5s infinite;
-        }
-
-        @keyframes spinButtonPulse {
-            0%, 100% { box-shadow: 0 8px 16px rgba(255, 71, 87, 0.4); }
-            50% { box-shadow: 0 8px 16px rgba(255, 71, 87, 0.8); }
+        .spin-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         .credits-display {
@@ -207,8 +286,8 @@
         }
 
         @keyframes winGlow {
-            0%, 100% { transform: scale(1); text-shadow: 0 0 20px rgba(0, 255, 136, 0.6); }
-            50% { transform: scale(1.05); text-shadow: 0 0 30px rgba(0, 255, 136, 0.9); }
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         .prize-code {
@@ -247,6 +326,10 @@
             to { transform: rotate(360deg); }
         }
 
+        .hidden {
+            display: none;
+        }
+
         @media (max-width: 768px) {
             .arcade-container { padding: 30px 20px; }
             .logo { font-size: 1.8rem; }
@@ -257,19 +340,30 @@
     </style>
 </head>
 <body>
+    <div class="stars" id="stars"></div>
     <div class="particles" id="particles"></div>
     
     <div class="arcade-container">
         <div class="machine-header">
             <h1 class="logo">PB DAYS ARCADE</h1>
-            <p class="tagline">Premium Dental Rewards</p>
+            <p class="tagline">Auto-Detecting Premium Rewards</p>
+        </div>
+
+        <!-- Email Prompt (shown if no auto-detection) -->
+        <div class="email-prompt" id="emailPrompt">
+            <h3>🎰 Welcome to PB Days Arcade!</h3>
+            <p>Enter your email to find your recent orders:</p>
+            <input type="email" id="customerEmail" class="email-input" placeholder="Enter your email address">
+            <button class="lookup-button" onclick="lookupCustomerOrders()">🔍 Find My Orders</button>
         </div>
 
         <div class="order-status" id="orderStatus">
-            <div class="loading"></div> Verifying order eligibility...
+            <div class="loading"></div> Auto-detecting your recent orders...
         </div>
 
-        <div class="slot-machine">
+        <div class="slot-machine" id="slotMachine">
+            <div class="machine-top"></div>
+            
             <div class="slot-screen">
                 <div class="reels-container">
                     <div class="reel" id="reel1">
@@ -290,13 +384,13 @@
                     <div id="orderDisplay">#----</div>
                 </div>
                 
-                <button class="spin-button" id="spinButton" onclick="spin()">
+                <button class="spin-button" id="spinButton" onclick="spin()" disabled>
                     SPIN
                 </button>
                 
                 <div class="credits-display">
                     <div style="font-size: 0.7rem; color: #888;">STATUS</div>
-                    <div id="statusDisplay">READY</div>
+                    <div id="statusDisplay">DETECTING</div>
                 </div>
             </div>
         </div>
@@ -305,80 +399,33 @@
     </div>
 
     <script>
-        // Professional slot machine symbols with real imagery
+        // Professional slot machine symbols
         const symbols = [
-            { 
-                name: 'DIAMOND', 
-                emoji: '💎', 
-                color: '#00ffff', 
-                prize: '50% OFF',
-                rarity: 5,
-                code: 'DIAMOND50'
-            },
-            { 
-                name: 'CROWN', 
-                emoji: '👑', 
-                color: '#ffd700', 
-                prize: '40% OFF',
-                rarity: 8,
-                code: 'CROWN40'
-            },
-            { 
-                name: 'STAR', 
-                emoji: '⭐', 
-                color: '#ffff00', 
-                prize: '30% OFF',
-                rarity: 12,
-                code: 'STAR30'
-            },
-            { 
-                name: 'SEVEN', 
-                emoji: '7️⃣', 
-                color: '#ff0000', 
-                prize: '25% OFF',
-                rarity: 15,
-                code: 'LUCKY25'
-            },
-            { 
-                name: 'BAR', 
-                emoji: '🔸', 
-                color: '#ff6b6b', 
-                prize: '20% OFF',
-                rarity: 20,
-                code: 'BAR20'
-            },
-            { 
-                name: 'CHERRY', 
-                emoji: '🍒', 
-                color: '#ff1744', 
-                prize: '15% OFF',
-                rarity: 25,
-                code: 'CHERRY15'
-            },
-            { 
-                name: 'BELL', 
-                emoji: '🔔', 
-                color: '#ffc107', 
-                prize: '10% OFF',
-                rarity: 30,
-                code: 'BELL10'
-            },
-            { 
-                name: 'LEMON', 
-                emoji: '🍋', 
-                color: '#ffeb3b', 
-                prize: 'FREE SHIPPING',
-                rarity: 35,
-                code: 'FREESHIP'
-            }
+            { name: 'DIAMOND', emoji: '💎', color: '#00ffff', prize: '50% OFF', rarity: 2, code: 'DIAMOND50' },
+            { name: 'CROWN', emoji: '👑', color: '#ffd700', prize: '40% OFF', rarity: 3, code: 'CROWN40' },
+            { name: 'STAR', emoji: '⭐', color: '#ffff00', prize: '30% OFF', rarity: 5, code: 'STAR30' },
+            { name: 'SEVEN', emoji: '7️⃣', color: '#ff0000', prize: '25% OFF', rarity: 8, code: 'LUCKY25' },
+            { name: 'BAR', emoji: '🔸', color: '#ff6b6b', prize: '20% OFF', rarity: 12, code: 'BAR20' },
+            { name: 'CHERRY', emoji: '🍒', color: '#ff1744', prize: '15% OFF', rarity: 20, code: 'CHERRY15' },
+            { name: 'BELL', emoji: '🔔', color: '#ffc107', prize: '10% OFF', rarity: 25, code: 'BELL10' },
+            { name: 'LEMON', emoji: '🍋', color: '#ffeb3b', prize: 'FREE SHIPPING', rarity: 25, code: 'FREESHIP' }
         ];
 
-        let isSpinning = false;
-        let orderId = null;
-        let customerEmail = null;
-        let gameData = null;
+        // User session data
+        let userSession = {
+            orderId: null,
+            email: null,
+            customerName: null,
+            orderAmount: null,
+            sessionId: null,
+            fingerprint: null,
+            startTime: null,
+            hasPlayed: false
+        };
 
-        // Audio context for professional sounds
+        let isSpinning = false;
+
+        // Audio context
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
         function playSound(frequency, type = 'sine', duration = 0.1, volume = 0.1) {
@@ -398,18 +445,166 @@
             oscillator.stop(audioContext.currentTime + duration);
         }
 
-        // Initialize game
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeReels();
-            checkOrderEligibility();
-        });
+        // Initialize auto-detection system
+        async function initializeAutoDetection() {
+            userSession.sessionId = 'AUTO_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            userSession.startTime = new Date().toISOString();
+            
+            // Try multiple detection methods
+            const detected = await tryAutoDetection();
+            
+            if (!detected) {
+                // Show email prompt if auto-detection fails
+                showEmailPrompt();
+            }
+        }
+
+        async function tryAutoDetection() {
+            // Method 1: Check URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const emailParam = urlParams.get('email') || urlParams.get('e');
+            
+            if (emailParam) {
+                return await lookupOrdersByEmail(emailParam);
+            }
+            
+            // Method 2: Check localStorage for previous email
+            const savedEmail = localStorage.getItem('pb_customer_email');
+            if (savedEmail) {
+                return await lookupOrdersByEmail(savedEmail);
+            }
+            
+            // Method 3: Check sessionStorage
+            const sessionEmail = sessionStorage.getItem('customer_email');
+            if (sessionEmail) {
+                return await lookupOrdersByEmail(sessionEmail);
+            }
+            
+            return false;
+        }
+
+        async function lookupOrdersByEmail(email) {
+            try {
+                document.getElementById('orderStatus').innerHTML = 
+                    `<div class="loading"></div> Looking up orders for ${email.substring(0,3)}***...`;
+                
+                const response = await fetch('/.netlify/functions/get-customer-order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        email: email,
+                        sessionId: userSession.sessionId
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success && data.order) {
+                    // Order found - populate session
+                    userSession.orderId = data.order.entity_id;
+                    userSession.email = email;
+                    userSession.orderAmount = data.order.grand_total;
+                    userSession.customerName = data.order.customer_firstname;
+                    
+                    // Save email for future visits
+                    localStorage.setItem('pb_customer_email', email);
+                    
+                    // Show success and enable game
+                    showOrderFound(data.order);
+                    enableGame();
+                    
+                    return true;
+                } else {
+                    // No recent eligible orders
+                    document.getElementById('orderStatus').innerHTML = 
+                        `❌ No eligible orders found for ${email.substring(0,3)}*** in the last 7 days`;
+                    return false;
+                }
+                
+            } catch (error) {
+                console.error('Order lookup failed:', error);
+                document.getElementById('orderStatus').innerHTML = 
+                    '⚠️ Unable to lookup orders. Please try manual entry.';
+                return false;
+            }
+        }
+
+        function showOrderFound(order) {
+            const customerName = order.customer_firstname ? `, ${order.customer_firstname}` : '';
+            
+            document.getElementById('orderStatus').innerHTML = 
+                `✅ Welcome back${customerName}!<br>
+                 Order #${order.increment_id} - ₹${order.grand_total}<br>
+                 <small>Placed on ${new Date(order.created_at).toLocaleDateString()}</small>`;
+            
+            document.getElementById('orderDisplay').textContent = `#${order.increment_id}`;
+            document.getElementById('statusDisplay').textContent = 'READY';
+            
+            // Hide email prompt
+            document.getElementById('emailPrompt').classList.add('hidden');
+            
+            playSound(800, 'sine', 0.3, 0.05);
+        }
+
+        function showEmailPrompt() {
+            document.getElementById('orderStatus').innerHTML = 
+                '🔍 Enter your email below to find your recent orders';
+            document.getElementById('emailPrompt').classList.remove('hidden');
+        }
+
+        async function lookupCustomerOrders() {
+            const email = document.getElementById('customerEmail').value.trim();
+            
+            if (!email) {
+                alert('Please enter your email address');
+                return;
+            }
+            
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address');
+                return;
+            }
+            
+            await lookupOrdersByEmail(email);
+        }
+
+        function enableGame() {
+            document.getElementById('spinButton').disabled = false;
+            
+            // Auto-play after 3 seconds if user doesn't interact
+            setTimeout(() => {
+                if (!isSpinning && !userSession.hasPlayed) {
+                    showAutoPlayPrompt();
+                }
+            }, 3000);
+        }
+
+        function showAutoPlayPrompt() {
+            if (confirm('🎰 Ready to spin? Click OK to auto-play or Cancel to spin manually!')) {
+                spin();
+            }
+        }
+
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = Math.random() * 3 + 1 + 'px';
+                star.style.height = star.style.width;
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
 
         function initializeReels() {
             for (let i = 1; i <= 3; i++) {
                 const reelContent = document.getElementById(`reelContent${i}`);
                 let symbolsHTML = '';
                 
-                // Create extended reel with weighted distribution
                 for (let j = 0; j < 25; j++) {
                     const symbol = getWeightedRandomSymbol();
                     symbolsHTML += `<div class="symbol" style="color: ${symbol.color}">${symbol.emoji}</div>`;
@@ -432,62 +627,23 @@
             return symbols[symbols.length - 1];
         }
 
-        async function checkOrderEligibility() {
-            try {
-                const urlParams = new URLSearchParams(window.location.search);
-                orderId = urlParams.get('order_id');
-                customerEmail = urlParams.get('email');
-
-                if (!orderId) {
-                    document.getElementById('orderStatus').innerHTML = 
-                        '⚠️ No order found. Complete a purchase to play!';
-                    document.getElementById('spinButton').disabled = true;
-                    return;
-                }
-
-                document.getElementById('orderDisplay').textContent = `#${orderId}`;
-                
-                // Validate order with your API
-                const response = await fetch(`/.netlify/functions/validate-order?order_id=${orderId}&email=${customerEmail}`);
-                const data = await response.json();
-
-                if (data.success) {
-                    document.getElementById('orderStatus').innerHTML = 
-                        `✅ Order verified! Amount: ₹${data.order_amount}`;
-                    document.getElementById('statusDisplay').textContent = 'READY';
-                    playSound(800, 'sine', 0.3, 0.05);
-                } else {
-                    document.getElementById('orderStatus').innerHTML = 
-                        '❌ Order verification failed';
-                    document.getElementById('spinButton').disabled = true;
-                }
-            } catch (error) {
-                // Demo mode for testing
-                document.getElementById('orderStatus').innerHTML = 
-                    '🔄 Demo Mode - Playing without order verification';
-                document.getElementById('statusDisplay').textContent = 'DEMO';
-                orderId = 'DEMO' + Math.floor(Math.random() * 10000);
-                playSound(600, 'sine', 0.2, 0.05);
-            }
-        }
-
         async function spin() {
-            if (isSpinning) return;
+            if (isSpinning || !userSession.orderId) return;
             
+            userSession.hasPlayed = true;
             isSpinning = true;
+            
             const spinButton = document.getElementById('spinButton');
             spinButton.disabled = true;
-            spinButton.classList.add('spinning');
             document.getElementById('statusDisplay').textContent = 'SPINNING';
             document.getElementById('resultDisplay').innerHTML = '';
             
-            // Play spinning sound
             playSpinningSound();
             
             const spinDuration = 3000;
             const finalSymbols = [];
             
-            // Spin each reel with staggered stops
+            // Spin each reel
             for (let i = 1; i <= 3; i++) {
                 const reel = document.getElementById(`reelContent${i}`);
                 const finalSymbol = determineResult();
@@ -495,10 +651,9 @@
                 
                 const finalPosition = -(Math.floor(Math.random() * 15) + 8) * 40;
                 
-                // Animate reel spinning
                 let currentPosition = 0;
                 const spinSpeed = 25;
-                const stopTime = spinDuration + (i * 400); // Staggered stops
+                const stopTime = spinDuration + (i * 400);
                 
                 const spinInterval = setInterval(() => {
                     currentPosition -= spinSpeed;
@@ -514,8 +669,7 @@
                             checkResult(finalSymbols);
                             isSpinning = false;
                             spinButton.disabled = false;
-                            spinButton.classList.remove('spinning');
-                            document.getElementById('statusDisplay').textContent = 'READY';
+                            document.getElementById('statusDisplay').textContent = 'COMPLETE';
                         }, 500);
                     }
                 }, stopTime);
@@ -523,7 +677,6 @@
         }
 
         function determineResult() {
-            // Professional probability distribution
             const rand = Math.random() * 100;
             
             if (rand < 2) return symbols[0];      // Diamond - 2%
@@ -538,7 +691,7 @@
 
         async function checkResult(finalSymbols) {
             const firstSymbol = finalSymbols[0];
-            const isWin = Math.random() < 0.65; // 65% win rate
+            const isWin = Math.random() < 0.75; // 75% win rate
             
             if (isWin) {
                 await displayWin(firstSymbol);
@@ -553,32 +706,34 @@
             
             resultDisplay.innerHTML = `
                 <div class="win-text">
-                    🎉 CONGRATULATIONS! 🎉<br>
+                    🎉 CONGRATULATIONS${userSession.customerName ? ' ' + userSession.customerName.toUpperCase() : ''}! 🎉<br>
                     <span style="font-size: 2rem; margin: 10px 0; display: block;">${symbol.emoji}</span>
                     You won: ${symbol.prize}
                 </div>
                 <div class="prize-code">CODE: ${prizeCode}</div>
             `;
             
-            // Play win sound and effects
             playWinSound();
             createWinParticles();
             
-            // Save win to GitHub backend
+            // Save win
             await saveWinResult({
-                orderId,
-                customerEmail,
+                orderId: userSession.orderId,
+                customerEmail: userSession.email,
+                customerName: userSession.customerName,
                 prize: symbol.prize,
                 prizeCode,
                 symbol: symbol.name,
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
+                sessionId: userSession.sessionId,
+                orderAmount: userSession.orderAmount
             });
         }
 
         function displayLoss() {
             document.getElementById('resultDisplay').innerHTML = `
                 <div style="color: #ff6b6b; font-size: 1.1rem;">
-                    Try Again Tomorrow!<br>
+                    Try Again Tomorrow${userSession.customerName ? ' ' + userSession.customerName : ''}!<br>
                     <small style="color: #888;">Better luck next time!</small>
                 </div>
             `;
@@ -597,7 +752,7 @@
         }
 
         function playWinSound() {
-            const winMelody = [523, 659, 784, 1047, 1319]; // C major scale
+            const winMelody = [523, 659, 784, 1047, 1319];
             winMelody.forEach((note, index) => {
                 setTimeout(() => {
                     playSound(note, 'sine', 0.4, 0.08);
@@ -646,12 +801,19 @@
             }
         }
 
-        // Add ambient sounds
-        setInterval(() => {
-            if (!isSpinning && Math.random() < 0.05) {
-                playSound(150 + Math.random() * 50, 'sine', 0.1, 0.01);
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            createStars();
+            initializeReels();
+            initializeAutoDetection();
+        });
+
+        // Enter key support for email input
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && document.getElementById('customerEmail') === document.activeElement) {
+                lookupCustomerOrders();
             }
-        }, 3000);
+        });
     </script>
 </body>
 </html>
