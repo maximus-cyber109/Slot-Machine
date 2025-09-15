@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PB DAYS Arcade - Auto Slot Machine</title>
+    <title>PB DAYS Arcade - Auto-Detecting Slot Machine</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         * {
@@ -125,6 +125,10 @@
             outline: none;
             border-color: #00d4ff;
             box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+        }
+
+        .email-input::placeholder {
+            color: #666;
         }
 
         .lookup-button {
@@ -257,6 +261,15 @@
             cursor: not-allowed;
         }
 
+        .spin-button.spinning {
+            animation: spinButtonPulse 0.5s infinite;
+        }
+
+        @keyframes spinButtonPulse {
+            0%, 100% { box-shadow: 0 8px 16px rgba(255, 71, 87, 0.4); }
+            50% { box-shadow: 0 8px 16px rgba(255, 71, 87, 0.8); }
+        }
+
         .credits-display {
             background: #000;
             border: 2px solid #666;
@@ -330,12 +343,38 @@
             display: none;
         }
 
+        .auto-play-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, #00ff88, #00d4ff);
+            color: #000;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            z-index: 1000;
+            animation: slideIn 0.5s ease;
+            max-width: 300px;
+            text-align: center;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
         @media (max-width: 768px) {
             .arcade-container { padding: 30px 20px; }
             .logo { font-size: 1.8rem; }
             .reel { width: 80px; height: 100px; }
             .symbol { width: 80px; height: 33px; font-size: 1.4rem; }
             .spin-button { width: 70px; height: 70px; font-size: 0.9rem; }
+            .auto-play-notification { 
+                top: 10px; 
+                right: 10px; 
+                left: 10px; 
+                max-width: none; 
+            }
         }
     </style>
 </head>
@@ -416,11 +455,13 @@
             orderId: null,
             email: null,
             customerName: null,
+            customerId: null,
             orderAmount: null,
             sessionId: null,
             fingerprint: null,
             startTime: null,
-            hasPlayed: false
+            hasPlayed: false,
+            detectionMethod: null
         };
 
         let isSpinning = false;
@@ -445,110 +486,132 @@
             oscillator.stop(audioContext.currentTime + duration);
         }
 
-        // Initialize auto-detection system
+        // Enhanced Magento customer auto-detection
         async function initializeAutoDetection() {
             userSession.sessionId = 'AUTO_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
             userSession.startTime = new Date().toISOString();
             
-            // Try multiple detection methods
-            const detected = await tryAutoDetection();
+            console.log('🎰 Starting Magento customer auto-detection...');
             
-            if (!detected) {
-                // Show email prompt if auto-detection fails
-                showEmailPrompt();
+            // Method 1: Direct Magento Customer Data Access (Most Powerful)
+            if (typeof require !== 'undefined') {
+                console.log('✅ Magento RequireJS detected, accessing customer data...');
+                
+                try {
+                    require(['jquery', 'Magento_Customer/js/customer-data'], function($, customerData) {
+                        $(document).ready(function() {
+                            console.log('🔍 Checking Magento customer session...');
+                            
+                            var customer = customerData.get('customer')();
+                            console.log('👤 Customer data:', customer);
+                            
+                            if (customer && customer.email) {
+                                console.log('✅ Auto-detected logged-in customer:', customer.email);
+                                
+                                userSession.email = customer.email;
+                                userSession.customerName = customer.firstname || 'Customer';
+                                userSession.customerId = customer.entity_id;
+                                userSession.detectionMethod = 'magento_session';
+                                
+                                document.getElementById('emailPrompt').classList.add('hidden');
+                                
+                                document.getElementById('orderStatus').innerHTML = 
+                                    `🎉 Welcome back, ${customer.firstname || 'Customer'}!<br>
+                                     <div class="loading"></div> Looking up your recent orders...`;
+                                
+                                setTimeout(() => {
+                                    lookupOrdersByEmail(customer.email);
+                                }, 1000);
+                                
+                                return;
+                            } else {
+                                console.log('❌ No Magento customer session found');
+                                fallbackDetection();
+                            }
+                        });
+                    });
+                } catch (error) {
+                    console.log('❌ Magento customer data access failed:', error);
+                    fallbackDetection();
+                }
+            } else {
+                console.log('❌ Magento RequireJS not available, trying fallback methods');
+                fallbackDetection();
             }
         }
 
-        async function tryAutoDetection() {
-            // Method 1: Check URL parameters
+        // Fallback detection methods
+        async function fallbackDetection() {
+            console.log('🔄 Trying fallback detection methods...');
+            
+            // Method 2: URL parameters
             const urlParams = new URLSearchParams(window.location.search);
             const emailParam = urlParams.get('email') || urlParams.get('e');
+            const nameParam = urlParams.get('name');
+            const autoParam = urlParams.get('auto');
             
             if (emailParam) {
+                console.log('📧 Email from URL:', emailParam);
+                userSession.email = emailParam;
+                userSession.customerName = nameParam || 'Customer';
+                userSession.detectionMethod = 'url_parameter';
+                
+                document.getElementById('emailPrompt').classList.add('hidden');
+                
+                if (autoParam === 'true') {
+                    document.getElementById('orderStatus').innerHTML = 
+                        `🎯 Auto-redirected customer detected!<br>
+                         <div class="loading"></div> Looking up recent orders...`;
+                }
+                
                 return await lookupOrdersByEmail(emailParam);
             }
             
-            // Method 2: Check localStorage for previous email
+            // Method 3: Saved customer data
             const savedEmail = localStorage.getItem('pb_customer_email');
             if (savedEmail) {
+                console.log('💾 Saved customer:', savedEmail.substring(0,3) + '***');
+                userSession.email = savedEmail;
+                userSession.detectionMethod = 'local_storage';
+                
+                document.getElementById('emailPrompt').classList.add('hidden');
+                document.getElementById('orderStatus').innerHTML = 
+                    `👋 Welcome back!<br>
+                     <div class="loading"></div> Looking up recent orders...`;
+                
                 return await lookupOrdersByEmail(savedEmail);
             }
             
-            // Method 3: Check sessionStorage
-            const sessionEmail = sessionStorage.getItem('customer_email');
-            if (sessionEmail) {
-                return await lookupOrdersByEmail(sessionEmail);
+            // Method 4: Check for Magento cookies
+            const magentoEmail = getMagentoEmailFromCookies();
+            if (magentoEmail) {
+                console.log('🍪 Email from Magento cookies');
+                userSession.email = magentoEmail;
+                userSession.detectionMethod = 'magento_cookies';
+                
+                document.getElementById('emailPrompt').classList.add('hidden');
+                return await lookupOrdersByEmail(magentoEmail);
             }
             
-            return false;
+            console.log('❌ All auto-detection methods failed, showing email prompt');
+            showEmailPrompt();
         }
 
-        async function lookupOrdersByEmail(email) {
-            try {
-                document.getElementById('orderStatus').innerHTML = 
-                    `<div class="loading"></div> Looking up orders for ${email.substring(0,3)}***...`;
-                
-                const response = await fetch('/.netlify/functions/get-customer-order', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        email: email,
-                        sessionId: userSession.sessionId
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (data.success && data.order) {
-                    // Order found - populate session
-                    userSession.orderId = data.order.entity_id;
-                    userSession.email = email;
-                    userSession.orderAmount = data.order.grand_total;
-                    userSession.customerName = data.order.customer_firstname;
-                    
-                    // Save email for future visits
-                    localStorage.setItem('pb_customer_email', email);
-                    
-                    // Show success and enable game
-                    showOrderFound(data.order);
-                    enableGame();
-                    
-                    return true;
-                } else {
-                    // No recent eligible orders
-                    document.getElementById('orderStatus').innerHTML = 
-                        `❌ No eligible orders found for ${email.substring(0,3)}*** in the last 7 days`;
-                    return false;
+        // Extract email from Magento cookies
+        function getMagentoEmailFromCookies() {
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                const [name, value] = cookie.trim().split('=');
+                if (name === 'customer_email' || name === 'mage-customer-email') {
+                    return decodeURIComponent(value);
                 }
-                
-            } catch (error) {
-                console.error('Order lookup failed:', error);
-                document.getElementById('orderStatus').innerHTML = 
-                    '⚠️ Unable to lookup orders. Please try manual entry.';
-                return false;
             }
-        }
-
-        function showOrderFound(order) {
-            const customerName = order.customer_firstname ? `, ${order.customer_firstname}` : '';
-            
-            document.getElementById('orderStatus').innerHTML = 
-                `✅ Welcome back${customerName}!<br>
-                 Order #${order.increment_id} - ₹${order.grand_total}<br>
-                 <small>Placed on ${new Date(order.created_at).toLocaleDateString()}</small>`;
-            
-            document.getElementById('orderDisplay').textContent = `#${order.increment_id}`;
-            document.getElementById('statusDisplay').textContent = 'READY';
-            
-            // Hide email prompt
-            document.getElementById('emailPrompt').classList.add('hidden');
-            
-            playSound(800, 'sine', 0.3, 0.05);
+            return null;
         }
 
         function showEmailPrompt() {
             document.getElementById('orderStatus').innerHTML = 
-                '🔍 Enter your email below to find your recent orders';
+                '🔍 Enter your email below to find your recent orders and start playing!';
             document.getElementById('emailPrompt').classList.remove('hidden');
         }
 
@@ -566,24 +629,129 @@
                 return;
             }
             
+            userSession.detectionMethod = 'manual_entry';
             await lookupOrdersByEmail(email);
+        }
+
+        async function lookupOrdersByEmail(email) {
+            try {
+                console.log('🔍 Looking up orders for:', email);
+                
+                document.getElementById('orderStatus').innerHTML = 
+                    `<div class="loading"></div> Looking up orders for ${email.substring(0,3)}***...`;
+                
+                const response = await fetch('/.netlify/functions/get-customer-order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        email: email,
+                        sessionId: userSession.sessionId,
+                        detectionMethod: userSession.detectionMethod
+                    })
+                });
+                
+                console.log('📊 Response status:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                console.log('📋 Response data:', data);
+                
+                if (data.success && data.order) {
+                    userSession.orderId = data.order.entity_id;
+                    userSession.email = email;
+                    userSession.orderAmount = data.order.grand_total;
+                    userSession.customerName = data.order.customer_firstname;
+                    
+                    localStorage.setItem('pb_customer_email', email);
+                    
+                    showOrderFound(data.order);
+                    enableGame();
+                    
+                    return true;
+                } else {
+                    document.getElementById('orderStatus').innerHTML = 
+                        `❌ No eligible orders found for ${email.substring(0,3)}*** in the last 7 days<br>
+                         <small>Error: ${data.error || 'Unknown error'}</small>`;
+                    return false;
+                }
+                
+            } catch (error) {
+                console.error('Order lookup failed:', error);
+                document.getElementById('orderStatus').innerHTML = 
+                    `⚠️ Unable to lookup orders: ${error.message}<br>
+                     <small>Check browser console for details</small>`;
+                return false;
+            }
+        }
+
+        function showOrderFound(order) {
+            const customerName = order.customer_firstname ? `, ${order.customer_firstname}` : '';
+            
+            // Fix date parsing
+            let formattedDate = 'Recently';
+            try {
+                if (order.created_at) {
+                    const date = new Date(order.created_at);
+                    if (!isNaN(date.getTime())) {
+                        formattedDate = date.toLocaleDateString('en-IN', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+                    }
+                }
+            } catch (error) {
+                console.log('Date parsing error:', error);
+            }
+            
+            document.getElementById('orderStatus').innerHTML = 
+                `✅ Welcome back${customerName}!<br>
+                 Order #${order.increment_id} - ₹${order.grand_total}<br>
+                 <small>Placed on ${formattedDate}</small>`;
+            
+            document.getElementById('orderDisplay').textContent = `#${order.increment_id}`;
+            document.getElementById('statusDisplay').textContent = 'READY';
+            
+            document.getElementById('emailPrompt').classList.add('hidden');
+            
+            playSound(800, 'sine', 0.3, 0.05);
         }
 
         function enableGame() {
             document.getElementById('spinButton').disabled = false;
             
-            // Auto-play after 3 seconds if user doesn't interact
             setTimeout(() => {
                 if (!isSpinning && !userSession.hasPlayed) {
-                    showAutoPlayPrompt();
+                    showAutoPlayNotification();
                 }
-            }, 3000);
+            }, 2000);
         }
 
-        function showAutoPlayPrompt() {
-            if (confirm('🎰 Ready to spin? Click OK to auto-play or Cancel to spin manually!')) {
-                spin();
-            }
+        function showAutoPlayNotification() {
+            const notification = document.createElement('div');
+            notification.className = 'auto-play-notification';
+            notification.innerHTML = `
+                🎰 Ready to spin! Click SPIN or wait 3 seconds for auto-play
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    document.body.removeChild(notification);
+                }
+            }, 4000);
+            
+            setTimeout(() => {
+                if (!isSpinning && !userSession.hasPlayed) {
+                    spin();
+                }
+            }, 3000);
         }
 
         function createStars() {
@@ -635,6 +803,7 @@
             
             const spinButton = document.getElementById('spinButton');
             spinButton.disabled = true;
+            spinButton.classList.add('spinning');
             document.getElementById('statusDisplay').textContent = 'SPINNING';
             document.getElementById('resultDisplay').innerHTML = '';
             
@@ -643,7 +812,6 @@
             const spinDuration = 3000;
             const finalSymbols = [];
             
-            // Spin each reel
             for (let i = 1; i <= 3; i++) {
                 const reel = document.getElementById(`reelContent${i}`);
                 const finalSymbol = determineResult();
@@ -669,6 +837,7 @@
                             checkResult(finalSymbols);
                             isSpinning = false;
                             spinButton.disabled = false;
+                            spinButton.classList.remove('spinning');
                             document.getElementById('statusDisplay').textContent = 'COMPLETE';
                         }, 500);
                     }
@@ -716,17 +885,18 @@
             playWinSound();
             createWinParticles();
             
-            // Save win
             await saveWinResult({
                 orderId: userSession.orderId,
                 customerEmail: userSession.email,
                 customerName: userSession.customerName,
+                customerId: userSession.customerId,
                 prize: symbol.prize,
                 prizeCode,
                 symbol: symbol.name,
                 timestamp: new Date().toISOString(),
                 sessionId: userSession.sessionId,
-                orderAmount: userSession.orderAmount
+                orderAmount: userSession.orderAmount,
+                detectionMethod: userSession.detectionMethod
             });
         }
 
@@ -801,7 +971,7 @@
             }
         }
 
-        // Initialize on page load
+        // Initialize game
         document.addEventListener('DOMContentLoaded', function() {
             createStars();
             initializeReels();
