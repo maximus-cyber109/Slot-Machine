@@ -2,13 +2,35 @@
   functions = "functions"
   publish = "."
 
-[build.environment]
-  NODE_VERSION = "18"
-
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
   status = 200
+
+[[redirects]]
+  from = "/arcade"
+  to = "/main.html"
+  status = 301
+
+[[redirects]]
+  from = "/play"
+  to = "/main.html"
+  status = 301
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/main.html"
+  [headers.values]
+    Cache-Control = "public, max-age=300"
 
 [[headers]]
   for = "/.netlify/functions/*"
