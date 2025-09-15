@@ -65,7 +65,7 @@ exports.handler = async (event, context) => {
             ip: event.headers['x-forwarded-for'] || event.headers['client-ip'] || 'unknown',
             country: event.headers['cf-ipcountry'] || 'unknown',
             userAgent: event.headers['user-agent'] || 'unknown',
-            source: 'magento_auto_detection'
+            source: 'magento_auto_detection_v2'
         };
 
         wins.push(enhancedWinData);
@@ -82,13 +82,10 @@ exports.handler = async (event, context) => {
             owner,
             repo,
             path,
-            message: `Auto Win: ${enhancedWinData.prize} - ${enhancedWinData.customerName || 'Customer'} - ${enhancedWinData.detectionMethod}`,
+            message: `Enhanced Win: ${enhancedWinData.prize} - ${enhancedWinData.customerName || 'Customer'} - ${enhancedWinData.detectionMethod}`,
             content,
             sha: sha || undefined
         });
-
-        // Update Google Sheets if configured
-        await updateGoogleSheets(enhancedWinData);
 
         return {
             statusCode: 200,
@@ -96,7 +93,7 @@ exports.handler = async (event, context) => {
             body: JSON.stringify({
                 success: true,
                 winId: enhancedWinData.id,
-                message: 'Win saved successfully'
+                message: 'Win saved successfully with detection info'
             })
         };
 
@@ -112,31 +109,3 @@ exports.handler = async (event, context) => {
         };
     }
 };
-
-async function updateGoogleSheets(winData) {
-    const SHEET_URL = process.env.GOOGLE_SHEETS_WEBHOOK;
-    
-    if (!SHEET_URL) return;
-
-    try {
-        await fetch(SHEET_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                timestamp: winData.timestamp,
-                orderId: winData.orderId,
-                customerName: winData.customerName,
-                email: winData.customerEmail,
-                prize: winData.prize,
-                code: winData.prizeCode,
-                symbol: winData.symbol,
-                detectionMethod: winData.detectionMethod,
-                orderAmount: winData.orderAmount,
-                ip: winData.ip,
-                country: winData.country
-            })
-        });
-    } catch (error) {
-        console.error('Google Sheets update failed:', error);
-    }
-}
