@@ -1,15 +1,13 @@
 {
-  "name": "pb-days-arcade-enhanced",
-  "version": "3.0.0",
-  "description": "Enhanced auto-detecting slot machine with comprehensive Magento integration",
+  "name": "pb-days-arcade-complete",
+  "version": "4.0.0",
+  "description": "Complete auto-detecting slot machine with Magento iframe integration",
   "main": "main.html",
   "scripts": {
-    "build": "echo 'Static site - no build required'",
+    "build": "echo 'Static site ready'",
     "dev": "netlify dev",
-    "deploy": "netlify deploy --prod",
-    "test": "echo 'Testing slot machine functions'"
+    "deploy": "netlify deploy --prod"
   },
-  "keywords": ["slot-machine", "arcade", "magento", "auto-detection", "pinkblue", "enhanced"],
   "dependencies": {
     "@octokit/rest": "^20.0.2"
   },
@@ -18,9 +16,5 @@
   },
   "engines": {
     "node": ">=18.0.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/maximus-cyber109/Slot-Machine.git"
   }
 }
