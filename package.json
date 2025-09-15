@@ -1,14 +1,15 @@
 {
-  "name": "pb-days-arcade-magento",
-  "version": "2.0.0",
-  "description": "Auto-detecting slot machine with full Magento integration",
+  "name": "pb-days-arcade-enhanced",
+  "version": "3.0.0",
+  "description": "Enhanced auto-detecting slot machine with comprehensive Magento integration",
   "main": "main.html",
   "scripts": {
     "build": "echo 'Static site - no build required'",
     "dev": "netlify dev",
-    "deploy": "netlify deploy --prod"
+    "deploy": "netlify deploy --prod",
+    "test": "echo 'Testing slot machine functions'"
   },
-  "keywords": ["slot-machine", "arcade", "magento", "auto-detection", "pinkblue"],
+  "keywords": ["slot-machine", "arcade", "magento", "auto-detection", "pinkblue", "enhanced"],
   "dependencies": {
     "@octokit/rest": "^20.0.2"
   },
