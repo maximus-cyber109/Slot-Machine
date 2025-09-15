@@ -7,10 +7,19 @@
   to = "/.netlify/functions/:splat"
   status = 200
 
+[[redirects]]
+  from = "/arcade"
+  to = "/main.html"
+  status = 301
+
+[[redirects]]
+  from = "/play"
+  to = "/main.html"
+  status = 301
+
 [build.environment]
   NODE_VERSION = "18"
 
-# Allow iframe embedding
 [[headers]]
   for = "/*"
   [headers.values]
