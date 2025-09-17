@@ -63,7 +63,7 @@ exports.handler = async (event, context) => {
             timestamp: new Date().toISOString()
         });
 
-        // Send WebEngage event to trigger email
+        // Send WebEngage event to trigger email campaign
         await sendWebEngageEvent(email, selectedPrize, prizeCode, orderData);
 
         return {
@@ -168,7 +168,7 @@ async function logAllocationToSheets(allocationData) {
             sessionId: allocationData.sessionId
         };
 
-        const response = await fetch(process.env.GOOGLE_SHEETS_WEBHOOK, {
+        await fetch(process.env.GOOGLE_SHEETS_WEBHOOK, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -266,10 +266,13 @@ function generatePrizeCode(sku) {
     return `PB${sku.substring(0, 6)}_${timestamp}_${random}`;
 }
 
-// Send event to WebEngage to trigger email
+// Send event to WebEngage to trigger email campaign
 async function sendWebEngageEvent(email, prize, prizeCode, orderData) {
     try {
         console.log('📧 Sending WebEngage event for:', email);
+        
+        // WebEngage REST API endpoint for events
+        const webengageUrl = `https://api.webengage.com/v1/accounts/${process.env.WEBENGAGE_LICENSE_CODE}/events`;
         
         const eventData = {
             userId: email,
@@ -287,7 +290,7 @@ async function sendWebEngageEvent(email, prize, prizeCode, orderData) {
             }
         };
 
-        const response = await fetch(`https://api.webengage.com/v1/accounts/${process.env.WEBENGAGE_LICENSE_CODE}/events`, {
+        const response = await fetch(webengageUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
