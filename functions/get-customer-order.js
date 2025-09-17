@@ -1,13 +1,16 @@
 exports.handler = async (event, context) => {
-    console.log('🎰 Enhanced function called with method:', event.httpMethod);
+    console.log('🎰 Enhanced function with date validation');
+    
     const headers = {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': 'Content-Type',
         'Access-Control-Allow-Methods': 'POST, OPTIONS'
     };
+    
     if (event.httpMethod === 'OPTIONS') {
         return { statusCode: 200, headers, body: '' };
     }
+    
     if (event.httpMethod !== 'POST') {
         return {
             statusCode: 405,
@@ -18,10 +21,9 @@ exports.handler = async (event, context) => {
             })
         };
     }
+    
     try {
         const { email, sessionId, detectionMethod, source } = JSON.parse(event.body || '{}');
-        console.log('🔍 Processing email:', email);
-        console.log('🎯 Detection method:', detectionMethod);
         
         if (!email) {
             return {
@@ -33,61 +35,49 @@ exports.handler = async (event, context) => {
                 })
             };
         }
-
-        // ✅ SECURE: Get credentials from environment variables
-        const MAGENTO_API_TOKEN = process.env.MAGENTO_API_TOKEN;
-        const MAGENTO_BASE_URL = process.env.MAGENTO_BASE_URL || 'https://pinkblue.in/rest/V1';
-
-        if (!MAGENTO_API_TOKEN) {
-            console.error('❌ MAGENTO_API_TOKEN environment variable not set');
-            return {
-                statusCode: 500,
-                headers,
-                body: JSON.stringify({
-                    success: false,
-                    error: 'Server configuration error'
-                })
-            };
-        }
-
-        // TEST EMAIL - Always works for your testing
-        if (email.toLowerCase() === 'syed.ahmed@theraoralcare.com') {
-            console.log('✅ Test email detected, returning mock order');
+        
+        // ✅ Check for override codes only (not regular emails)
+        const normalizedEmail = email.toLowerCase().trim();
+        if (normalizedEmail.includes('test_override_maaz') || normalizedEmail.includes('test_override_valli')) {
+            console.log('✅ Override code detected, returning mock order');
             const mockOrderData = {
                 entity_id: '789123',
-                increment_id: 'PB000789',
-                grand_total: '2450.00',
+                increment_id: 'TEST_ORDER_' + Date.now(),
+                grand_total: '15000.00',
                 status: 'complete',
                 created_at: new Date().toISOString(),
-                customer_email: email,
-                customer_firstname: 'Syed',
-                customer_lastname: 'Ahmed',
+                customer_email: normalizedEmail.replace(/[_-]?test_override_(maaz|valli)/g, ''),
+                customer_firstname: 'Test',
+                customer_lastname: 'User',
                 order_currency_code: 'INR'
             };
+            
             return {
                 statusCode: 200,
                 headers,
                 body: JSON.stringify({
                     success: true,
-                    orderData: mockOrderData, // ✅ FIXED: Changed from 'order' to 'orderData'
-                    message: `Auto-detected via ${detectionMethod || 'unknown method'}!`,
-                    detectionMethod: detectionMethod
+                    orderData: mockOrderData,
+                    message: `Override detected - unlimited access`,
+                    detectionMethod: 'override'
                 })
             };
         }
-
-        // Real Magento API call with secure credentials
-        console.log('🛒 Calling Magento API for email:', email);
         
-        const weekAgo = new Date();
-        weekAgo.setDate(weekAgo.getDate() - 7);
+        const API_TOKEN = process.env.MAGENTO_API_TOKEN ||
+        const BASE_URL = process.env.MAGENTO_BASE_URL || 
+       
+        // ✅ ENHANCED: Look for orders from today or max 2 days ago
+        const maxDaysAgo = new Date();
+        maxDaysAgo.setDate(maxDaysAgo.getDate() - 2);
+        maxDaysAgo.setHours(0, 0, 0, 0); // Start of day
         
-        const searchUrl = `${MAGENTO_BASE_URL}/orders?` +
+        const searchUrl = `${BASE_URL}/orders?` +
             `searchCriteria[filterGroups][0][filters][0][field]=customer_email&` +
             `searchCriteria[filterGroups][0][filters][0][value]=${encodeURIComponent(email)}&` +
             `searchCriteria[filterGroups][0][filters][0][conditionType]=eq&` +
             `searchCriteria[filterGroups][1][filters][0][field]=created_at&` +
-            `searchCriteria[filterGroups][1][filters][0][value]=${weekAgo.toISOString()}&` +
+            `searchCriteria[filterGroups][1][filters][0][value]=${maxDaysAgo.toISOString()}&` +
             `searchCriteria[filterGroups][1][filters][0][conditionType]=from&` +
             `searchCriteria[filterGroups][2][filters][0][field]=status&` +
             `searchCriteria[filterGroups][2][filters][0][value]=complete,processing,pending&` +
@@ -95,19 +85,17 @@ exports.handler = async (event, context) => {
             `searchCriteria[sortOrders][0][field]=created_at&` +
             `searchCriteria[sortOrders][0][direction]=DESC&` +
             `searchCriteria[pageSize]=1`;
-
+        
         const response = await fetch(searchUrl, {
             headers: {
-                'Authorization': `Bearer ${MAGENTO_API_TOKEN}`, // ✅ SECURE: Using environment variable
+                'Authorization': `Bearer ${API_TOKEN}`,
                 'Content-Type': 'application/json'
             }
         });
-
+        
         const orderData = await response.json();
-        console.log('📊 Magento API response status:', response.status);
         
         if (!response.ok) {
-            console.error('❌ Magento API error:', response.status, response.statusText);
             return {
                 statusCode: 200,
                 headers,
@@ -118,10 +106,25 @@ exports.handler = async (event, context) => {
                 })
             };
         }
-
+        
         if (orderData.items && orderData.items.length > 0) {
             const recentOrder = orderData.items[0];
-            console.log('✅ Order found:', recentOrder.increment_id);
+            
+            // ✅ Check order date
+            const orderDate = new Date(recentOrder.created_at);
+            const currentDate = new Date();
+            const dayDifference = Math.ceil((currentDate.getTime() - orderDate.getTime()) / (1000 * 3600 * 24));
+            
+            if (dayDifference > 2) {
+                return {
+                    statusCode: 200,
+                    headers,
+                    body: JSON.stringify({
+                        success: false,
+                        error: `Orders older than 2 days are not eligible. Your most recent order is ${dayDifference} days old. Please place a new order to participate.`
+                    })
+                };
+            }
             
             if (parseFloat(recentOrder.grand_total) >= 500) {
                 return {
@@ -129,7 +132,7 @@ exports.handler = async (event, context) => {
                     headers,
                     body: JSON.stringify({
                         success: true,
-                        orderData: { // ✅ FIXED: Changed from 'order' to 'orderData'
+                        orderData: {
                             entity_id: recentOrder.entity_id,
                             increment_id: recentOrder.increment_id,
                             grand_total: recentOrder.grand_total,
@@ -141,7 +144,7 @@ exports.handler = async (event, context) => {
                             order_currency_code: recentOrder.order_currency_code
                         },
                         detectionMethod: detectionMethod,
-                        message: `Order found via ${detectionMethod || 'API lookup'}`
+                        message: `Valid order found (${dayDifference} day${dayDifference === 1 ? '' : 's'} old)`
                     })
                 };
             } else {
@@ -160,7 +163,7 @@ exports.handler = async (event, context) => {
                 headers,
                 body: JSON.stringify({
                     success: false,
-                    error: 'No eligible orders found in the last 7 days'
+                    error: 'No eligible orders found in the last 2 days. Please place a new order to participate.'
                 })
             };
         }
