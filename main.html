@@ -56,7 +56,7 @@
             100% { opacity: 1; }
         }
 
-        /* ✅ ENHANCED EMAIL POPUP with retry functionality */
+        /* ✅ FIXED EMAIL POPUP with proper retry functionality */
         .email-popup {
             position: fixed;
             top: 0;
@@ -147,16 +147,26 @@
             color: white !important;
         }
 
-        .email-popup button:hover {
+        .email-popup button:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(139, 69, 19, 0.6);
         }
 
+        .email-popup button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
         .retry-info {
-            font-size: 8px;
-            color: #999;
-            margin-top: 10px;
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            font-size: 9px;
+            line-height: 1.4;
             font-family: 'Exo 2', sans-serif;
+            border: 2px solid rgba(255,255,255,0.2);
         }
 
         /* Custom Modal for messages */
@@ -702,7 +712,7 @@
 <body>
     <div class="arcade-background"></div>
     
-    <!-- ✅ ENHANCED EMAIL POPUP with retry functionality -->
+    <!-- ✅ FIXED EMAIL POPUP with proper retry functionality -->
     <div class="email-popup" id="emailPopup">
         <div class="email-popup-content">
             <h2>🎰 Welcome to PB DAYS ARCADE! 🎉</h2>
@@ -783,7 +793,7 @@
         let retryCount = 0;
         const MAX_RETRIES = 2;
 
-        // ✅ ENHANCED: Email popup with retry functionality
+        // ✅ FIXED: Enhanced email popup with proper retry functionality
         async function submitEmailAndStart() {
             const emailInput = document.getElementById('popupEmailInput');
             const email = emailInput.value.trim();
@@ -798,44 +808,103 @@
                 userEmail = email;
                 localStorage.setItem('arcadeEmail', email);
                 
+                // ✅ Show loading state
+                const startButton = document.querySelector('.email-popup button:not(.retry-button)');
+                const originalText = startButton.textContent;
+                startButton.textContent = 'CHECKING...';
+                startButton.disabled = true;
+                
                 // Check for valid orders
                 const customerData = await fetchCustomerData(email);
+                
+                // ✅ Reset button state
+                startButton.textContent = originalText;
+                startButton.disabled = false;
                 
                 if (customerData && customerData.orderData) {
                     // Success - hide popup and start game
                     document.getElementById('emailPopup').classList.add('hidden');
                     initializeGameForUser(email);
+                    resetRetryState(); // Reset retry count on success
                 } else {
-                    // Show retry option
-                    showRetryOption();
+                    // ✅ FIXED: Show proper message for no orders found
+                    showRetryOption('No eligible orders found from the last 2 days. Please try again or place a new order.');
                 }
             } catch (error) {
                 console.error('Email submission error:', error);
-                showRetryOption();
+                // ✅ Reset button state on error
+                const startButton = document.querySelector('.email-popup button:not(.retry-button)');
+                startButton.textContent = '🎮 START PLAYING';
+                startButton.disabled = false;
+                showRetryOption('Unable to check orders. Please try again.');
             }
         }
 
-        function showRetryOption() {
+        // ✅ FIXED: Proper retry option handling
+        function showRetryOption(message) {
             if (retryCount < MAX_RETRIES) {
                 document.getElementById('retryButton').style.display = 'block';
                 document.getElementById('retryInfo').style.display = 'block';
-                document.getElementById('retryInfo').textContent = `Retries remaining: ${MAX_RETRIES - retryCount}`;
+                document.getElementById('retryInfo').innerHTML = `
+                    <div style="color: #ff6b35; font-weight: bold; margin-bottom: 8px;">
+                        ${message}
+                    </div>
+                    <div style="color: #666;">
+                        Retries remaining: ${MAX_RETRIES - retryCount}
+                    </div>
+                `;
             } else {
-                document.getElementById('retryInfo').textContent = `You've used all retries. Please contact support@pinkblue.in for assistance.`;
+                // ✅ FIXED: Show support message when all retries are exhausted
                 document.getElementById('retryButton').style.display = 'none';
+                document.getElementById('retryInfo').style.display = 'block';
+                document.getElementById('retryInfo').innerHTML = `
+                    <div style="color: #ff6b35; font-weight: bold; margin-bottom: 10px;">
+                        You've used all retries.
+                    </div>
+                    <div style="color: #666; font-size: 9px;">
+                        Please contact <strong>support@pinkblue.in</strong> for assistance or place a new order.
+                    </div>
+                `;
+                
+                // ✅ Also show a modal for better visibility
+                setTimeout(() => {
+                    showCustomModal('You have used all retry attempts. Please contact support@pinkblue.in for assistance or place a new order to participate.');
+                }, 1000);
             }
         }
 
+        // ✅ FIXED: Retry email function
         function retryEmail() {
             retryCount++;
+            console.log('🔄 Retry attempt:', retryCount);
+            
             if (retryCount <= MAX_RETRIES) {
+                // Clear input and reset UI
                 document.getElementById('popupEmailInput').value = '';
                 document.getElementById('popupEmailInput').focus();
                 document.getElementById('retryButton').style.display = 'none';
                 document.getElementById('retryInfo').style.display = 'none';
+                
+                // Reset button states
+                const startButton = document.querySelector('.email-popup button:not(.retry-button)');
+                startButton.textContent = '🎮 START PLAYING';
+                startButton.disabled = false;
+                
+                console.log('✅ Retry UI reset, remaining attempts:', MAX_RETRIES - retryCount);
+            } else {
+                // ✅ No more retries available
+                showRetryOption('No more retries available.');
             }
         }
 
+        // ✅ NEW: Reset retry state on successful login
+        function resetRetryState() {
+            retryCount = 0;
+            document.getElementById('retryButton').style.display = 'none';
+            document.getElementById('retryInfo').style.display = 'none';
+        }
+
+        // ✅ ENHANCED: Initialize game with better error handling
         async function initializeGameForUser(email) {
             try {
                 const isOverrideUser = checkIfOverrideUser(email);
@@ -1129,7 +1198,7 @@
             return { canSpin: true, reason: 'Valid order found' };
         }
 
-        // Fetch customer order data
+        // ✅ ENHANCED: Better error handling in fetchCustomerData
         async function fetchCustomerData(email) {
             try {
                 console.log('Fetching customer data for:', email);
@@ -1156,7 +1225,8 @@
                         email: email
                     };
                 } else {
-                    console.error('Customer data not successful:', data);
+                    // ✅ Log the specific error message from the API
+                    console.error('Customer data not successful:', data.error);
                     return null;
                 }
             } catch (error) {
