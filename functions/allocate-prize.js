@@ -222,18 +222,68 @@ function generatePrizeCode(sku) {
     return `PB${sku.substring(0, 6)}_${timestamp}_${random}`;
 }
 
-// Send WebEngage event for real prize winners
+// Fixed WebEngage event sender - removes eventTime to avoid date format issues
 async function sendWebEngageEvent(email, prize, prizeCode, orderData) {
     try {
         console.log('📧 Sending WebEngage event for:', email);
         
-        // Fix date format for WebEngage compatibility
-        const eventTime = new Date().toISOString().split('.')[0] + 'Z';
-        
         const eventData = {
             userId: email,
             eventName: 'prize_won',
-            eventTime: eventTime,
+            // Removed eventTime completely - WebEngage will use server time
+            eventData: {
+                prize_name: prize.name,
+                prize_value: prize.value.toString(),
+                prize_code: prizeCode,
+                prize_sku: prize.sku,
+                customer_name: orderData?.customer_firstname || 'Valued Customer',
+                customer_email: email,
+                order_number: orderData?.increment_id || 'N/A',
+                order_value: orderData?.grand_total?.toString() || 'N/A',
+                support_email: 'support@pinkblue.in',
+                event_timestamp: Date.now(), // Use timestamp in eventData instead
+                campaign_source: 'pb_days_arcade'
+            }
+        };
+
+        console.log('📤 Sending WebEngage event without eventTime field');
+
+        const response = await fetch('https://api.webengage.com/v1/accounts/82618240/events', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer 997ecae4-4632-4cb0-a65d-8427472e8f31'
+            },
+            body: JSON.stringify(eventData)
+        });
+
+        const responseText = await response.text();
+
+        if (response.ok) {
+            console.log('✅ WebEngage event sent successfully');
+            console.log('📋 Response:', responseText);
+        } else {
+            console.error('❌ WebEngage API error:', response.status, responseText);
+            
+            // If it still fails, try with Unix timestamp
+            if (responseText.includes('Invalid date format') || responseText.includes('date')) {
+                console.log('🔄 Trying with Unix timestamp...');
+                await sendWebEngageEventWithTimestamp(email, prize, prizeCode, orderData);
+            }
+        }
+    } catch (error) {
+        console.error('❌ WebEngage event error:', error);
+        // Don't throw error - this is non-critical for prize allocation
+    }
+}
+
+// Alternative WebEngage sender with Unix timestamp
+async function sendWebEngageEventWithTimestamp(email, prize, prizeCode, orderData) {
+    try {
+        const eventData = {
+            userId: email,
+            eventName: 'prize_won',
+            eventTime: Math.floor(Date.now() / 1000), // Unix timestamp in seconds
             eventData: {
                 prize_name: prize.name,
                 prize_value: prize.value.toString(),
@@ -247,6 +297,8 @@ async function sendWebEngageEvent(email, prize, prizeCode, orderData) {
             }
         };
 
+        console.log('📤 Trying Unix timestamp:', eventData.eventTime);
+
         const response = await fetch('https://api.webengage.com/v1/accounts/82618240/events', {
             method: 'POST',
             headers: {
@@ -257,13 +309,12 @@ async function sendWebEngageEvent(email, prize, prizeCode, orderData) {
         });
 
         if (response.ok) {
-            console.log('✅ WebEngage event sent successfully');
+            console.log('✅ WebEngage event sent with Unix timestamp');
         } else {
             const errorText = await response.text();
-            console.error('❌ WebEngage API error:', response.status, errorText);
+            console.error('❌ Unix timestamp also failed:', response.status, errorText);
         }
     } catch (error) {
-        console.error('❌ WebEngage event error:', error);
-        throw error;
+        console.error('❌ Alternative WebEngage attempt failed:', error);
     }
 }
