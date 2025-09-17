@@ -101,6 +101,11 @@
             background: transparent;
         }
 
+        /* FIRST REEL - MOVED SLIGHTLY LEFT */
+        .reel-window:first-child {
+            transform: translateX(-8px);
+        }
+
         .reel-strip {
             position: absolute;
             top: 0;
@@ -344,6 +349,10 @@
             .reel-window {
                 width: 50px;
                 height: 65px;
+            }
+            
+            .reel-window:first-child {
+                transform: translateX(-6px);
             }
             
             .symbol {
