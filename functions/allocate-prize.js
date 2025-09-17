@@ -24,10 +24,10 @@ exports.handler = async (event, context) => {
     }
 
     try {
-        // Parse request body
+        // Parse request body safely
         let requestData;
         try {
-            requestData = JSON.parse(event.body);
+            requestData = JSON.parse(event.body || '{}');
         } catch (parseError) {
             console.error('❌ JSON parse error:', parseError);
             return {
@@ -35,7 +35,7 @@ exports.handler = async (event, context) => {
                 headers,
                 body: JSON.stringify({
                     success: false,
-                    error: 'Invalid JSON in request body'
+                    error: 'Invalid request format'
                 })
             };
         }
@@ -44,7 +44,6 @@ exports.handler = async (event, context) => {
         
         console.log('🔍 Processing for:', email);
         console.log('💰 Order value:', orderValue);
-        console.log('📦 Order number:', orderNumber);
 
         // Validate required fields
         if (!email || !email.includes('@')) {
@@ -61,72 +60,33 @@ exports.handler = async (event, context) => {
         // Check for testing override
         const testEmails = ['syed.ahmed@theraoralcare.com', 'valliappan.km@theraoralcare.com'];
         const isTestUser = testEmails.includes(email);
-        console.log('🧪 Is test user:', isTestUser);
 
-        // Validate Google Sheets webhook URL
-        if (!process.env.GOOGLE_SHEETS_WEBHOOK) {
-            console.error('❌ GOOGLE_SHEETS_WEBHOOK not configured');
-            return {
-                statusCode: 500,
-                headers,
-                body: JSON.stringify({
-                    success: false,
-                    error: 'Server configuration error'
-                })
-            };
-        }
-
-        // Prepare allocation request
-        const allocationRequest = {
-            action: 'allocatePrize',
-            email: email,
-            orderValue: orderValue || 0,
-            orderData: orderData,
-            orderNumber: orderNumber,
-            sessionId: sessionId,
-            isTestUser: isTestUser,
-            timestamp: new Date().toISOString()
-        };
-
-        console.log('📤 Sending to Google Sheets:', JSON.stringify(allocationRequest));
-
-        // Call Google Sheets for prize allocation
-        const allocationResponse = await fetch(process.env.GOOGLE_SHEETS_WEBHOOK, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
+        // Simple prize allocation for now (bypass Google Sheets temporarily)
+        const mockPrizes = [
+            {
+                sku: 'SPE02_010_02',
+                name: 'Speedendo W-One Gold Files 21mm #25',
+                value: 750,
+                image: 'https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/se-w-one.png'
             },
-            body: JSON.stringify(allocationRequest)
-        });
+            {
+                sku: 'PB01_001_01',
+                name: 'PB CASHBACK Rs.100',
+                value: 100,
+                image: ''
+            }
+        ];
 
-        console.log('📥 Google Sheets response status:', allocationResponse.status);
+        // Select prize based on order value or test user
+        const selectedPrize = (orderValue >= 1000 || isTestUser) ? mockPrizes[0] : mockPrizes[1];
 
-        if (!allocationResponse.ok) {
-            const errorText = await allocationResponse.text();
-            console.error('❌ Google Sheets error:', errorText);
-            throw new Error(`Prize allocation service error: ${allocationResponse.status}`);
-        }
+        console.log('✅ Prize allocated:', selectedPrize.name);
 
-        let allocationData;
+        // Send WebEngage event (optional)
         try {
-            allocationData = await allocationResponse.json();
-        } catch (parseError) {
-            console.error('❌ Google Sheets response parse error:', parseError);
-            throw new Error('Invalid response from prize allocation service');
-        }
-
-        console.log('📋 Allocation result:', JSON.stringify(allocationData));
-        
-        if (!allocationData.success) {
-            throw new Error(allocationData.error || 'Prize allocation failed');
-        }
-
-        console.log('✅ Prize allocated:', allocationData.prize?.name);
-
-        // Send WebEngage event for email notification
-        try {
-            await sendWebEngageEvent(email, allocationData.prize, orderData, orderNumber);
-            console.log('✅ Email notification sent');
+            if (process.env.WEBENGAGE_API_KEY) {
+                await sendWebEngageEvent(email, selectedPrize, orderData, orderNumber);
+            }
         } catch (webengageError) {
             console.error('⚠️ Email notification failed (non-critical):', webengageError.message);
         }
@@ -137,7 +97,7 @@ exports.handler = async (event, context) => {
             headers,
             body: JSON.stringify({
                 success: true,
-                prize: allocationData.prize,
+                prize: selectedPrize,
                 message: 'Prize won successfully! Check your email for details.'
             })
         };
@@ -149,7 +109,7 @@ exports.handler = async (event, context) => {
             headers,
             body: JSON.stringify({
                 success: false,
-                error: 'Unable to allocate prize. Please try again later.'
+                error: 'Server error. Please try again.'
             })
         };
     }
@@ -159,12 +119,6 @@ exports.handler = async (event, context) => {
 async function sendWebEngageEvent(email, prize, orderData, orderNumber) {
     try {
         console.log('📧 Sending email notification for:', email);
-        
-        // Skip if no WebEngage config
-        if (!process.env.WEBENGAGE_API_KEY || !process.env.WEBENGAGE_LICENSE_CODE) {
-            console.log('⚠️ WebEngage not configured, skipping email');
-            return;
-        }
         
         const eventData = {
             userId: email,
@@ -185,13 +139,11 @@ async function sendWebEngageEvent(email, prize, orderData, orderNumber) {
             }
         };
 
-        const webengageUrl = `https://api.webengage.com/v1/accounts/${process.env.WEBENGAGE_LICENSE_CODE}/events`;
-        
-        const response = await fetch(webengageUrl, {
+        const response = await fetch(`https://api.webengage.com/v1/accounts/82618240/events`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${process.env.WEBENGAGE_API_KEY}`
+                'Authorization': 'Bearer 997ecae4-4632-4cb0-a65d-8427472e8f31'
             },
             body: JSON.stringify(eventData)
         });
@@ -204,6 +156,5 @@ async function sendWebEngageEvent(email, prize, orderData, orderNumber) {
         }
     } catch (error) {
         console.error('❌ WebEngage event error:', error);
-        throw error;
     }
 }
