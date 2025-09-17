@@ -56,6 +56,45 @@
             100% { opacity: 1; }
         }
 
+        /* Custom Modal instead of alert() */
+        .custom-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .modal-content {
+            background: linear-gradient(145deg, #ffd700 0%, #ffed4e 100%);
+            padding: 30px;
+            border-radius: 15px;
+            border: 4px solid #8b4513;
+            text-align: center;
+            max-width: 400px;
+            color: #8b4513;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            line-height: 1.6;
+        }
+
+        .modal-close {
+            background: #8b4513;
+            color: #ffd700;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            margin-top: 20px;
+            cursor: pointer;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+        }
+
         /* Email Input */
         .email-container {
             position: fixed;
@@ -332,7 +371,7 @@
             left: 50%;
             transform: translate(-50%, -50%) scale(0);
             width: 360px;
-            height: 400px;
+            height: 420px;
             background: linear-gradient(145deg, #ffd700 0%, #ffed4e 20%, #b8860b 100%);
             border-radius: 25px;
             border: 8px solid #8b4513;
@@ -450,7 +489,18 @@
             
             .golden-card {
                 width: 320px;
-                height: 350px;
+                height: 380px;
+            }
+        }
+
+        @keyframes particleExplode {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-200px) rotate(720deg);
+                opacity: 0;
             }
         }
     </style>
@@ -458,10 +508,13 @@
 <body>
     <div class="arcade-background"></div>
     
-    <!-- Audio Element -->
-    <audio id="backgroundMusic" autoplay loop muted>
-        <source src="data:audio/mpeg;base64,..." type="audio/mpeg">
-    </audio>
+    <!-- Custom Modal instead of alert() -->
+    <div class="custom-modal" id="customModal">
+        <div class="modal-content">
+            <div id="modalMessage">Message here</div>
+            <button class="modal-close" onclick="closeCustomModal()">OK</button>
+        </div>
+    </div>
     
     <div class="email-container">
         <input type="email" id="customerEmail" placeholder="Enter your email for prize delivery" required>
@@ -519,13 +572,22 @@
         let spinning = false;
         let availablePrizes = [];
 
+        // Custom Modal System (replaces alert())
+        function showCustomModal(message) {
+            document.getElementById('modalMessage').textContent = message;
+            document.getElementById('customModal').style.display = 'flex';
+        }
+
+        function closeCustomModal() {
+            document.getElementById('customModal').style.display = 'none';
+        }
+
         // Audio System
         class AudioSystem {
             constructor() {
                 this.audioContext = null;
                 this.masterGain = null;
                 this.isMuted = false;
-                this.backgroundMusic = document.getElementById('backgroundMusic');
                 this.init();
             }
 
@@ -543,58 +605,63 @@
             playSpinSound() {
                 if (!this.audioContext || this.isMuted) return;
                 
-                // Create spinning sound
-                const spinOsc = this.audioContext.createOscillator();
-                const spinGain = this.audioContext.createGain();
-                
-                spinOsc.connect(spinGain);
-                spinGain.connect(this.masterGain);
-                
-                spinOsc.frequency.setValueAtTime(200, this.audioContext.currentTime);
-                spinOsc.frequency.exponentialRampToValueAtTime(800, this.audioContext.currentTime + 2);
-                spinOsc.type = 'sawtooth';
-                
-                spinGain.gain.setValueAtTime(0.1, this.audioContext.currentTime);
-                spinGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 2);
-                
-                spinOsc.start();
-                spinOsc.stop(this.audioContext.currentTime + 2);
+                try {
+                    const spinOsc = this.audioContext.createOscillator();
+                    const spinGain = this.audioContext.createGain();
+                    
+                    spinOsc.connect(spinGain);
+                    spinGain.connect(this.masterGain);
+                    
+                    spinOsc.frequency.setValueAtTime(200, this.audioContext.currentTime);
+                    spinOsc.frequency.exponentialRampToValueAtTime(800, this.audioContext.currentTime + 2);
+                    spinOsc.type = 'sawtooth';
+                    
+                    spinGain.gain.setValueAtTime(0.1, this.audioContext.currentTime);
+                    spinGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 2);
+                    
+                    spinOsc.start();
+                    spinOsc.stop(this.audioContext.currentTime + 2);
+                } catch (error) {
+                    console.log('Audio play error:', error);
+                }
             }
 
             playWinSound() {
                 if (!this.audioContext || this.isMuted) return;
                 
-                // Create win celebration sound
-                for (let i = 0; i < 5; i++) {
-                    setTimeout(() => {
-                        const winOsc = this.audioContext.createOscillator();
-                        const winGain = this.audioContext.createGain();
-                        
-                        winOsc.connect(winGain);
-                        winGain.connect(this.masterGain);
-                        
-                        const freq = 400 + (i * 200);
-                        winOsc.frequency.setValueAtTime(freq, this.audioContext.currentTime);
-                        winOsc.type = 'sine';
-                        
-                        winGain.gain.setValueAtTime(0.2, this.audioContext.currentTime);
-                        winGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.5);
-                        
-                        winOsc.start();
-                        winOsc.stop(this.audioContext.currentTime + 0.5);
-                    }, i * 100);
+                try {
+                    for (let i = 0; i < 5; i++) {
+                        setTimeout(() => {
+                            const winOsc = this.audioContext.createOscillator();
+                            const winGain = this.audioContext.createGain();
+                            
+                            winOsc.connect(winGain);
+                            winGain.connect(this.masterGain);
+                            
+                            const freq = 400 + (i * 200);
+                            winOsc.frequency.setValueAtTime(freq, this.audioContext.currentTime);
+                            winOsc.type = 'sine';
+                            
+                            winGain.gain.setValueAtTime(0.2, this.audioContext.currentTime);
+                            winGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.5);
+                            
+                            winOsc.start();
+                            winOsc.stop(this.audioContext.currentTime + 0.5);
+                        }, i * 100);
+                    }
+                } catch (error) {
+                    console.log('Win sound error:', error);
                 }
             }
 
             toggleMute() {
                 this.isMuted = !this.isMuted;
-                if (this.isMuted) {
-                    this.masterGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.2);
-                    this.backgroundMusic.muted = true;
-                } else {
-                    this.masterGain.gain.exponentialRampToValueAtTime(0.4, this.audioContext.currentTime + 0.2);
-                    this.backgroundMusic.muted = false;
-                    this.backgroundMusic.play();
+                if (this.audioContext) {
+                    if (this.isMuted) {
+                        this.masterGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.2);
+                    } else {
+                        this.masterGain.gain.exponentialRampToValueAtTime(0.4, this.audioContext.currentTime + 0.2);
+                    }
                 }
                 return this.isMuted;
             }
@@ -613,6 +680,8 @@
         function initializeReels() {
             for (let i = 1; i <= 3; i++) {
                 const strip = document.getElementById(`reel${i}`);
+                strip.innerHTML = ''; // Clear existing content
+                
                 for (let j = 0; j < 6; j++) {
                     symbols.forEach(symbol => {
                         const symbolDiv = document.createElement('div');
@@ -623,6 +692,9 @@
                         img.src = symbol.image;
                         img.alt = symbol.name;
                         img.loading = 'eager';
+                        img.onerror = function() {
+                            console.log('Image failed to load:', symbol.image);
+                        };
                         
                         symbolDiv.appendChild(img);
                         strip.appendChild(symbolDiv);
@@ -640,59 +712,47 @@
             }
 
             if (!orderData || !orderData.increment_id) {
-                return { canSpin: false, reason: 'No valid order found' };
+                return { canSpin: false, reason: 'No valid order found for this email' };
             }
 
-            // In production, check if this order ID has been used for spinning
             return { canSpin: true, reason: 'Valid order found' };
         }
 
-        // Fetch customer order and prizes
+        // Fetch customer order data
         async function fetchCustomerData(email) {
             try {
+                console.log('Fetching customer data for:', email);
+                
                 const response = await fetch('/.netlify/functions/get-customer-order', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: email })
                 });
 
+                console.log('Response status:', response.status);
+
                 if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Response error:', errorText);
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
                 const data = await response.json();
+                console.log('Customer data response:', data);
+
                 if (data.success) {
                     return {
                         orderData: data.orderData,
                         orderValue: parseFloat(data.orderData?.grand_total || 0),
                         email: email
                     };
+                } else {
+                    console.error('Customer data not successful:', data);
+                    return null;
                 }
-                return null;
             } catch (error) {
                 console.error('Error fetching customer data:', error);
                 return null;
-            }
-        }
-
-        // Fetch available prizes from new sheet structure
-        async function fetchPrizes() {
-            try {
-                const response = await fetch('/.netlify/functions/get-prizes', {
-                    method: 'GET'
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
-                if (data.success) {
-                    availablePrizes = data.prizes;
-                }
-            } catch (error) {
-                console.error('Error fetching prizes:', error);
-                availablePrizes = [];
             }
         }
 
@@ -704,7 +764,7 @@
             const email = emailInput.value.trim();
 
             if (!email || !email.includes('@')) {
-                alert('Please enter a valid email address!');
+                showCustomModal('Please enter a valid email address!');
                 emailInput.focus();
                 return;
             }
@@ -714,60 +774,71 @@
             spinBtn.disabled = true;
             spinBtn.textContent = 'CHECKING...';
 
-            // Fetch customer data and check eligibility
-            const customerData = await fetchCustomerData(email);
-            
-            if (!customerData) {
-                alert('No valid order found for this email. Please check your email or complete a purchase first.');
-                spinning = false;
-                spinBtn.disabled = false;
-                spinBtn.textContent = 'SPIN';
-                return;
-            }
+            try {
+                // Fetch customer data and check eligibility
+                const customerData = await fetchCustomerData(email);
+                
+                if (!customerData) {
+                    showCustomModal('No valid order found for this email. Please check your email or complete a purchase first.');
+                    return;
+                }
 
-            const spinCheck = canUserSpin(email, customerData.orderData);
-            if (!spinCheck.canSpin) {
-                alert(spinCheck.reason);
-                spinning = false;
-                spinBtn.disabled = false;
-                spinBtn.textContent = 'SPIN';
-                return;
-            }
+                const spinCheck = canUserSpin(email, customerData.orderData);
+                if (!spinCheck.canSpin) {
+                    showCustomModal(spinCheck.reason);
+                    return;
+                }
 
-            userSession = customerData;
-            document.getElementById('spinsLeft').textContent = '0';
+                userSession = customerData;
+                document.getElementById('spinsLeft').textContent = '0';
 
-            // Start spinning
-            spinBtn.textContent = 'SPINNING...';
-            audioSystem.playSpinSound();
+                // Start spinning
+                spinBtn.textContent = 'SPINNING...';
+                audioSystem.playSpinSound();
 
-            // Animate reels
-            const results = [];
-            const spinDurations = [1800, 2200, 2600];
+                // Animate reels
+                const results = [];
+                const spinDurations = [1800, 2200, 2600];
 
-            // Start spinning animation
-            for (let i = 1; i <= 3; i++) {
-                document.getElementById(`reel${i}`).classList.add('spinning');
-            }
-
-            // Stop reels one by one
-            spinDurations.forEach((duration, index) => {
-                setTimeout(() => {
-                    const strip = document.getElementById(`reel${index + 1}`);
-                    strip.classList.remove('spinning');
-                    
-                    const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
-                    results.push(randomSymbol);
-                    
-                    const symbolIndex = symbols.findIndex(s => s.name === randomSymbol.name);
-                    const translateDistance = symbolIndex * 75;
-                    strip.style.transform = `translateY(-${translateDistance}px)`;
-
-                    if (results.length === 3) {
-                        setTimeout(() => processPrize(email, customerData), 600);
+                // Start spinning animation
+                for (let i = 1; i <= 3; i++) {
+                    const strip = document.getElementById(`reel${i}`);
+                    if (strip) {
+                        strip.classList.add('spinning');
                     }
-                }, duration);
-            });
+                }
+
+                // Stop reels one by one
+                spinDurations.forEach((duration, index) => {
+                    setTimeout(() => {
+                        const strip = document.getElementById(`reel${index + 1}`);
+                        if (strip) {
+                            strip.classList.remove('spinning');
+                            
+                            const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+                            results.push(randomSymbol);
+                            
+                            const symbolIndex = symbols.findIndex(s => s.name === randomSymbol.name);
+                            const translateDistance = symbolIndex * 75;
+                            strip.style.transform = `translateY(-${translateDistance}px)`;
+
+                            if (results.length === 3) {
+                                setTimeout(() => processPrize(email, customerData), 600);
+                            }
+                        }
+                    }, duration);
+                });
+
+            } catch (error) {
+                console.error('Spin error:', error);
+                showCustomModal('Something went wrong. Please try again.');
+            } finally {
+                spinning = false;
+                spinBtn.disabled = false;
+                if (spinBtn.textContent !== 'COMPLETED') {
+                    spinBtn.textContent = 'SPIN';
+                }
+            }
         }
 
         // Process prize allocation
@@ -776,6 +847,8 @@
             spinBtn.textContent = 'PROCESSING...';
 
             try {
+                console.log('Processing prize for:', email);
+                
                 const response = await fetch('/.netlify/functions/allocate-prize', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -788,21 +861,26 @@
                     })
                 });
 
+                console.log('Allocate-prize response status:', response.status);
+
                 if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Allocate-prize error:', errorText);
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
                 const data = await response.json();
+                console.log('Prize allocation result:', data);
                 
                 if (data.success) {
                     showWinnerCard(data.prize);
                     audioSystem.playWinSound();
                 } else {
-                    alert(data.error || 'Unable to allocate prize. Please try again.');
+                    showCustomModal(data.error || 'Unable to allocate prize. Please try again.');
                 }
             } catch (error) {
                 console.error('Prize allocation error:', error);
-                alert('Something went wrong. Please try again.');
+                showCustomModal('Something went wrong. Please contact support.');
             }
 
             spinning = false;
@@ -819,16 +897,20 @@
             
             titleElement.textContent = `YOU WON: ${prize.name}`;
             
-            if (prize.name.includes('CASHBACK')) {
+            if (prize.name && prize.name.includes('CASHBACK')) {
                 descElement.textContent = 'Your cashback will be credited once your order is delivered!';
                 imageElement.style.display = 'none';
             } else {
                 descElement.textContent = 'This product will be sent once your order is delivered!';
-                imageElement.src = prize.image || '';
-                imageElement.style.display = 'block';
+                if (prize.image) {
+                    imageElement.src = prize.image;
+                    imageElement.style.display = 'block';
+                } else {
+                    imageElement.style.display = 'none';
+                }
             }
             
-            valueElement.textContent = `Value: ₹${prize.value}`;
+            valueElement.textContent = `Value: ₹${prize.value || '0'}`;
             
             card.classList.add('show');
             createWinParticles(30);
@@ -853,9 +935,14 @@
                     particle.style.top = (window.innerHeight - 100) + 'px';
                     particle.style.pointerEvents = 'none';
                     particle.style.animation = 'particleExplode 1.5s ease-out forwards';
+                    particle.style.zIndex = '999';
                     
                     document.body.appendChild(particle);
-                    setTimeout(() => particle.remove(), 1500);
+                    setTimeout(() => {
+                        if (particle.parentNode) {
+                            particle.parentNode.removeChild(particle);
+                        }
+                    }, 1500);
                 }, i * 20);
             }
         }
@@ -865,34 +952,51 @@
             const button = document.getElementById('audioControl');
             const isMuted = audioSystem.toggleMute();
             button.textContent = isMuted ? '🔇' : '🔊';
-            button.classList.toggle('muted', isMuted);
         }
 
         // Email input handler
         async function handleEmailInput() {
             const email = document.getElementById('customerEmail').value.trim();
             if (email && email.includes('@')) {
-                // Fetch customer data when email is entered
-                const customerData = await fetchCustomerData(email);
-                if (customerData) {
-                    document.getElementById('spinsLeft').textContent = '1';
-                } else {
+                try {
+                    // Fetch customer data when email is entered
+                    const customerData = await fetchCustomerData(email);
+                    if (customerData) {
+                        document.getElementById('spinsLeft').textContent = '1';
+                    } else {
+                        document.getElementById('spinsLeft').textContent = '0';
+                    }
+                } catch (error) {
+                    console.error('Email input handler error:', error);
                     document.getElementById('spinsLeft').textContent = '0';
                 }
+            } else {
+                document.getElementById('spinsLeft').textContent = '0';
             }
         }
 
         // Event listeners
-        document.getElementById('spinBtn').addEventListener('click', spin);
-        document.getElementById('closeCard').addEventListener('click', closeWinnerCard);
-        document.getElementById('audioControl').addEventListener('click', toggleAudio);
-        document.getElementById('customerEmail').addEventListener('input', handleEmailInput);
-
-        // Initialize everything
         document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM Content Loaded - Initializing...');
+            
+            // Initialize components
             initializeReels();
-            fetchPrizes();
-            document.getElementById('customerEmail').focus();
+            
+            // Add event listeners
+            const spinBtn = document.getElementById('spinBtn');
+            const closeCard = document.getElementById('closeCard');
+            const audioControl = document.getElementById('audioControl');
+            const emailInput = document.getElementById('customerEmail');
+
+            if (spinBtn) spinBtn.addEventListener('click', spin);
+            if (closeCard) closeCard.addEventListener('click', closeWinnerCard);
+            if (audioControl) audioControl.addEventListener('click', toggleAudio);
+            if (emailInput) {
+                emailInput.addEventListener('input', handleEmailInput);
+                emailInput.focus();
+            }
+
+            console.log('Initialization complete');
         });
 
         // Enable audio on first interaction
@@ -902,21 +1006,14 @@
             }
         }, { once: true });
 
-        // Add particle animation CSS
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes particleExplode {
-                0% {
-                    transform: translateY(0) rotate(0deg);
-                    opacity: 1;
-                }
-                100% {
-                    transform: translateY(-200px) rotate(720deg);
-                    opacity: 0;
-                }
-            }
-        `;
-        document.head.appendChild(style);
+        // Add global error handler
+        window.addEventListener('error', (event) => {
+            console.error('Global error:', event.error);
+        });
+
+        window.addEventListener('unhandledrejection', (event) => {
+            console.error('Unhandled promise rejection:', event.reason);
+        });
     </script>
 </body>
 </html>
