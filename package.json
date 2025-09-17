@@ -1,7 +1,7 @@
 {
   "name": "pb-days-arcade-complete",
-  "version": "4.0.0",
-  "description": "Complete auto-detecting slot machine with Magento iframe integration",
+  "version": "5.0.0",
+  "description": "Complete auto-detecting slot machine with prize allocation system",
   "main": "main.html",
   "scripts": {
     "build": "echo 'Static site ready'",
