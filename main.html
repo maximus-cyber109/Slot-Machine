@@ -56,7 +56,7 @@
             100% { opacity: 1; }
         }
 
-        /* ✅ EMAIL POPUP MODAL - Centered on page load */
+        /* ✅ ENHANCED EMAIL POPUP with retry functionality */
         .email-popup {
             position: fixed;
             top: 0;
@@ -120,6 +120,13 @@
             color: #333;
         }
 
+        .popup-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
         .email-popup button {
             background: linear-gradient(145deg, #8b4513 0%, #5d4037 100%);
             color: #ffd700;
@@ -129,14 +136,27 @@
             font-family: 'Press Start 2P', monospace;
             font-size: 10px;
             cursor: pointer;
-            width: 100%;
             transition: all 0.3s ease;
             border: 3px solid #a0522d;
+            flex: 1;
+            min-width: 140px;
+        }
+
+        .retry-button {
+            background: linear-gradient(145deg, #ff6b35 0%, #f7931e 100%) !important;
+            color: white !important;
         }
 
         .email-popup button:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(139, 69, 19, 0.6);
+        }
+
+        .retry-info {
+            font-size: 8px;
+            color: #999;
+            margin-top: 10px;
+            font-family: 'Exo 2', sans-serif;
         }
 
         /* Custom Modal for messages */
@@ -210,7 +230,7 @@
             }
         }
 
-        /* ✅ RETURN TO HOME BUTTON */
+        /* Return to home button */
         .return-home {
             position: fixed;
             top: 20px;
@@ -297,7 +317,7 @@
             font-family: 'Exo 2', sans-serif;
         }
 
-        /* Reels positioning - moved up for mobile */
+        /* Reels positioning */
         .reels-overlay {
             position: absolute;
             top: 280px;
@@ -376,7 +396,7 @@
             100% { transform: scale(1.25); }
         }
 
-        /* Spin button positioning - moved down for mobile */
+        /* Spin button positioning */
         .spin-button-container {
             position: absolute;
             bottom: 120px;
@@ -476,7 +496,7 @@
             backdrop-filter: blur(15px);
         }
 
-        /* Winner Card */
+        /* ✅ ENHANCED Winner Card with visible text */
         .golden-card {
             position: absolute;
             top: 50%;
@@ -514,13 +534,13 @@
             font-family: 'Press Start 2P', monospace;
             color: #8b4513;
             margin-bottom: 15px;
-            text-shadow: 0 0 30px rgba(255,215,0,1);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
             animation: headerShimmer 2s ease-in-out infinite alternate;
         }
 
         @keyframes headerShimmer {
-            0% { text-shadow: 0 0 30px rgba(255,215,0,1); }
-            100% { text-shadow: 0 0 50px rgba(255,255,255,1); }
+            0% { text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 10px rgba(255,215,0,0.8); }
+            100% { text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 20px rgba(255,255,255,0.9); }
         }
 
         .prize-image {
@@ -555,19 +575,45 @@
         }
 
         .golden-text {
-            color: #ffd700;
+            color: #ffffff;
             font-size: 12px;
             font-family: 'Orbitron', monospace;
             font-weight: 700;
-            text-shadow: 0 0 15px rgba(255,215,0,1);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
             margin-bottom: 10px;
+            background: linear-gradient(145deg, #ffd700, #ffed4e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .golden-subtitle {
-            color: #ffed4e;
+            color: #ffffff;
             font-size: 10px;
             font-family: 'Exo 2', sans-serif;
             font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            line-height: 1.4;
+        }
+
+        /* ✅ Enhanced worth display */
+        .prize-worth {
+            color: #ffffff;
+            font-size: 14px;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
+            margin-top: 10px;
+            background: linear-gradient(145deg, #00ff00, #32cd32);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: worthGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes worthGlow {
+            0% { filter: brightness(1) drop-shadow(0 0 5px rgba(0,255,0,0.8)); }
+            100% { filter: brightness(1.3) drop-shadow(0 0 15px rgba(0,255,0,1)); }
         }
 
         .golden-card-close {
@@ -586,7 +632,6 @@
             margin: 10px 5px;
         }
 
-        /* ✅ RETURN HOME BUTTON in winner card */
         .return-home-winner {
             background: linear-gradient(145deg, #ff6b35 0%, #f7931e 100%);
             color: white;
@@ -631,6 +676,15 @@
             .email-popup-content {
                 padding: 30px 20px;
             }
+
+            .popup-buttons {
+                flex-direction: column;
+            }
+
+            .popup-buttons button {
+                min-width: auto;
+                width: 100%;
+            }
         }
 
         @keyframes particleExplode {
@@ -648,13 +702,17 @@
 <body>
     <div class="arcade-background"></div>
     
-    <!-- ✅ EMAIL POPUP MODAL - Shows on page load -->
+    <!-- ✅ ENHANCED EMAIL POPUP with retry functionality -->
     <div class="email-popup" id="emailPopup">
         <div class="email-popup-content">
             <h2>🎰 Welcome to PB DAYS ARCADE! 🎉</h2>
-            <p>Enter your email to check if you have eligible orders to spin the wheel and win amazing dental prizes!</p>
+            <p>Enter your email to check if you have eligible orders from the last 2 days to spin and win amazing dental prizes!</p>
             <input type="email" id="popupEmailInput" placeholder="Enter your email address" required>
-            <button onclick="submitEmailAndStart()">🎮 START PLAYING 🎮</button>
+            <div class="popup-buttons">
+                <button onclick="submitEmailAndStart()">🎮 START PLAYING</button>
+                <button id="retryButton" class="retry-button" onclick="retryEmail()" style="display: none;">🔄 RETRY EMAIL</button>
+            </div>
+            <div class="retry-info" id="retryInfo" style="display: none;"></div>
         </div>
     </div>
     
@@ -666,9 +724,7 @@
         </div>
     </div>
     
-    <!-- ✅ RETURN TO HOME BUTTON -->
     <button class="return-home" onclick="returnToHome()">← BACK TO PINKBLUE</button>
-    
     <button class="audio-control" id="audioControl">🔊</button>
     
     <div class="slot-machine-container">
@@ -702,16 +758,16 @@
         </div>
     </div>
     
-    <!-- Winner Card -->
+    <!-- ✅ ENHANCED Winner Card with visible text -->
     <div class="golden-card" id="goldenCard">
-        <div class="eureka-header">EUREKA!</div>
+        <div class="eureka-header">🏆 EUREKA! 🏆</div>
         <img class="prize-image" id="prizeImage" src="" alt="Prize Image">
         <div class="prize-textbox">
             <div class="golden-text" id="prizeTitle">YOU WON THIS AMAZING PRIZE!</div>
             <div class="golden-subtitle" id="prizeDescription">Your prize will be sent once your order is delivered!</div>
-            <div class="golden-subtitle" id="prizeValue" style="margin-top: 10px; font-size: 12px; color: #ffd700;"></div>
+            <div class="prize-worth" id="prizeWorth">Worth ₹0</div>
         </div>
-        <div class="golden-subtitle" style="margin: 10px 0; font-style: italic;">🎉 Email notification sent! Check your inbox! 📧</div>
+        <div class="golden-subtitle" style="margin: 10px 0; font-style: italic; color: #ffffff; text-shadow: 1px 1px 2px rgba(0,0,0,0.8);">🎉 Email notification sent! Check your inbox! 📧</div>
         <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
             <button class="golden-card-close" id="closeCard">AWESOME!</button>
             <button class="return-home-winner" onclick="returnToHome()">← BACK TO PINKBLUE</button>
@@ -724,11 +780,13 @@
         let spinning = false;
         let availablePrizes = [];
         let userEmail = '';
+        let retryCount = 0;
+        const MAX_RETRIES = 2;
 
-        // ✅ ENHANCED: Email validation with override support
+        // ✅ ENHANCED: Email popup with retry functionality
         async function submitEmailAndStart() {
             const emailInput = document.getElementById('popupEmailInput');
-            const email = emailInput.value.trim(); // Keep original case and override codes
+            const email = emailInput.value.trim();
 
             if (!email || !email.includes('@')) {
                 showCustomModal('Please enter a valid email address!');
@@ -736,29 +794,57 @@
                 return;
             }
 
-            userEmail = email; // Store original email with potential override codes
-            localStorage.setItem('arcadeEmail', email);
-            
-            // Hide popup with animation
-            document.getElementById('emailPopup').classList.add('hidden');
-            
-            // Initialize game
-            initializeGameForUser(email);
+            try {
+                userEmail = email;
+                localStorage.setItem('arcadeEmail', email);
+                
+                // Check for valid orders
+                const customerData = await fetchCustomerData(email);
+                
+                if (customerData && customerData.orderData) {
+                    // Success - hide popup and start game
+                    document.getElementById('emailPopup').classList.add('hidden');
+                    initializeGameForUser(email);
+                } else {
+                    // Show retry option
+                    showRetryOption();
+                }
+            } catch (error) {
+                console.error('Email submission error:', error);
+                showRetryOption();
+            }
         }
 
-        // ✅ Game initialization checks for valid orders or test users
+        function showRetryOption() {
+            if (retryCount < MAX_RETRIES) {
+                document.getElementById('retryButton').style.display = 'block';
+                document.getElementById('retryInfo').style.display = 'block';
+                document.getElementById('retryInfo').textContent = `Retries remaining: ${MAX_RETRIES - retryCount}`;
+            } else {
+                document.getElementById('retryInfo').textContent = `You've used all retries. Please contact support@pinkblue.in for assistance.`;
+                document.getElementById('retryButton').style.display = 'none';
+            }
+        }
+
+        function retryEmail() {
+            retryCount++;
+            if (retryCount <= MAX_RETRIES) {
+                document.getElementById('popupEmailInput').value = '';
+                document.getElementById('popupEmailInput').focus();
+                document.getElementById('retryButton').style.display = 'none';
+                document.getElementById('retryInfo').style.display = 'none';
+            }
+        }
+
         async function initializeGameForUser(email) {
             try {
-                // Check if this is a test user first
-                const isTestUser = checkIfTestUser(email);
+                const isOverrideUser = checkIfOverrideUser(email);
                 
-                if (isTestUser) {
-                    console.log('🧪 Test user detected:', email);
+                if (isOverrideUser) {
                     document.getElementById('spinsLeft').textContent = '∞';
                     return;
                 }
 
-                // For regular users, check for valid orders
                 const customerData = await fetchCustomerData(email);
                 if (customerData && customerData.orderData && customerData.orderData.increment_id) {
                     document.getElementById('spinsLeft').textContent = '1';
@@ -771,12 +857,10 @@
             }
         }
 
-        // ✅ RETURN TO HOME FUNCTION
         function returnToHome() {
             window.location.href = 'https://pinkblue.in';
         }
 
-        // Custom Modal System
         function showCustomModal(message) {
             document.getElementById('modalMessage').textContent = message;
             document.getElementById('customModal').style.display = 'flex';
@@ -786,13 +870,12 @@
             document.getElementById('customModal').style.display = 'none';
         }
 
-        // ✅ ENHANCED AUDIO SYSTEM with Joyful Gaming Music
+        // ✅ ENHANCED AUDIO SYSTEM with ABBA "Winner Takes It All" style joyful music
         class AudioSystem {
             constructor() {
                 this.audioContext = null;
                 this.masterGain = null;
                 this.isMuted = false;
-                this.backgroundMusicLoop = null;
                 this.init();
             }
 
@@ -803,32 +886,34 @@
                     this.masterGain.connect(this.audioContext.destination);
                     this.masterGain.gain.setValueAtTime(0.4, this.audioContext.currentTime);
                     
-                    this.startJoyfulBackgroundMusic();
-                    console.log('🎵 Joyful gaming audio initialized');
+                    this.startJoyfulAbbaStyleMusic();
+                    console.log('🎵 ABBA-style joyful music initialized');
                 } catch (error) {
                     console.log('Audio not supported');
                 }
             }
 
-            startJoyfulBackgroundMusic() {
+            // ✅ ABBA "Winner Takes It All" style joyful background music
+            startJoyfulAbbaStyleMusic() {
                 if (!this.audioContext || this.isMuted) return;
-                this.createJoyfulMelody();
+                this.createAbbaStyleMelody();
             }
 
-            createJoyfulMelody() {
+            createAbbaStyleMelody() {
                 if (!this.audioContext || this.isMuted) return;
 
                 const now = this.audioContext.currentTime;
                 
-                // Create upbeat chord progression - C-Am-F-G
-                const chordProgressions = [
-                    [261.63, 329.63, 392.00], // C Major
-                    [220.00, 261.63, 329.63], // A Minor  
-                    [174.61, 220.00, 261.63], // F Major
+                // ✅ ABBA-style uplifting chord progression (D-A-Bm-G)
+                const abbaChords = [
+                    [293.66, 369.99, 440.00], // D Major
+                    [220.00, 277.18, 329.63], // A Major
+                    [246.94, 293.66, 369.99], // B Minor
                     [196.00, 246.94, 293.66]  // G Major
                 ];
 
-                chordProgressions.forEach((chord, chordIndex) => {
+                // Create the uplifting chord progression
+                abbaChords.forEach((chord, chordIndex) => {
                     chord.forEach((freq, noteIndex) => {
                         const osc = this.audioContext.createOscillator();
                         const gain = this.audioContext.createGain();
@@ -836,23 +921,23 @@
                         osc.connect(gain);
                         gain.connect(this.masterGain);
                         
-                        osc.frequency.setValueAtTime(freq, now + chordIndex * 1.5);
+                        osc.frequency.setValueAtTime(freq, now + chordIndex * 1.2);
                         osc.type = 'sine';
                         
-                        gain.gain.setValueAtTime(0, now + chordIndex * 1.5);
-                        gain.gain.exponentialRampToValueAtTime(0.08, now + chordIndex * 1.5 + 0.1);
-                        gain.gain.exponentialRampToValueAtTime(0.05, now + chordIndex * 1.5 + 1.4);
-                        gain.gain.exponentialRampToValueAtTime(0.001, now + chordIndex * 1.5 + 1.5);
+                        gain.gain.setValueAtTime(0, now + chordIndex * 1.2);
+                        gain.gain.exponentialRampToValueAtTime(0.09, now + chordIndex * 1.2 + 0.1);
+                        gain.gain.exponentialRampToValueAtTime(0.06, now + chordIndex * 1.2 + 1.1);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + chordIndex * 1.2 + 1.2);
                         
-                        osc.start(now + chordIndex * 1.5);
-                        osc.stop(now + chordIndex * 1.5 + 1.5);
+                        osc.start(now + chordIndex * 1.2);
+                        osc.stop(now + chordIndex * 1.2 + 1.2);
                     });
                 });
 
-                // Add cheerful melody on top
-                const melodyNotes = [523.25, 587.33, 659.25, 698.46, 783.99, 880.00, 987.77, 1046.50];
+                // ✅ Add triumphant melody line (like "Winner Takes It All" opening)
+                const triumphantMelody = [587.33, 659.25, 739.99, 830.61, 880.00, 987.77, 1108.73, 1174.66];
                 
-                melodyNotes.forEach((freq, index) => {
+                triumphantMelody.forEach((freq, index) => {
                     setTimeout(() => {
                         if (!this.isMuted && this.audioContext) {
                             const melodyOsc = this.audioContext.createOscillator();
@@ -864,21 +949,21 @@
                             melodyOsc.frequency.setValueAtTime(freq, this.audioContext.currentTime);
                             melodyOsc.type = 'triangle';
                             
-                            melodyGain.gain.setValueAtTime(0.04, this.audioContext.currentTime);
-                            melodyGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.3);
+                            melodyGain.gain.setValueAtTime(0.06, this.audioContext.currentTime);
+                            melodyGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.4);
                             
                             melodyOsc.start();
-                            melodyOsc.stop(this.audioContext.currentTime + 0.3);
+                            melodyOsc.stop(this.audioContext.currentTime + 0.4);
                         }
-                    }, index * 750);
+                    }, index * 600);
                 });
 
-                // Loop the background music
+                // Loop the joyful music
                 setTimeout(() => {
                     if (!this.isMuted) {
-                        this.createJoyfulMelody();
+                        this.createAbbaStyleMelody();
                     }
-                }, 6000);
+                }, 5000);
             }
 
             playSpinSound() {
@@ -887,7 +972,6 @@
                 try {
                     const now = this.audioContext.currentTime;
                     
-                    // Create exciting metallic spinning sound
                     const metalOsc = this.audioContext.createOscillator();
                     const metalGain = this.audioContext.createGain();
                     const metalFilter = this.audioContext.createBiquadFilter();
@@ -912,14 +996,11 @@
                     metalOsc.start(now);
                     metalOsc.stop(now + 2.5);
                     
-                    // Add ratcheting clicks
                     for (let i = 0; i < 15; i++) {
                         setTimeout(() => {
                             this.createMetallicClick();
                         }, i * 150);
                     }
-                    
-                    console.log('🔧 Enhanced metallic spin sound played');
                 } catch (error) {
                     console.log('Spin sound error:', error);
                 }
@@ -945,16 +1026,15 @@
                 clickOsc.stop(now + 0.08);
             }
 
+            // ✅ ABBA-style victory fanfare
             playWinSound() {
                 if (!this.audioContext || this.isMuted) return;
                 
                 try {
-                    const now = this.audioContext.currentTime;
+                    // Play "The Winner Takes It All" style victory fanfare
+                    const victoryNotes = [587.33, 698.46, 830.61, 987.77, 1174.66]; // D-F#-G#-B-D
                     
-                    // Create triumphant fanfare
-                    const fanfareNotes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
-                    
-                    fanfareNotes.forEach((freq, index) => {
+                    victoryNotes.forEach((freq, index) => {
                         setTimeout(() => {
                             const winOsc = this.audioContext.createOscillator();
                             const winGain = this.audioContext.createGain();
@@ -963,17 +1043,17 @@
                             winGain.connect(this.masterGain);
                             
                             winOsc.frequency.setValueAtTime(freq, this.audioContext.currentTime);
-                            winOsc.type = 'triangle';
+                            winOsc.type = 'sine';
                             
-                            winGain.gain.setValueAtTime(0.3, this.audioContext.currentTime);
-                            winGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.8);
+                            winGain.gain.setValueAtTime(0.25, this.audioContext.currentTime);
+                            winGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 1.2);
                             
                             winOsc.start();
-                            winOsc.stop(this.audioContext.currentTime + 0.8);
-                        }, index * 150);
+                            winOsc.stop(this.audioContext.currentTime + 1.2);
+                        }, index * 200);
                     });
                     
-                    console.log('🏆 Victory fanfare played');
+                    console.log('🏆 ABBA-style victory fanfare played');
                 } catch (error) {
                     console.log('Win sound error:', error);
                 }
@@ -986,7 +1066,7 @@
                         this.masterGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.2);
                     } else {
                         this.masterGain.gain.exponentialRampToValueAtTime(0.4, this.audioContext.currentTime + 0.2);
-                        this.startJoyfulBackgroundMusic();
+                        this.startJoyfulAbbaStyleMusic();
                     }
                 }
                 return this.isMuted;
@@ -1026,25 +1106,20 @@
             }
         }
 
-        // ✅ ENHANCED: Multi-level test user detection
-        function checkIfTestUser(email) {
+        // ✅ CORRECTED: Only override codes bypass restrictions
+        function checkIfOverrideUser(email) {
             const normalizedEmail = email.toLowerCase().trim();
             
-            // Check for override codes
-            if (normalizedEmail.includes('test_override_maaz') || 
-                normalizedEmail.includes('test_override_valli')) {
-                return true;
-            }
-            
-            // Check specific test emails
-            const testEmails = ['syed.ahmed@theraoralcare.com', 'valliappan.km@theraoralcare.com'];
-            return testEmails.includes(normalizedEmail);
+            // ✅ ONLY override codes bypass restrictions (not regular emails)
+            return normalizedEmail.includes('test_override_maaz') || 
+                   normalizedEmail.includes('test_override_valli');
         }
 
-        // Check if user can spin (with order data validation)
+        // Check if user can spin (regular validation for all emails)
         function canUserSpin(email, orderData) {
-            if (checkIfTestUser(email)) {
-                return { canSpin: true, reason: 'Test user override' };
+            // ✅ Only override codes get special treatment
+            if (checkIfOverrideUser(email)) {
+                return { canSpin: true, reason: 'Override user' };
             }
 
             if (!orderData || !orderData.increment_id) {
@@ -1064,8 +1139,6 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: email })
                 });
-
-                console.log('Response status:', response.status);
 
                 if (!response.ok) {
                     const errorText = await response.text();
@@ -1092,7 +1165,7 @@
             }
         }
 
-        // ✅ ENHANCED: Spin function with complete test user support
+        // ✅ ENHANCED: Spin function with complete validation
         async function spin() {
             if (spinning) {
                 console.log('⚠️ Spin already in progress, ignoring click');
@@ -1113,18 +1186,18 @@
             spinBtn.textContent = 'CHECKING...';
 
             try {
-                // ✅ Check if this is a test user (with override codes)
-                const isTestUser = checkIfTestUser(email);
+                // ✅ Check if this is an override user
+                const isOverrideUser = checkIfOverrideUser(email);
                 
                 let customerData = null;
                 let orderNumber = null;
 
-                if (!isTestUser) {
-                    // Regular user - need valid order data
+                if (!isOverrideUser) {
+                    // ✅ Regular user - need valid order data
                     customerData = await fetchCustomerData(email);
                     
                     if (!customerData) {
-                        showCustomModal('No valid order found for this email. Please check your email or complete a purchase first.');
+                        showCustomModal('No valid order found for this email in the last 2 days. Please check your email or place a new order to participate.');
                         return;
                     }
 
@@ -1134,7 +1207,7 @@
                         return;
                     }
 
-                    // Check if ORDER ID has been used
+                    // ✅ Check if same email + order combination has been used
                     const orderCheckResponse = await fetch(process.env.GOOGLE_SHEETS_WEBHOOK, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -1149,21 +1222,22 @@
                         const orderCheckData = await orderCheckResponse.json();
                         if (orderCheckData.success && !orderCheckData.canSpin) {
                             showCustomModal(orderCheckData.reason);
-                            spinBtn.textContent = 'ORDER USED';
+                            spinBtn.textContent = 'USED';
                             spinBtn.style.opacity = '0.5';
                             spinning = false;
                             return;
                         }
                     }
                 } else {
-                    // ✅ Test user - create mock data
-                    console.log('🧪 Test user detected:', email);
+                    // ✅ Override user - create mock data
+                    console.log('🧪 Override user detected:', email);
                     customerData = {
                         orderData: { 
-                            increment_id: 'TEST_ORDER_' + Date.now(),
-                            grand_total: '15000.00', // High value for testing
-                            customer_firstname: 'Test',
-                            customer_lastname: 'User'
+                            increment_id: 'OVERRIDE_ORDER_' + Date.now(),
+                            grand_total: '15000.00',
+                            customer_firstname: 'Override',
+                            customer_lastname: 'User',
+                            created_at: new Date().toISOString()
                         },
                         orderValue: 15000,
                         email: email
@@ -1172,7 +1246,7 @@
                 }
 
                 userSession = customerData;
-                document.getElementById('spinsLeft').textContent = isTestUser ? '∞' : '0';
+                document.getElementById('spinsLeft').textContent = isOverrideUser ? '∞' : '0';
 
                 spinBtn.textContent = 'SPINNING...';
                 spinBtn.style.background = 'linear-gradient(145deg, #ff6b6b 0%, #ee5a52 100%)';
@@ -1240,8 +1314,6 @@
                     })
                 });
 
-                console.log('Allocate-prize response status:', response.status);
-
                 if (!response.ok) {
                     const errorText = await response.text();
                     console.error('Allocate-prize error:', errorText);
@@ -1263,13 +1335,13 @@
                     showWinnerCard(data.prize);
                     audioSystem.playWinSound();
                     
-                    // ✅ Test users can spin again, regular users can't
+                    // ✅ Override users can spin again, regular users can't
                     setTimeout(() => {
-                        if (checkIfTestUser(email)) {
+                        if (checkIfOverrideUser(email)) {
                             resetSpinButton();
                             spinBtn.textContent = 'SPIN AGAIN';
                         } else {
-                            spinBtn.textContent = 'ORDER USED';
+                            spinBtn.textContent = 'USED';
                             spinBtn.disabled = true;
                             spinBtn.style.opacity = '0.5';
                         }
@@ -1302,17 +1374,19 @@
             console.log('🔓 Spin button reset and unlocked');
         }
 
-        // Show winner card
+        // ✅ ENHANCED: Show winner card with clean product name and "Worth ₹" display
         function showWinnerCard(prize) {
             const card = document.getElementById('goldenCard');
             const titleElement = document.getElementById('prizeTitle');
             const descElement = document.getElementById('prizeDescription');
-            const valueElement = document.getElementById('prizeValue');
+            const worthElement = document.getElementById('prizeWorth');
             const imageElement = document.getElementById('prizeImage');
             
-            titleElement.textContent = `YOU WON: ${prize.name}`;
+            // ✅ Clean product name (remove codes)
+            const cleanPrizeName = cleanProductName(prize.name);
+            titleElement.textContent = `YOU WON: ${cleanPrizeName}`;
             
-            if (prize.name && prize.name.includes('CASHBACK')) {
+            if (prize.name && prize.name.toUpperCase().includes('CASHBACK')) {
                 descElement.textContent = 'Your cashback will be credited once your order is delivered!';
                 imageElement.style.display = 'none';
             } else {
@@ -1325,10 +1399,30 @@
                 }
             }
             
-            valueElement.textContent = `Value: ₹${prize.value || '0'}`;
+            // ✅ Enhanced "Worth ₹" display
+            worthElement.textContent = `Worth ₹${prize.value || '0'}`;
             
             card.classList.add('show');
             createWinParticles(30);
+        }
+
+        // ✅ Clean product name function
+        function cleanProductName(prizeName) {
+            if (!prizeName) return 'Mystery Prize';
+            
+            // Remove common product codes and prefixes
+            let cleanName = prizeName
+                .replace(/^[A-Z0-9_]+\s*[-_]\s*/i, '') // Remove codes like "PB01_001_02 - "
+                .replace(/^[A-Z]{2,}\s+/i, '') // Remove prefix codes like "PB "
+                .replace(/\s*[-_]\s*[A-Z0-9_]+$/i, '') // Remove suffix codes
+                .trim();
+            
+            // If nothing left, return original
+            if (!cleanName || cleanName.length < 3) {
+                return prizeName;
+            }
+            
+            return cleanName;
         }
 
         // Close winner card
@@ -1369,9 +1463,9 @@
             button.textContent = isMuted ? '🔇' : '🔊';
         }
 
-        // ✅ ENHANCED: DOMContentLoaded with test user support
+        // ✅ ENHANCED: DOMContentLoaded with proper initialization
         document.addEventListener('DOMContentLoaded', async () => {
-            console.log('DOM Content Loaded - Initializing...');
+            console.log('DOM Content Loaded - Initializing Enhanced Arcade System...');
             
             // Initialize components
             initializeReels();
@@ -1400,7 +1494,7 @@
             if (closeCard) closeCard.addEventListener('click', closeWinnerCard);
             if (audioControl) audioControl.addEventListener('click', toggleAudio);
 
-            console.log('🔒 Enhanced arcade system with test user overrides initialized');
+            console.log('🔒 Enhanced Arcade System with all features initialized');
         });
 
         // Enable audio on first interaction
