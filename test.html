@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PB DAYS - Premium 3D Slot Machine</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #000000;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+        }
+
+        .slot-machine-container {
+            width: 350px;
+            height: 600px;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: rotateX(-2deg) rotateY(3deg);
+        }
+
+        /* Gift Box on Top */
+        .gift-box {
+            position: absolute;
+            top: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 80px;
+            z-index: 20;
+        }
+
+        .gift-base {
+            width: 100%;
+            height: 60px;
+            background: linear-gradient(145deg, #ff8c42 0%, #ff6b35 50%, #d84315 100%);
+            border-radius: 8px;
+            position: relative;
+            box-shadow: 
+                0 10px 30px rgba(0,0,0,0.4),
+                inset 0 5px 15px rgba(255,255,255,0.2);
+        }
+
+        .gift-ribbon-h {
+            position: absolute;
+            top: 20px;
+            left: -5px;
+            right: -5px;
+            height: 20px;
+            background: linear-gradient(145deg, #7b1fa2 0%, #9c27b0 50%, #673ab7 100%);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .gift-ribbon-v {
+            position: absolute;
+            top: -10px;
+            left: 45px;
+            width: 20px;
+            height: 80px;
+            background: linear-gradient(90deg, #7b1fa2 0%, #9c27b0 50%, #673ab7 100%);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .gift-bow {
+            position: absolute;
+            top: -25px;
+            left: 35px;
+            width: 40px;
+            height: 25px;
+            background: linear-gradient(145deg, #7b1fa2 0%, #9c27b0 100%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+
+        /* Main Machine Body */
+        .machine-body {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(145deg, #e91e63 0%, #ad1457 50%, #880e4f 100%);
+            border-radius: 25px;
+            position: relative;
+            box-shadow: 
+                0 30px 80px rgba(0,0,0,0.6),
+                inset 0 20px 40px rgba(255,255,255,0.1),
+                inset 0 -10px 30px rgba(0,0,0,0.2);
+        }
+
+        /* Header Text */
+        .header-text {
+            position: absolute;
+            top: 30px;
+            left: 20px;
+            right: 20px;
+            text-align: center;
+            color: white;
+            background: rgba(0,0,0,0.6);
+            padding: 15px;
+            border-radius: 25px;
+            border: 2px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+
+        .header-text h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .header-text p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Screen Area */
+        .screen-container {
+            position: absolute;
+            top: 120px;
+            left: 25px;
+            width: 300px;
+            height: 240px;
+            background: linear-gradient(145deg, #1a1a1a 0%, #000000 100%);
+            border-radius: 20px;
+            border: 8px solid rgba(255,255,255,0.1);
+            box-shadow: 
+                inset 0 10px 30px rgba(0,0,0,0.8),
+                0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .reels-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 8px;
+            padding: 15px;
+            height: 100%;
+        }
+
+        .reel-cell {
+            background: linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                inset 0 3px 10px rgba(0,0,0,0.5),
+                0 3px 8px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .reel-cell:hover {
+            transform: scale(1.05);
+            box-shadow: 
+                inset 0 3px 10px rgba(0,0,0,0.5),
+                0 5px 15px rgba(255,20,147,0.3);
+        }
+
+        .reel-cell.spinning {
+            animation: cellSpin 0.1s linear infinite;
+        }
+
+        @keyframes cellSpin {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        .reel-cell.winning {
+            background: linear-gradient(145deg, #ffd700 0%, #ffed4e 100%);
+            animation: winPulse 0.5s ease-in-out infinite alternate;
+            box-shadow: 0 0 20px rgba(255,215,0,0.8);
+        }
+
+        @keyframes winPulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+
+        /* Symbols */
+        .symbol {
+            font-size: 28px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+        }
+
+        .product-img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            filter: brightness(1.2) contrast(1.1);
+        }
+
+        /* Control Panel */
+        .control-panel {
+            position: absolute;
+            bottom: 80px;
+            left: 25px;
+            right: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Golden Spin Button */
+        .spin-button {
+            width: 180px;
+            height: 55px;
+            background: linear-gradient(145deg, #ffd700 0%, #ffed4e 50%, #daa520 100%);
+            border: none;
+            border-radius: 27px;
+            color: #8b4513;
+            font-family: 'Inter', sans-serif;
+            font-weight: 800;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 
+                0 12px 25px rgba(255,215,0,0.4),
+                0 6px 12px rgba(0,0,0,0.3),
+                inset 0 4px 8px rgba(255,255,255,0.3),
+                inset 0 -2px 6px rgba(184,134,11,0.4);
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .spin-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 16px 35px rgba(255,215,0,0.5),
+                0 8px 16px rgba(0,0,0,0.4),
+                inset 0 6px 12px rgba(255,255,255,0.4);
+        }
+
+        .spin-button:active {
+            transform: translateY(1px);
+            box-shadow: 
+                0 6px 15px rgba(255,215,0,0.3),
+                inset 0 8px 16px rgba(184,134,11,0.4);
+        }
+
+        /* Purple Side Button */
+        .side-button {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(145deg, #9c27b0 0%, #7b1fa2 50%, #4a148c 100%);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 
+                0 10px 20px rgba(156,39,176,0.4),
+                0 5px 10px rgba(0,0,0,0.3),
+                inset 0 4px 8px rgba(255,255,255,0.2);
+            transition: all 0.2s ease;
+        }
+
+        .side-button:hover {
+            transform: translateY(-2px) scale(1.05);
+        }
+
+        /* Status Bar */
+        .status-bar {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .spins-left {
+            background: rgba(0,0,0,0.4);
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .players-count {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0,0,0,0.4);
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .user-avatars {
+            display: flex;
+            gap: -5px;
+        }
+
+        .avatar {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid white;
+            margin-left: -5px;
+        }
+
+        .avatar:nth-child(1) { background: #ff6b6b; }
+        .avatar:nth-child(2) { background: #4ecdc4; }
+        .avatar:nth-child(3) { background: #45b7d1; }
+
+        /* Details Button */
+        .details-button {
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.6);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .details-button:hover {
+            background: rgba(0,0,0,0.8);
+            transform: translateX(-50%) translateY(-2px);
+        }
+
+        /* Particles */
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            border-radius: 50%;
+            animation: particleFly 3s ease-out forwards;
+        }
+
+        @keyframes particleFly {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-200px) scale(0.3) rotate(360deg);
+            }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .slot-machine-container {
+                width: 320px;
+                height: 550px;
+                transform: scale(0.95);
+            }
+            
+            .screen-container {
+                width: 270px;
+                height: 220px;
+            }
+            
+            .spin-button {
+                width: 150px;
+                height: 50px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="slot-machine-container">
+        <!-- Gift Box -->
+        <div class="gift-box">
+            <div class="gift-base">
+                <div class="gift-ribbon-h"></div>
+                <div class="gift-ribbon-v"></div>
+                <div class="gift-bow"></div>
+            </div>
+        </div>
+
+        <!-- Main Machine Body -->
+        <div class="machine-body">
+            <!-- Header Text -->
+            <div class="header-text">
+                <h3>win the jackpot or get AI course worth</h3>
+                <p>₹4,999 for free</p>
+            </div>
+
+            <!-- Screen with Grid -->
+            <div class="screen-container">
+                <div class="reels-grid">
+                    <div class="reel-cell" data-position="0">
+                        <img src="https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/se-w-one.png" alt="Speed Endo" class="product-img">
+                    </div>
+                    <div class="reel-cell" data-position="1">
+                        <div class="symbol">🪙</div>
+                    </div>
+                    <div class="reel-cell" data-position="2">
+                        <img src="https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/sdr_plus_3.jpg" alt="SDR Plus" class="product-img">
+                    </div>
+                    <div class="reel-cell" data-position="3">
+                        <div class="symbol">💎</div>
+                    </div>
+                    <div class="reel-cell" data-position="4">
+                        <img src="https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/SE-EndoMotor.png" alt="Endomotor" class="product-img">
+                    </div>
+                    <div class="reel-cell" data-position="5">
+                        <div class="symbol">🏆</div>
+                    </div>
+                    <div class="reel-cell" data-position="6">
+                        <img src="https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/APEX.png" alt="Apex" class="product-img">
+                    </div>
+                    <div class="reel-cell" data-position="7">
+                        <div class="symbol">7️⃣</div>
+                    </div>
+                    <div class="reel-cell" data-position="8">
+                        <img src="https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/Endostar.jpg" alt="Endostar" class="product-img">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <button class="spin-button" id="spinBtn">
+                    🎰 SPIN 🎰
+                </button>
+                <button class="side-button" id="sideBtn"></button>
+            </div>
+
+            <!-- Status Bar -->
+            <div class="status-bar">
+                <div class="spins-left">
+                    <span id="spinsLeft">10</span> / 10 SPINS LEFT
+                </div>
+                <div class="players-count">
+                    <span id="playersCount">13,58,096</span> played
+                    <div class="user-avatars">
+                        <div class="avatar"></div>
+                        <div class="avatar"></div>
+                        <div class="avatar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Details Button -->
+        <button class="details-button" id="detailsBtn">
+            ⓘ details
+        </button>
+    </div>
+
+    <script>
+        const symbols = ['🪙', '💎', '🏆', '7️⃣', '⭐', '🔥', '💰', '🎯'];
+        const products = [
+            'https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/se-w-one.png',
+            'https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/sdr_plus_3.jpg',
+            'https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/SE-EndoMotor.png',
+            'https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/APEX.png',
+            'https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/Endostar.jpg',
+            'https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/DDT-Black.jpeg'
+        ];
+
+        let spinsLeft = 10;
+        let playersCount = 1358096;
+        let spinning = false;
+
+        // Create particles
+        function createParticles() {
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.width = (Math.random() * 8 + 4) + 'px';
+                    particle.style.height = particle.style.width;
+                    particle.style.background = `hsl(${Math.random() * 60 + 45}, 100%, 60%)`;
+                    particle.style.left = (Math.random() * window.innerWidth) + 'px';
+                    particle.style.top = (window.innerHeight - 100) + 'px';
+                    
+                    document.body.appendChild(particle);
+                    
+                    setTimeout(() => particle.remove(), 3000);
+                }, i * 100);
+            }
+        }
+
+        // Play sound
+        function playSound(freq, duration = 0.3) {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(freq, audioContext.currentTime);
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+            
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + duration);
+        }
+
+        // Spin animation
+        function spinSlots() {
+            if (spinning || spinsLeft <= 0) return;
+            
+            spinning = true;
+            spinsLeft--;
+            playersCount++;
+            
+            document.getElementById('spinsLeft').textContent = spinsLeft;
+            document.getElementById('playersCount').textContent = playersCount.toLocaleString();
+            
+            const cells = document.querySelectorAll('.reel-cell');
+            
+            // Start spinning animation
+            cells.forEach(cell => cell.classList.add('spinning'));
+            playSound(440, 0.1);
+            
+            // Stop spinning after random time
+            setTimeout(() => {
+                cells.forEach((cell, index) => {
+                    cell.classList.remove('spinning');
+                    
+                    // Randomly assign new content
+                    if (Math.random() > 0.5) {
+                        const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+                        cell.innerHTML = `<div class="symbol">${randomSymbol}</div>`;
+                    } else {
+                        const randomProduct = products[Math.floor(Math.random() * products.length)];
+                        cell.innerHTML = `<img src="${randomProduct}" alt="Product" class="product-img">`;
+                    }
+                });
+                
+                // Check for wins
+                const isWin = Math.random() > 0.7;
+                if (isWin) {
+                    playSound(659, 0.5);
+                    createParticles();
+                    
+                    // Highlight winning cells
+                    const winningCells = Array.from(cells).slice(0, 3);
+                    winningCells.forEach(cell => {
+                        cell.classList.add('winning');
+                        setTimeout(() => cell.classList.remove('winning'), 2000);
+                    });
+                    
+                    alert('🎉 Congratulations! You won a dental product! 🎉');
+                } else {
+                    playSound(330, 0.3);
+                }
+                
+                spinning = false;
+                
+                if (spinsLeft <= 0) {
+                    setTimeout(() => {
+                        alert('🎰 No more spins left! Thanks for playing PB DAYS! 🎰');
+                    }, 1000);
+                }
+            }, 2000);
+        }
+
+        // Event listeners
+        document.getElementById('spinBtn').addEventListener('click', spinSlots);
+        document.getElementById('sideBtn').addEventListener('click', () => {
+            playSound(523, 0.2);
+            alert('Settings menu opened!');
+        });
+        document.getElementById('detailsBtn').addEventListener('click', () => {
+            alert('PB DAYS Slot Machine\n\nSpin to win amazing dental products!\nEach spin gives you a chance to win premium equipment.');
+        });
+
+        // Keyboard support
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                spinSlots();
+            }
+        });
+
+        // Auto-update players count
+        setInterval(() => {
+            playersCount += Math.floor(Math.random() * 10) + 1;
+            document.getElementById('playersCount').textContent = playersCount.toLocaleString();
+        }, 5000);
+
+        // Initial setup
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add subtle glow effect to machine
+            setTimeout(() => {
+                document.querySelector('.machine-body').style.boxShadow += ', 0 0 50px rgba(233,30,99,0.3)';
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
