@@ -13,13 +13,11 @@
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700;900&family=Exo+2:wght@400;600;700;800&display=swap');
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: 'Press Start 2P', monospace;
             min-height: 100vh;
@@ -31,12 +29,10 @@
             background: radial-gradient(ellipse at center, #1a0033 0%, #000000 70%), linear-gradient(45deg, rgba(25, 25, 112, 0.3) 0%, rgba(75, 0, 130, 0.2) 100%);
             animation: backgroundShift 10s ease-in-out infinite;
         }
-
         @keyframes backgroundShift {
             0%, 100% { filter: brightness(1) hue-rotate(0deg); }
             50% { filter: brightness(1.1) hue-rotate(15deg); }
         }
-
         .arcade-background {
             position: fixed;
             top: 0;
@@ -50,12 +46,10 @@
             z-index: -1;
             animation: backgroundGlow 8s ease-in-out infinite alternate;
         }
-
         @keyframes backgroundGlow {
             0% { opacity: 0.8; }
             100% { opacity: 1; }
         }
-
         /* Custom Modal instead of alert() */
         .custom-modal {
             position: fixed;
@@ -69,7 +63,6 @@
             align-items: center;
             z-index: 9999;
         }
-
         .modal-content {
             background: linear-gradient(145deg, #ffd700 0%, #ffed4e 100%);
             padding: 30px;
@@ -82,7 +75,6 @@
             font-size: 10px;
             line-height: 1.6;
         }
-
         .modal-close {
             background: #8b4513;
             color: #ffd700;
@@ -94,7 +86,6 @@
             font-family: 'Press Start 2P', monospace;
             font-size: 8px;
         }
-
         /* Email Input */
         .email-container {
             position: fixed;
@@ -102,7 +93,6 @@
             left: 20px;
             z-index: 1001;
         }
-
         #customerEmail {
             width: 250px;
             padding: 8px 12px;
@@ -115,7 +105,6 @@
             backdrop-filter: blur(10px);
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
-
         /* Audio Control */
         .audio-control {
             position: fixed;
@@ -136,7 +125,6 @@
             transition: all 0.3s ease;
             animation: audioButtonGlow 2s ease-in-out infinite alternate;
         }
-
         @keyframes audioButtonGlow {
             0% { 
                 box-shadow: 0 8px 20px rgba(255,181,0,0.4), 0 0 30px rgba(255,215,0,0.6);
@@ -147,7 +135,6 @@
                 transform: scale(1.05);
             }
         }
-
         /* Slot Machine */
         .slot-machine-container {
             position: relative;
@@ -157,12 +144,10 @@
             filter: drop-shadow(0 30px 60px rgba(0,0,0,0.8));
             animation: machineFloat 6s ease-in-out infinite;
         }
-
         @keyframes machineFloat {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-5px); }
         }
-
         .slot-machine-bg {
             width: 100%;
             height: 100%;
@@ -172,7 +157,6 @@
             background-position: center;
             position: relative;
         }
-
         .header-text {
             position: absolute;
             top: 15px;
@@ -191,12 +175,10 @@
             font-family: 'Orbitron', monospace;
             animation: headerGlow 3s ease-in-out infinite alternate;
         }
-
         @keyframes headerGlow {
             0% { box-shadow: 0 10px 30px rgba(0,0,0,0.4), 0 0 40px rgba(255,181,0,0.6); }
             100% { box-shadow: 0 15px 40px rgba(0,0,0,0.5), 0 0 70px rgba(255,181,0,0.9); }
         }
-
         .header-text h3 {
             font-size: 11px;
             font-weight: 700;
@@ -204,14 +186,12 @@
             color: #e65100;
             text-transform: uppercase;
         }
-
         .header-text p {
             font-size: 10px;
             font-weight: 600;
             color: #ff8f00;
             font-family: 'Exo 2', sans-serif;
         }
-
         /* Spin Wheel / Reels */
         .reels-overlay {
             position: absolute;
@@ -225,7 +205,6 @@
             align-items: center;
             z-index: 5;
         }
-
         .reel-window {
             width: 58px;
             height: 75px;
@@ -236,12 +215,10 @@
             box-shadow: 0 0 20px rgba(255,215,0,0.3);
             animation: reelGlow 4s ease-in-out infinite alternate;
         }
-
         @keyframes reelGlow {
             0% { box-shadow: 0 0 20px rgba(255,215,0,0.3); }
             100% { box-shadow: 0 0 35px rgba(255,215,0,0.6); }
         }
-
         .reel-strip {
             position: absolute;
             top: 0;
@@ -251,16 +228,13 @@
             flex-direction: column;
             transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
         .reel-strip.spinning {
             animation: reelSpin 0.05s linear infinite;
         }
-
         @keyframes reelSpin {
             0% { transform: translateY(0); }
             100% { transform: translateY(-75px); }
         }
-
         .symbol {
             width: 58px;
             height: 75px;
@@ -271,7 +245,6 @@
             border-radius: 6px;
             margin-bottom: 1px;
         }
-
         .symbol img {
             width: 50px;
             height: 50px;
@@ -279,18 +252,15 @@
             filter: brightness(1.2) contrast(1.3) drop-shadow(0 2px 6px rgba(0,0,0,0.4));
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
         .symbol.winning img {
             filter: brightness(1.6) contrast(1.7) drop-shadow(0 0 25px #ffd700);
             transform: scale(1.2);
             animation: symbolWin 0.3s ease-in-out infinite alternate;
         }
-
         @keyframes symbolWin {
             0% { transform: scale(1.2); }
             100% { transform: scale(1.25); }
         }
-
         /* Spin Button */
         .spin-button-container {
             position: absolute;
@@ -299,7 +269,6 @@
             transform: translateX(-50%);
             z-index: 10;
         }
-
         .spin-button {
             width: 160px;
             height: 42px;
@@ -319,7 +288,6 @@
             position: relative;
             overflow: hidden;
         }
-
         @keyframes buttonPulse {
             0%, 100% { 
                 box-shadow: 0 10px 25px rgba(255,181,0,0.6), 0 0 50px rgba(255,215,0,0.4);
@@ -330,19 +298,16 @@
                 transform: scale(1.02);
             }
         }
-
         .spin-button:hover {
             transform: translateY(-3px) scale(1.05);
             box-shadow: 0 20px 50px rgba(255,181,0,0.8), 0 0 100px rgba(255,215,0,1);
         }
-
         .spin-button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
             background: linear-gradient(145deg, #888 0%, #666 100%);
             animation: none;
         }
-
         /* Status Display */
         .status-overlay {
             position: absolute;
@@ -351,7 +316,6 @@
             transform: translateX(-50%);
             z-index: 10;
         }
-
         .spins-left {
             background: rgba(255,255,255,0.95);
             color: #333;
@@ -363,7 +327,6 @@
             font-family: 'Press Start 2P', monospace;
             backdrop-filter: blur(15px);
         }
-
         /* Winner Card */
         .golden-card {
             position: absolute;
@@ -385,18 +348,15 @@
             opacity: 0;
             transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
-
         .golden-card.show {
             transform: translate(-50%, -50%) scale(1);
             opacity: 1;
             animation: cardGlow 2s ease-in-out infinite alternate;
         }
-
         @keyframes cardGlow {
             0% { box-shadow: 0 0 80px rgba(255,215,0,1); }
             100% { box-shadow: 0 0 120px rgba(255,215,0,1); }
         }
-
         .eureka-header {
             font-size: 24px;
             font-family: 'Press Start 2P', monospace;
@@ -405,12 +365,10 @@
             text-shadow: 0 0 30px rgba(255,215,0,1);
             animation: headerShimmer 2s ease-in-out infinite alternate;
         }
-
         @keyframes headerShimmer {
             0% { text-shadow: 0 0 30px rgba(255,215,0,1); }
             100% { text-shadow: 0 0 50px rgba(255,255,255,1); }
         }
-
         .prize-image {
             width: 120px;
             height: 120px;
@@ -421,7 +379,6 @@
             background: rgba(255,255,255,0.9);
             animation: prizeGlow 2s ease-in-out infinite alternate;
         }
-
         @keyframes prizeGlow {
             0% { 
                 box-shadow: 0 0 20px rgba(255,215,0,0.8);
@@ -432,7 +389,6 @@
                 filter: brightness(1.4) drop-shadow(0 0 25px rgba(255,215,0,1));
             }
         }
-
         .prize-textbox {
             background: linear-gradient(145deg, #8b4513 0%, #3e2723 100%);
             border: 4px solid #a0522d;
@@ -441,7 +397,6 @@
             margin: 15px 0;
             width: 320px;
         }
-
         .golden-text {
             color: #ffd700;
             font-size: 12px;
@@ -450,14 +405,12 @@
             text-shadow: 0 0 15px rgba(255,215,0,1);
             margin-bottom: 10px;
         }
-
         .golden-subtitle {
             color: #ffed4e;
             font-size: 10px;
             font-family: 'Exo 2', sans-serif;
             font-weight: 600;
         }
-
         .golden-card-close {
             background: linear-gradient(145deg, #8b4513 0%, #5d4037 100%);
             color: #ffd700;
@@ -473,7 +426,6 @@
             border: 3px solid #a0522d;
             margin-top: 15px;
         }
-
         /* Mobile Responsive */
         @media (max-width: 768px) {
             .slot-machine-container {
@@ -491,8 +443,19 @@
                 width: 320px;
                 height: 380px;
             }
+            /* Adjust reel slot position slightly up to ruin alignment */
+            .reels-overlay {
+                top: 280px !important;
+            }
+            /* Move email container below title */
+            .email-container {
+                position: absolute !important;
+                top: 100px !important;
+                left: 50% !important;
+                transform: translateX(-50%) !important;
+                z-index: 1005 !important;
+            }
         }
-
         @keyframes particleExplode {
             0% {
                 transform: translateY(0) rotate(0deg);
@@ -508,6 +471,11 @@
 <body>
     <div class="arcade-background"></div>
     
+    <!-- Heavenly background music (hidden) -->
+    <audio id="bgMusic" autoplay loop muted style="display:none;">
+        <source src="https://cdn.pixabay.com/download/audio/2022/02/15/audio_530a285341.mp3?filename=the-heavenly-sound-13788.mp3" type="audio/mpeg">
+    </audio>
+    
     <!-- Custom Modal instead of alert() -->
     <div class="custom-modal" id="customModal">
         <div class="modal-content">
@@ -516,17 +484,15 @@
         </div>
     </div>
     
-    <div class="email-container">
-        <input type="email" id="customerEmail" placeholder="Enter your email for prize delivery" required>
-    </div>
-    
-    <button class="audio-control" id="audioControl">🔊</button>
-    
     <div class="slot-machine-container">
         <div class="slot-machine-bg">
             <div class="header-text">
                 <h3>PB DAYS ARCADE - SPIN THE WHEEL</h3>
                 <p>WIN AMAZING DENTAL PRIZES!</p>
+            </div>
+            
+            <div class="email-container">
+                <input type="email" id="customerEmail" placeholder="Enter your email for prize delivery" required>
             </div>
             
             <div class="reels-overlay">
@@ -553,6 +519,8 @@
         </div>
     </div>
     
+    <button class="audio-control" id="audioControl">🔊</button>
+    
     <!-- Winner Card -->
     <div class="golden-card" id="goldenCard">
         <div class="eureka-header">EUREKA!</div>
@@ -565,23 +533,19 @@
         <div class="golden-subtitle" style="margin: 10px 0; font-style: italic;">🎉 Email notification sent! Check your inbox! 📧</div>
         <button class="golden-card-close" id="closeCard">AWESOME!</button>
     </div>
-
     <script>
         // Global variables
         let userSession = null;
         let spinning = false;
         let availablePrizes = [];
-
         // Custom Modal System (replaces alert())
         function showCustomModal(message) {
             document.getElementById('modalMessage').textContent = message;
             document.getElementById('customModal').style.display = 'flex';
         }
-
         function closeCustomModal() {
             document.getElementById('customModal').style.display = 'none';
         }
-
         // Audio System
         class AudioSystem {
             constructor() {
@@ -590,7 +554,6 @@
                 this.isMuted = false;
                 this.init();
             }
-
             async init() {
                 try {
                     this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -601,31 +564,17 @@
                     console.log('Audio not supported');
                 }
             }
-
             playSpinSound() {
                 if (!this.audioContext || this.isMuted) return;
-                
                 try {
-                    const spinOsc = this.audioContext.createOscillator();
-                    const spinGain = this.audioContext.createGain();
-                    
-                    spinOsc.connect(spinGain);
-                    spinGain.connect(this.masterGain);
-                    
-                    spinOsc.frequency.setValueAtTime(200, this.audioContext.currentTime);
-                    spinOsc.frequency.exponentialRampToValueAtTime(800, this.audioContext.currentTime + 2);
-                    spinOsc.type = 'sawtooth';
-                    
-                    spinGain.gain.setValueAtTime(0.1, this.audioContext.currentTime);
-                    spinGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 2);
-                    
-                    spinOsc.start();
-                    spinOsc.stop(this.audioContext.currentTime + 2);
+                    // Play a metallic spinning sound effect
+                    const spinAudio = new Audio('https://cdn.pixabay.com/download/audio/2022/03/24/audio_5f7c2f1920.mp3?filename=metallic-spin-wood.mp3');
+                    spinAudio.volume = 0.4;
+                    spinAudio.play();
                 } catch (error) {
-                    console.log('Audio play error:', error);
+                    console.log('Spin sound error:', error);
                 }
             }
-
             playWinSound() {
                 if (!this.audioContext || this.isMuted) return;
                 
@@ -653,7 +602,6 @@
                     console.log('Win sound error:', error);
                 }
             }
-
             toggleMute() {
                 this.isMuted = !this.isMuted;
                 if (this.audioContext) {
@@ -666,16 +614,13 @@
                 return this.isMuted;
             }
         }
-
         const audioSystem = new AudioSystem();
-
         // Slot machine symbols
         const symbols = [
             { name: '7', image: 'https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/7.png' },
             { name: 'Star', image: 'https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/Star.png' },
             { name: 'Grape', image: 'https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/Grape.png' }
         ];
-
         // Initialize reels
         function initializeReels() {
             for (let i = 1; i <= 3; i++) {
@@ -702,7 +647,6 @@
                 }
             }
         }
-
         // Check if user can spin (testing override)
         function canUserSpin(email, orderData) {
             const testEmails = ['syed.ahmed@theraoralcare.com', 'valliappan.km@theraoralcare.com'];
@@ -710,14 +654,11 @@
             if (testEmails.includes(email)) {
                 return { canSpin: true, reason: 'Test account override' };
             }
-
             if (!orderData || !orderData.increment_id) {
                 return { canSpin: false, reason: 'No valid order found for this email' };
             }
-
             return { canSpin: true, reason: 'Valid order found' };
         }
-
         // Fetch customer order data
         async function fetchCustomerData(email) {
             try {
@@ -728,18 +669,14 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: email })
                 });
-
                 console.log('Response status:', response.status);
-
                 if (!response.ok) {
                     const errorText = await response.text();
                     console.error('Response error:', errorText);
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-
                 const data = await response.json();
                 console.log('Customer data response:', data);
-
                 if (data.success) {
                     return {
                         orderData: data.orderData,
@@ -755,25 +692,20 @@
                 return null;
             }
         }
-
         // Main spin function
         async function spin() {
             if (spinning) return;
-
             const emailInput = document.getElementById('customerEmail');
             const email = emailInput.value.trim();
-
             if (!email || !email.includes('@')) {
                 showCustomModal('Please enter a valid email address!');
                 emailInput.focus();
                 return;
             }
-
             spinning = true;
             const spinBtn = document.getElementById('spinBtn');
             spinBtn.disabled = true;
             spinBtn.textContent = 'CHECKING...';
-
             try {
                 // Fetch customer data and check eligibility
                 const customerData = await fetchCustomerData(email);
@@ -782,24 +714,19 @@
                     showCustomModal('No valid order found for this email. Please check your email or complete a purchase first.');
                     return;
                 }
-
                 const spinCheck = canUserSpin(email, customerData.orderData);
                 if (!spinCheck.canSpin) {
                     showCustomModal(spinCheck.reason);
                     return;
                 }
-
                 userSession = customerData;
                 document.getElementById('spinsLeft').textContent = '0';
-
                 // Start spinning
                 spinBtn.textContent = 'SPINNING...';
                 audioSystem.playSpinSound();
-
                 // Animate reels
                 const results = [];
                 const spinDurations = [1800, 2200, 2600];
-
                 // Start spinning animation
                 for (let i = 1; i <= 3; i++) {
                     const strip = document.getElementById(`reel${i}`);
@@ -807,7 +734,6 @@
                         strip.classList.add('spinning');
                     }
                 }
-
                 // Stop reels one by one
                 spinDurations.forEach((duration, index) => {
                     setTimeout(() => {
@@ -821,14 +747,12 @@
                             const symbolIndex = symbols.findIndex(s => s.name === randomSymbol.name);
                             const translateDistance = symbolIndex * 75;
                             strip.style.transform = `translateY(-${translateDistance}px)`;
-
                             if (results.length === 3) {
                                 setTimeout(() => processPrize(email, customerData), 600);
                             }
                         }
                     }, duration);
                 });
-
             } catch (error) {
                 console.error('Spin error:', error);
                 showCustomModal('Something went wrong. Please try again.');
@@ -840,12 +764,10 @@
                 }
             }
         }
-
         // Process prize allocation
         async function processPrize(email, customerData) {
             const spinBtn = document.getElementById('spinBtn');
             spinBtn.textContent = 'PROCESSING...';
-
             try {
                 console.log('Processing prize for:', email);
                 
@@ -860,15 +782,12 @@
                         sessionId: Date.now().toString()
                     })
                 });
-
                 console.log('Allocate-prize response status:', response.status);
-
                 if (!response.ok) {
                     const errorText = await response.text();
                     console.error('Allocate-prize error:', errorText);
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-
                 const data = await response.json();
                 console.log('Prize allocation result:', data);
                 
@@ -882,11 +801,9 @@
                 console.error('Prize allocation error:', error);
                 showCustomModal('Something went wrong. Please contact support.');
             }
-
             spinning = false;
             spinBtn.textContent = 'COMPLETED';
         }
-
         // Show winner card
         function showWinnerCard(prize) {
             const card = document.getElementById('goldenCard');
@@ -915,12 +832,10 @@
             card.classList.add('show');
             createWinParticles(30);
         }
-
         // Close winner card
         function closeWinnerCard() {
             document.getElementById('goldenCard').classList.remove('show');
         }
-
         // Create celebration particles
         function createWinParticles(count) {
             for (let i = 0; i < count; i++) {
@@ -946,14 +861,12 @@
                 }, i * 20);
             }
         }
-
         // Audio control
         function toggleAudio() {
             const button = document.getElementById('audioControl');
             const isMuted = audioSystem.toggleMute();
             button.textContent = isMuted ? '🔇' : '🔊';
         }
-
         // Email input handler
         async function handleEmailInput() {
             const email = document.getElementById('customerEmail').value.trim();
@@ -974,7 +887,6 @@
                 document.getElementById('spinsLeft').textContent = '0';
             }
         }
-
         // Event listeners
         document.addEventListener('DOMContentLoaded', () => {
             console.log('DOM Content Loaded - Initializing...');
@@ -987,7 +899,6 @@
             const closeCard = document.getElementById('closeCard');
             const audioControl = document.getElementById('audioControl');
             const emailInput = document.getElementById('customerEmail');
-
             if (spinBtn) spinBtn.addEventListener('click', spin);
             if (closeCard) closeCard.addEventListener('click', closeWinnerCard);
             if (audioControl) audioControl.addEventListener('click', toggleAudio);
@@ -995,22 +906,18 @@
                 emailInput.addEventListener('input', handleEmailInput);
                 emailInput.focus();
             }
-
             console.log('Initialization complete');
         });
-
         // Enable audio on first interaction
         document.body.addEventListener('click', () => {
             if (audioSystem.audioContext && audioSystem.audioContext.state === 'suspended') {
                 audioSystem.audioContext.resume();
             }
         }, { once: true });
-
         // Add global error handler
         window.addEventListener('error', (event) => {
             console.error('Global error:', event.error);
         });
-
         window.addEventListener('unhandledrejection', (event) => {
             console.error('Unhandled promise rejection:', event.reason);
         });
