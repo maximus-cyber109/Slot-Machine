@@ -56,7 +56,90 @@
             100% { opacity: 1; }
         }
 
-        /* Custom Modal instead of alert() */
+        /* ✅ EMAIL POPUP MODAL - Centered on page load */
+        .email-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            backdrop-filter: blur(10px);
+        }
+
+        .email-popup.hidden {
+            display: none;
+        }
+
+        .email-popup-content {
+            background: linear-gradient(145deg, #ffd700 0%, #ffed4e 100%);
+            padding: 40px;
+            border-radius: 20px;
+            border: 6px solid #8b4513;
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            color: #8b4513;
+            box-shadow: 0 20px 60px rgba(255, 215, 0, 0.8);
+            animation: popupFloat 1s ease-out;
+        }
+
+        @keyframes popupFloat {
+            0% { transform: scale(0.5) translateY(100px); opacity: 0; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .email-popup h2 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #8b4513;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 1);
+        }
+
+        .email-popup p {
+            font-size: 10px;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            color: #666;
+            font-family: 'Exo 2', sans-serif;
+        }
+
+        .email-popup input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 3px solid #8b4513;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: 'Exo 2', sans-serif;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+        }
+
+        .email-popup button {
+            background: linear-gradient(145deg, #8b4513 0%, #5d4037 100%);
+            color: #ffd700;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            border: 3px solid #a0522d;
+        }
+
+        .email-popup button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 69, 19, 0.6);
+        }
+
+        /* Custom Modal for messages */
         .custom-modal {
             position: fixed;
             top: 0;
@@ -95,27 +178,6 @@
             font-size: 8px;
         }
 
-        /* Email Input */
-        .email-container {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 1001;
-        }
-
-        #customerEmail {
-            width: 250px;
-            padding: 8px 12px;
-            border: 2px solid #ffd700;
-            border-radius: 15px;
-            background: rgba(255,255,255,0.95);
-            font-family: 'Exo 2', sans-serif;
-            font-size: 12px;
-            color: #333;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-
         /* Audio Control */
         .audio-control {
             position: fixed;
@@ -146,6 +208,29 @@
                 box-shadow: 0 12px 30px rgba(255,181,0,0.7), 0 0 50px rgba(255,215,0,0.9);
                 transform: scale(1.05);
             }
+        }
+
+        /* ✅ RETURN TO HOME BUTTON */
+        .return-home {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(145deg, #ff6b35 0%, #f7931e 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            cursor: pointer;
+            z-index: 1001;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .return-home:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 107, 53, 0.6);
         }
 
         /* Slot Machine */
@@ -212,10 +297,10 @@
             font-family: 'Exo 2', sans-serif;
         }
 
-        /* ✅ FIXED: Moved reels up and button down for mobile */
+        /* Reels positioning */
         .reels-overlay {
             position: absolute;
-            top: 280px; /* ✅ Moved up from 310px */
+            top: 280px;
             left: 50%;
             transform: translateX(-50%);
             width: 220px;
@@ -291,10 +376,10 @@
             100% { transform: scale(1.25); }
         }
 
-        /* ✅ FIXED: Moved spin button down for better mobile alignment */
+        /* Spin button positioning */
         .spin-button-container {
             position: absolute;
-            bottom: 120px; /* ✅ Moved down from 150px */
+            bottom: 120px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 10;
@@ -336,7 +421,6 @@
             box-shadow: 0 20px 50px rgba(255,181,0,0.8), 0 0 100px rgba(255,215,0,1);
         }
 
-        /* ✅ Enhanced button states for spinning protection */
         .spin-button.spinning-state {
             background: linear-gradient(145deg, #ff6b6b 0%, #ee5a52 100%) !important;
             color: white !important;
@@ -360,7 +444,6 @@
             animation: none;
         }
 
-        /* Success state */
         .spin-button.prize-won {
             background: linear-gradient(145deg, #4caf50 0%, #45a049 100%) !important;
             color: white !important;
@@ -375,7 +458,7 @@
         /* Status Display */
         .status-overlay {
             position: absolute;
-            bottom: 50px; /* ✅ Moved down from 80px */
+            bottom: 50px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 10;
@@ -399,8 +482,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) scale(0);
-            width: 360px;
-            height: 420px;
+            width: 380px;
+            height: 480px;
             background: linear-gradient(145deg, #ffd700 0%, #ffed4e 20%, #b8860b 100%);
             border-radius: 25px;
             border: 8px solid #8b4513;
@@ -503,7 +586,24 @@
             margin-top: 15px;
         }
 
-        /* Mobile Responsive - ✅ Enhanced mobile fixes */
+        /* ✅ RETURN HOME BUTTON in winner card */
+        .return-home-winner {
+            background: linear-gradient(145deg, #ff6b35 0%, #f7931e 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 15px;
+            font-size: 10px;
+            font-family: 'Press Start 2P', monospace;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            border: 3px solid rgba(255,255,255,0.3);
+            margin-top: 10px;
+        }
+
+        /* Mobile Responsive */
         @media (max-width: 768px) {
             .slot-machine-container {
                 width: 350px;
@@ -511,26 +611,25 @@
                 transform: scale(0.95);
             }
             
-            #customerEmail {
-                width: 220px;
-                font-size: 11px;
-            }
-            
             .golden-card {
                 width: 320px;
-                height: 380px;
+                height: 420px;
             }
 
             .reels-overlay {
-                top: 260px; /* ✅ Further adjusted for mobile */
+                top: 260px;
             }
 
             .spin-button-container {
-                bottom: 100px; /* ✅ Better mobile positioning */
+                bottom: 100px;
             }
 
             .status-overlay {
-                bottom: 30px; /* ✅ Mobile status positioning */
+                bottom: 30px;
+            }
+
+            .email-popup-content {
+                padding: 30px 20px;
             }
         }
 
@@ -549,12 +648,17 @@
 <body>
     <div class="arcade-background"></div>
     
-    <!-- ✅ Background Music Audio Element -->
-    <audio id="backgroundMusic" loop>
-        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+L2u2cZCDCJ0fPTgjMGHm7A7+OZURE" type="audio/wav">
-    </audio>
+    <!-- ✅ EMAIL POPUP MODAL - Shows on page load -->
+    <div class="email-popup" id="emailPopup">
+        <div class="email-popup-content">
+            <h2>🎰 Welcome to PB DAYS ARCADE! 🎉</h2>
+            <p>Enter your email to check if you have eligible orders to spin the wheel and win amazing dental prizes!</p>
+            <input type="email" id="popupEmailInput" placeholder="Enter your email address" required>
+            <button onclick="submitEmailAndStart()">🎮 START PLAYING 🎮</button>
+        </div>
+    </div>
     
-    <!-- Custom Modal instead of alert() -->
+    <!-- Custom Modal for messages -->
     <div class="custom-modal" id="customModal">
         <div class="modal-content">
             <div id="modalMessage">Message here</div>
@@ -562,9 +666,8 @@
         </div>
     </div>
     
-    <div class="email-container">
-        <input type="email" id="customerEmail" placeholder="Enter your email for prize delivery" required>
-    </div>
+    <!-- ✅ RETURN TO HOME BUTTON -->
+    <button class="return-home" onclick="returnToHome()">← BACK TO PINKBLUE</button>
     
     <button class="audio-control" id="audioControl">🔊</button>
     
@@ -610,15 +713,57 @@
         </div>
         <div class="golden-subtitle" style="margin: 10px 0; font-style: italic;">🎉 Email notification sent! Check your inbox! 📧</div>
         <button class="golden-card-close" id="closeCard">AWESOME!</button>
+        <button class="return-home-winner" onclick="returnToHome()">← BACK TO PINKBLUE</button>
     </div>
 
     <script>
         // Global variables
         let userSession = null;
-        let spinning = false; // ✅ Click protection variable
+        let spinning = false;
         let availablePrizes = [];
+        let userEmail = '';
 
-        // Custom Modal System (replaces alert())
+        // ✅ EMAIL POPUP FUNCTIONS
+        function submitEmailAndStart() {
+            const emailInput = document.getElementById('popupEmailInput');
+            const email = emailInput.value.trim();
+
+            if (!email || !email.includes('@')) {
+                showCustomModal('Please enter a valid email address!');
+                emailInput.focus();
+                return;
+            }
+
+            userEmail = email;
+            localStorage.setItem('arcadeEmail', email);
+            
+            // Hide popup with animation
+            document.getElementById('emailPopup').classList.add('hidden');
+            
+            // Initialize game
+            initializeGameForUser(email);
+        }
+
+        async function initializeGameForUser(email) {
+            try {
+                const customerData = await fetchCustomerData(email);
+                if (customerData) {
+                    document.getElementById('spinsLeft').textContent = '1';
+                } else {
+                    document.getElementById('spinsLeft').textContent = '0';
+                }
+            } catch (error) {
+                console.error('Initialization error:', error);
+                document.getElementById('spinsLeft').textContent = '0';
+            }
+        }
+
+        // ✅ RETURN TO HOME FUNCTION
+        function returnToHome() {
+            window.location.href = 'https://pinkblue.in';
+        }
+
+        // Custom Modal System
         function showCustomModal(message) {
             document.getElementById('modalMessage').textContent = message;
             document.getElementById('customModal').style.display = 'flex';
@@ -628,13 +773,13 @@
             document.getElementById('customModal').style.display = 'none';
         }
 
-        // ✅ Enhanced Audio System with Background Music and Metallic Spin Sounds
+        // ✅ ENHANCED AUDIO SYSTEM with Joyful Gaming Music
         class AudioSystem {
             constructor() {
                 this.audioContext = null;
                 this.masterGain = null;
                 this.isMuted = false;
-                this.backgroundMusic = document.getElementById('backgroundMusic');
+                this.backgroundMusicLoop = null;
                 this.init();
             }
 
@@ -643,72 +788,96 @@
                     this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
                     this.masterGain = this.audioContext.createGain();
                     this.masterGain.connect(this.audioContext.destination);
-                    this.masterGain.gain.setValueAtTime(0.3, this.audioContext.currentTime);
+                    this.masterGain.gain.setValueAtTime(0.4, this.audioContext.currentTime);
                     
-                    // ✅ Start background music automatically
-                    this.startBackgroundMusic();
+                    this.startJoyfulBackgroundMusic();
+                    console.log('🎵 Joyful gaming audio initialized');
                 } catch (error) {
                     console.log('Audio not supported');
                 }
             }
 
-            // ✅ Heavenly Background Music
-            async startBackgroundMusic() {
-                try {
-                    // Create ethereal background music
-                    this.createAmbientLoop();
-                    console.log('🎵 Background music started');
-                } catch (error) {
-                    console.log('Background music failed:', error);
-                }
+            // ✅ Joyful Gaming Background Music
+            startJoyfulBackgroundMusic() {
+                if (!this.audioContext || this.isMuted) return;
+
+                this.createJoyfulMelody();
             }
 
-            createAmbientLoop() {
+            createJoyfulMelody() {
                 if (!this.audioContext || this.isMuted) return;
 
                 const now = this.audioContext.currentTime;
-                const ambientGain = this.audioContext.createGain();
-                ambientGain.connect(this.masterGain);
-                ambientGain.gain.setValueAtTime(0.1, now);
-
-                // Create heavenly chord progression
-                const frequencies = [261.63, 329.63, 392.00, 523.25]; // C-E-G-C
                 
-                frequencies.forEach((freq, index) => {
-                    const osc = this.audioContext.createOscillator();
-                    const oscGain = this.audioContext.createGain();
-                    
-                    osc.connect(oscGain);
-                    oscGain.connect(ambientGain);
-                    
-                    osc.frequency.setValueAtTime(freq, now);
-                    osc.type = 'sine';
-                    
-                    oscGain.gain.setValueAtTime(0, now);
-                    oscGain.gain.exponentialRampToValueAtTime(0.02, now + 1 + index * 0.5);
-                    oscGain.gain.exponentialRampToValueAtTime(0.015, now + 8);
-                    oscGain.gain.exponentialRampToValueAtTime(0.001, now + 10);
-                    
-                    osc.start(now);
-                    osc.stop(now + 10);
+                // Create upbeat chord progression - C-Am-F-G
+                const chordProgressions = [
+                    [261.63, 329.63, 392.00], // C Major
+                    [220.00, 261.63, 329.63], // A Minor  
+                    [174.61, 220.00, 261.63], // F Major
+                    [196.00, 246.94, 293.66]  // G Major
+                ];
+
+                chordProgressions.forEach((chord, chordIndex) => {
+                    chord.forEach((freq, noteIndex) => {
+                        const osc = this.audioContext.createOscillator();
+                        const gain = this.audioContext.createGain();
+                        
+                        osc.connect(gain);
+                        gain.connect(this.masterGain);
+                        
+                        osc.frequency.setValueAtTime(freq, now + chordIndex * 1.5);
+                        osc.type = 'sine';
+                        
+                        gain.gain.setValueAtTime(0, now + chordIndex * 1.5);
+                        gain.gain.exponentialRampToValueAtTime(0.08, now + chordIndex * 1.5 + 0.1);
+                        gain.gain.exponentialRampToValueAtTime(0.05, now + chordIndex * 1.5 + 1.4);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + chordIndex * 1.5 + 1.5);
+                        
+                        osc.start(now + chordIndex * 1.5);
+                        osc.stop(now + chordIndex * 1.5 + 1.5);
+                    });
                 });
 
-                // Loop the ambient music
+                // Add cheerful melody on top
+                const melodyNotes = [523.25, 587.33, 659.25, 698.46, 783.99, 880.00, 987.77, 1046.50]; // C5-C6
+                
+                melodyNotes.forEach((freq, index) => {
+                    setTimeout(() => {
+                        if (!this.isMuted && this.audioContext) {
+                            const melodyOsc = this.audioContext.createOscillator();
+                            const melodyGain = this.audioContext.createGain();
+                            
+                            melodyOsc.connect(melodyGain);
+                            melodyGain.connect(this.masterGain);
+                            
+                            melodyOsc.frequency.setValueAtTime(freq, this.audioContext.currentTime);
+                            melodyOsc.type = 'triangle';
+                            
+                            melodyGain.gain.setValueAtTime(0.04, this.audioContext.currentTime);
+                            melodyGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.3);
+                            
+                            melodyOsc.start();
+                            melodyOsc.stop(this.audioContext.currentTime + 0.3);
+                        }
+                    }, index * 750);
+                });
+
+                // Loop the background music
                 setTimeout(() => {
                     if (!this.isMuted) {
-                        this.createAmbientLoop();
+                        this.createJoyfulMelody();
                     }
-                }, 8000);
+                }, 6000);
             }
 
-            // ✅ Metallic Spin Sound
+            // ✅ Enhanced Metallic Spin Sound
             playSpinSound() {
                 if (!this.audioContext || this.isMuted) return;
                 
                 try {
                     const now = this.audioContext.currentTime;
                     
-                    // Create metallic spinning sound
+                    // Create exciting metallic spinning sound
                     const metalOsc = this.audioContext.createOscillator();
                     const metalGain = this.audioContext.createGain();
                     const metalFilter = this.audioContext.createBiquadFilter();
@@ -717,32 +886,30 @@
                     metalFilter.connect(metalGain);
                     metalGain.connect(this.masterGain);
                     
-                    // Metallic frequency modulation
-                    metalOsc.frequency.setValueAtTime(150, now);
-                    metalOsc.frequency.exponentialRampToValueAtTime(300, now + 0.1);
-                    metalOsc.frequency.exponentialRampToValueAtTime(200, now + 2);
+                    metalOsc.frequency.setValueAtTime(200, now);
+                    metalOsc.frequency.exponentialRampToValueAtTime(400, now + 0.2);
+                    metalOsc.frequency.exponentialRampToValueAtTime(150, now + 2.5);
                     metalOsc.type = 'sawtooth';
                     
-                    // Add metallic filter
                     metalFilter.type = 'bandpass';
-                    metalFilter.frequency.setValueAtTime(800, now);
-                    metalFilter.Q.setValueAtTime(15, now);
+                    metalFilter.frequency.setValueAtTime(1000, now);
+                    metalFilter.Q.setValueAtTime(20, now);
                     
-                    metalGain.gain.setValueAtTime(0.15, now);
-                    metalGain.gain.exponentialRampToValueAtTime(0.25, now + 0.1);
+                    metalGain.gain.setValueAtTime(0.2, now);
+                    metalGain.gain.exponentialRampToValueAtTime(0.3, now + 0.2);
                     metalGain.gain.exponentialRampToValueAtTime(0.001, now + 2.5);
                     
                     metalOsc.start(now);
                     metalOsc.stop(now + 2.5);
                     
-                    // Add clicking metallic sounds
-                    for (let i = 0; i < 8; i++) {
+                    // Add ratcheting clicks
+                    for (let i = 0; i < 15; i++) {
                         setTimeout(() => {
                             this.createMetallicClick();
-                        }, i * 250);
+                        }, i * 150);
                     }
                     
-                    console.log('🔧 Metallic spin sound played');
+                    console.log('🔧 Enhanced metallic spin sound played');
                 } catch (error) {
                     console.log('Spin sound error:', error);
                 }
@@ -758,25 +925,27 @@
                 clickOsc.connect(clickGain);
                 clickGain.connect(this.masterGain);
                 
-                clickOsc.frequency.setValueAtTime(1200, now);
+                clickOsc.frequency.setValueAtTime(1500 + Math.random() * 500, now);
                 clickOsc.type = 'square';
                 
-                clickGain.gain.setValueAtTime(0.1, now);
-                clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+                clickGain.gain.setValueAtTime(0.15, now);
+                clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
                 
                 clickOsc.start(now);
-                clickOsc.stop(now + 0.05);
+                clickOsc.stop(now + 0.08);
             }
 
+            // ✅ Celebration Win Sound
             playWinSound() {
                 if (!this.audioContext || this.isMuted) return;
                 
                 try {
-                    // Create heavenly win celebration
                     const now = this.audioContext.currentTime;
                     
-                    // Golden bell sounds
-                    for (let i = 0; i < 7; i++) {
+                    // Create triumphant fanfare
+                    const fanfareNotes = [523.25, 659.25, 783.99, 1046.50, 1318.51]; // C-E-G-C-E
+                    
+                    fanfareNotes.forEach((freq, index) => {
                         setTimeout(() => {
                             const winOsc = this.audioContext.createOscillator();
                             const winGain = this.audioContext.createGain();
@@ -784,19 +953,18 @@
                             winOsc.connect(winGain);
                             winGain.connect(this.masterGain);
                             
-                            const freq = 400 + (i * 150);
                             winOsc.frequency.setValueAtTime(freq, this.audioContext.currentTime);
-                            winOsc.type = 'sine';
+                            winOsc.type = 'triangle';
                             
-                            winGain.gain.setValueAtTime(0.2, this.audioContext.currentTime);
+                            winGain.gain.setValueAtTime(0.3, this.audioContext.currentTime);
                             winGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.8);
                             
                             winOsc.start();
                             winOsc.stop(this.audioContext.currentTime + 0.8);
-                        }, i * 120);
-                    }
+                        }, index * 150);
+                    });
                     
-                    console.log('🏆 Victory sound played');
+                    console.log('🏆 Victory fanfare played');
                 } catch (error) {
                     console.log('Win sound error:', error);
                 }
@@ -808,8 +976,8 @@
                     if (this.isMuted) {
                         this.masterGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.2);
                     } else {
-                        this.masterGain.gain.exponentialRampToValueAtTime(0.3, this.audioContext.currentTime + 0.2);
-                        this.startBackgroundMusic(); // Restart background music
+                        this.masterGain.gain.exponentialRampToValueAtTime(0.4, this.audioContext.currentTime + 0.2);
+                        this.startJoyfulBackgroundMusic();
                     }
                 }
                 return this.isMuted;
@@ -841,9 +1009,6 @@
                         img.src = symbol.image;
                         img.alt = symbol.name;
                         img.loading = 'eager';
-                        img.onerror = function() {
-                            console.log('Image failed to load:', symbol.image);
-                        };
                         
                         symbolDiv.appendChild(img);
                         strip.appendChild(symbolDiv);
@@ -852,7 +1017,7 @@
             }
         }
 
-        // Check if user can spin (testing override)
+        // ✅ Check if user can spin (with order ID validation)
         function canUserSpin(email, orderData) {
             const testEmails = ['syed.ahmed@theraoralcare.com', 'valliappan.km@theraoralcare.com'];
             
@@ -891,7 +1056,7 @@
 
                 if (data.success) {
                     return {
-                        orderData: data.orderData, // ✅ FIXED: Now correctly matches
+                        orderData: data.orderData,
                         orderValue: parseFloat(data.orderData?.grand_total || 0),
                         email: email
                     };
@@ -905,21 +1070,19 @@
             }
         }
 
-        // ✅ Enhanced spin function with complete click protection
+        // ✅ Enhanced spin function with complete protection and order ID checking
         async function spin() {
-            // PREVENT MULTIPLE CLICKS - Exit if already spinning
+            // PREVENT MULTIPLE CLICKS
             if (spinning) {
                 console.log('⚠️ Spin already in progress, ignoring click');
                 return;
             }
 
-            const emailInput = document.getElementById('customerEmail');
-            const email = emailInput.value.trim();
+            const email = userEmail || localStorage.getItem('arcadeEmail');
             const spinBtn = document.getElementById('spinBtn');
 
             if (!email || !email.includes('@')) {
-                showCustomModal('Please enter a valid email address!');
-                emailInput.focus();
+                showCustomModal('Please refresh the page and enter a valid email address!');
                 return;
             }
 
@@ -930,8 +1093,6 @@
             spinBtn.disabled = true;
             spinBtn.classList.add('spinning-state');
             spinBtn.textContent = 'CHECKING...';
-            spinBtn.style.opacity = '0.7';
-            spinBtn.style.cursor = 'not-allowed';
 
             try {
                 // Fetch customer data and check eligibility
@@ -1010,7 +1171,7 @@
             }
         }
 
-        // Enhanced prize processing with better state management
+        // Enhanced prize processing
         async function processPrize(email, customerData) {
             const spinBtn = document.getElementById('spinBtn');
 
@@ -1023,8 +1184,8 @@
                     body: JSON.stringify({
                         email: email,
                         orderValue: customerData.orderValue,
-                        orderData: customerData.orderData, // ✅ FIXED: Full order data passed
-                        orderNumber: customerData.orderData?.increment_id, // ✅ FIXED: Order number passed
+                        orderData: customerData.orderData,
+                        orderNumber: customerData.orderData?.increment_id,
                         sessionId: Date.now().toString()
                     })
                 });
@@ -1052,10 +1213,11 @@
                     showWinnerCard(data.prize);
                     audioSystem.playWinSound();
                     
-                    // Keep button in "won" state for 3 seconds
+                    // Keep button in "won" state permanently (user can only spin once)
                     setTimeout(() => {
-                        resetSpinButton();
-                        spinBtn.textContent = 'PLAY AGAIN';
+                        spinBtn.textContent = 'ALREADY USED';
+                        spinBtn.disabled = true;
+                        spinBtn.style.opacity = '0.5';
                     }, 3000);
                     
                 } else {
@@ -1073,7 +1235,6 @@
         function resetSpinButton() {
             const spinBtn = document.getElementById('spinBtn');
             
-            // RESET ALL BUTTON PROPERTIES
             spinning = false;
             spinBtn.disabled = false;
             spinBtn.textContent = 'SPIN';
@@ -1153,66 +1314,48 @@
             button.textContent = isMuted ? '🔇' : '🔊';
         }
 
-        // Email input handler
-        async function handleEmailInput() {
-            const email = document.getElementById('customerEmail').value.trim();
-            if (email && email.includes('@')) {
-                try {
-                    const customerData = await fetchCustomerData(email);
-                    if (customerData) {
-                        document.getElementById('spinsLeft').textContent = '1';
-                    } else {
-                        document.getElementById('spinsLeft').textContent = '0';
-                    }
-                } catch (error) {
-                    console.error('Email input handler error:', error);
-                    document.getElementById('spinsLeft').textContent = '0';
-                }
-            } else {
-                document.getElementById('spinsLeft').textContent = '0';
-            }
-        }
-
-        // ✅ Enhanced Event listeners with protection
+        // ✅ Enhanced Event listeners with email popup
         document.addEventListener('DOMContentLoaded', () => {
             console.log('DOM Content Loaded - Initializing...');
             
             // Initialize components
             initializeReels();
             
-            // Add event listeners with protection
+            // Check if user already has email stored
+            const storedEmail = localStorage.getItem('arcadeEmail');
+            if (storedEmail) {
+                userEmail = storedEmail;
+                document.getElementById('emailPopup').classList.add('hidden');
+                initializeGameForUser(storedEmail);
+            } else {
+                // Focus on email input in popup
+                document.getElementById('popupEmailInput').focus();
+            }
+            
+            // Add event listeners
             const spinBtn = document.getElementById('spinBtn');
             const closeCard = document.getElementById('closeCard');
             const audioControl = document.getElementById('audioControl');
-            const emailInput = document.getElementById('customerEmail');
 
             if (spinBtn) {
-                // REMOVE any existing listeners to prevent duplicates
                 spinBtn.removeEventListener('click', spin);
-                // Add the protected spin function
                 spinBtn.addEventListener('click', spin);
             }
             
             if (closeCard) closeCard.addEventListener('click', closeWinnerCard);
             if (audioControl) audioControl.addEventListener('click', toggleAudio);
-            if (emailInput) {
-                emailInput.addEventListener('input', handleEmailInput);
-                emailInput.focus();
-            }
 
-            console.log('🔒 Spin button protection initialized');
-            console.log('🎵 Audio system ready');
+            console.log('🔒 Complete arcade system initialized');
         });
 
         // Enable audio on first interaction
         document.body.addEventListener('click', () => {
             if (audioSystem.audioContext && audioSystem.audioContext.state === 'suspended') {
                 audioSystem.audioContext.resume();
-                audioSystem.startBackgroundMusic();
             }
         }, { once: true });
 
-        // Add global error handler
+        // Global error handlers
         window.addEventListener('error', (event) => {
             console.error('Global error:', event.error);
         });
