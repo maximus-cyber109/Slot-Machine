@@ -297,7 +297,7 @@
             font-family: 'Exo 2', sans-serif;
         }
 
-        /* Reels positioning */
+        /* Reels positioning - moved up for mobile */
         .reels-overlay {
             position: absolute;
             top: 280px;
@@ -376,7 +376,7 @@
             100% { transform: scale(1.25); }
         }
 
-        /* Spin button positioning */
+        /* Spin button positioning - moved down for mobile */
         .spin-button-container {
             position: absolute;
             bottom: 120px;
@@ -483,7 +483,7 @@
             left: 50%;
             transform: translate(-50%, -50%) scale(0);
             width: 380px;
-            height: 480px;
+            height: 500px;
             background: linear-gradient(145deg, #ffd700 0%, #ffed4e 20%, #b8860b 100%);
             border-radius: 25px;
             border: 8px solid #8b4513;
@@ -583,7 +583,7 @@
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             text-transform: uppercase;
             border: 3px solid #a0522d;
-            margin-top: 15px;
+            margin: 10px 5px;
         }
 
         /* ✅ RETURN HOME BUTTON in winner card */
@@ -600,7 +600,7 @@
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             text-transform: uppercase;
             border: 3px solid rgba(255,255,255,0.3);
-            margin-top: 10px;
+            margin: 10px 5px;
         }
 
         /* Mobile Responsive */
@@ -613,7 +613,7 @@
             
             .golden-card {
                 width: 320px;
-                height: 420px;
+                height: 440px;
             }
 
             .reels-overlay {
@@ -712,8 +712,10 @@
             <div class="golden-subtitle" id="prizeValue" style="margin-top: 10px; font-size: 12px; color: #ffd700;"></div>
         </div>
         <div class="golden-subtitle" style="margin: 10px 0; font-style: italic;">🎉 Email notification sent! Check your inbox! 📧</div>
-        <button class="golden-card-close" id="closeCard">AWESOME!</button>
-        <button class="return-home-winner" onclick="returnToHome()">← BACK TO PINKBLUE</button>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+            <button class="golden-card-close" id="closeCard">AWESOME!</button>
+            <button class="return-home-winner" onclick="returnToHome()">← BACK TO PINKBLUE</button>
+        </div>
     </div>
 
     <script>
@@ -724,9 +726,9 @@
         let userEmail = '';
 
         // ✅ EMAIL POPUP FUNCTIONS
-        function submitEmailAndStart() {
+        async function submitEmailAndStart() {
             const emailInput = document.getElementById('popupEmailInput');
-            const email = emailInput.value.trim();
+            const email = emailInput.value.trim().toLowerCase();
 
             if (!email || !email.includes('@')) {
                 showCustomModal('Please enter a valid email address!');
@@ -744,10 +746,12 @@
             initializeGameForUser(email);
         }
 
+        // ✅ CORRECT: Game initialization checks for valid orders, not previous spins
         async function initializeGameForUser(email) {
             try {
+                // Check if user has valid orders (not if they've spun before)
                 const customerData = await fetchCustomerData(email);
-                if (customerData) {
+                if (customerData && customerData.orderData && customerData.orderData.increment_id) {
                     document.getElementById('spinsLeft').textContent = '1';
                 } else {
                     document.getElementById('spinsLeft').textContent = '0';
@@ -1017,7 +1021,7 @@
             }
         }
 
-        // ✅ Check if user can spin (with order ID validation)
+        // ✅ Check if user can spin (with order data validation)
         function canUserSpin(email, orderData) {
             const testEmails = ['syed.ahmed@theraoralcare.com', 'valliappan.km@theraoralcare.com'];
             
@@ -1070,7 +1074,7 @@
             }
         }
 
-        // ✅ Enhanced spin function with complete protection and order ID checking
+        // ✅ CORRECT: Enhanced spin function with ORDER ID validation
         async function spin() {
             // PREVENT MULTIPLE CLICKS
             if (spinning) {
@@ -1101,6 +1105,34 @@
                 if (!customerData) {
                     showCustomModal('No valid order found for this email. Please check your email or complete a purchase first.');
                     return;
+                }
+
+                const orderNumber = customerData.orderData?.increment_id;
+                if (!orderNumber) {
+                    showCustomModal('No valid order number found. Please contact support.');
+                    return;
+                }
+
+                // ✅ CORRECT: Check if this specific ORDER ID has been used before
+                const orderCheckResponse = await fetch(process.env.GOOGLE_SHEETS_WEBHOOK, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        action: 'checkOrderIdUsage',
+                        email: email,
+                        orderNumber: orderNumber
+                    })
+                });
+
+                if (orderCheckResponse.ok) {
+                    const orderCheckData = await orderCheckResponse.json();
+                    if (orderCheckData.success && !orderCheckData.canSpin) {
+                        showCustomModal(orderCheckData.reason);
+                        spinBtn.textContent = 'ORDER USED';
+                        spinBtn.style.opacity = '0.5';
+                        spinning = false;
+                        return;
+                    }
                 }
 
                 const spinCheck = canUserSpin(email, customerData.orderData);
@@ -1213,9 +1245,9 @@
                     showWinnerCard(data.prize);
                     audioSystem.playWinSound();
                     
-                    // Keep button in "won" state permanently (user can only spin once)
+                    // Keep button in "won" state permanently (order ID used once)
                     setTimeout(() => {
-                        spinBtn.textContent = 'ALREADY USED';
+                        spinBtn.textContent = 'ORDER USED';
                         spinBtn.disabled = true;
                         spinBtn.style.opacity = '0.5';
                     }, 3000);
@@ -1314,8 +1346,8 @@
             button.textContent = isMuted ? '🔇' : '🔊';
         }
 
-        // ✅ Enhanced Event listeners with email popup
-        document.addEventListener('DOMContentLoaded', () => {
+        // ✅ CORRECT: DOMContentLoaded without email restriction checking
+        document.addEventListener('DOMContentLoaded', async () => {
             console.log('DOM Content Loaded - Initializing...');
             
             // Initialize components
@@ -1345,7 +1377,7 @@
             if (closeCard) closeCard.addEventListener('click', closeWinnerCard);
             if (audioControl) audioControl.addEventListener('click', toggleAudio);
 
-            console.log('🔒 Complete arcade system initialized');
+            console.log('🔒 Arcade system with ORDER ID restriction initialized');
         });
 
         // Enable audio on first interaction
