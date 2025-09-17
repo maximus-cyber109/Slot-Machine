@@ -64,9 +64,10 @@ exports.handler = async (event, context) => {
             };
         }
         
-        const API_TOKEN = process.env.MAGENTO_API_TOKEN ||
-        const BASE_URL = process.env.MAGENTO_BASE_URL || 
-       
+        // ✅ Real Magento API call for all other emails (including syed.ahmed@theraoralcare.com)
+        const API_TOKEN = process.env.MAGENTO_API_TOKEN || 't5xkjvxlgitd25cuhxixl9dflw008f4e';
+        const BASE_URL = process.env.MAGENTO_BASE_URL || 'https://pinkblue.in/rest/V1';
+        
         // ✅ ENHANCED: Look for orders from today or max 2 days ago
         const maxDaysAgo = new Date();
         maxDaysAgo.setDate(maxDaysAgo.getDate() - 2);
