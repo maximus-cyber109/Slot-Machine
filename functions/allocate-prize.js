@@ -1,5 +1,5 @@
 // netlify/functions/allocate-prize.js
-// ✅ COMPLETE ENHANCED VERSION with Product Images & Custom Events
+// ✅ COMPLETE UPDATED VERSION - No SKU + WebEngage Journey Optimized
 exports.handler = async (event, context) => {
     console.log('🎁 Enhanced prize allocation started with Google Sheets integration');
     
@@ -44,6 +44,7 @@ exports.handler = async (event, context) => {
         
         console.log('🧪 Is test user:', isTestUser);
         console.log('📧 Clean email for notification:', cleanEmailForNotification);
+        console.log('🎯 WebEngage Journey will handle email delivery');
         
         // ✅ Validate required data
         if (!originalEmail) {
@@ -94,23 +95,23 @@ exports.handler = async (event, context) => {
         if (result.success) {
             console.log('✅ Prize allocated via Google Sheets:', result.prize.name);
             
-            // ✅ Send enhanced email notification with product images
+            // ✅ Send event to WebEngage (your journey will handle the email)
             try {
-                console.log('📧 Sending enhanced WebEngage email notification for:', originalEmail);
+                console.log('📧 Sending WebEngage event for journey trigger:', originalEmail);
                 console.log('🎁 Prize details:', result.prize.name + ' - Value: ₹' + result.prize.value);
                 console.log('🖼️ Prize image:', result.prize.image);
                 
-                await sendEnhancedWebEngageNotification(
+                await sendWebEngageJourneyEvent(
                     cleanEmailForNotification, 
                     result.prize, 
                     isTestUser,
                     data // ← Pass original order data for enhanced details
                 );
-                console.log('✅ Enhanced WebEngage email notification sent');
+                console.log('✅ WebEngage journey event sent - your journey will handle email delivery');
                 
             } catch (emailError) {
-                console.error('⚠️ Email notification failed (non-critical):', emailError.message);
-                // Don't fail the entire process if email fails
+                console.error('⚠️ WebEngage event failed (non-critical):', emailError.message);
+                // Don't fail the entire process if event fails
             }
             
             // ✅ Return successful result
@@ -140,15 +141,15 @@ exports.handler = async (event, context) => {
     }
 };
 
-// ✅ ENHANCED: WebEngage notification with complete product details & images
-async function sendEnhancedWebEngageNotification(cleanEmail, prize, isTestUser, originalOrderData) {
+// ✅ OPTIMIZED: WebEngage event for journey trigger (No SKU)
+async function sendWebEngageJourneyEvent(cleanEmail, prize, isTestUser, originalOrderData) {
     try {
-        console.log('📧 Enhanced WebEngage notification starting...');
+        console.log('📧 Sending WebEngage event for journey automation...');
         
         // ✅ Enhanced logging for test users
         if (isTestUser) {
-            console.log('🧪 Test user - logging enhanced email details instead of sending');
-            logEnhancedTestUserEmailDetails(cleanEmail, prize, originalOrderData);
+            console.log('🧪 Test user - logging journey event details instead of sending');
+            logTestUserJourneyEvent(cleanEmail, prize, originalOrderData);
             return true;
         }
         
@@ -156,32 +157,32 @@ async function sendEnhancedWebEngageNotification(cleanEmail, prize, isTestUser, 
         const WEBENGAGE_TOKEN = process.env.WEBENGAGE_TOKEN || 'gu3bqwq4';
         
         console.log('📧 WebEngage Config - API Key:', WEBENGAGE_API_KEY);
-        console.log('📧 Sending enhanced notification to:', cleanEmail);
+        console.log('📧 Sending journey trigger event to:', cleanEmail);
         
-        // ✅ Enhanced prize details with cleaned data
+        // ✅ Enhanced prize details with cleaned data (No SKU)
         const cleanPrizeName = cleanProductName(prize.name);
         const prizeImageUrl = prize.image || 'https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/default-prize.png';
         const orderValue = originalOrderData?.orderValue || originalOrderData?.orderData?.grand_total || 0;
         const orderNumber = originalOrderData?.orderNumber || originalOrderData?.orderData?.increment_id || 'N/A';
         
-        console.log('🎁 Enhanced prize details for WebEngage:');
+        console.log('🎁 Journey event details (No SKU):');
         console.log('   - Clean name:', cleanPrizeName);
         console.log('   - Original name:', prize.name);
         console.log('   - Image URL:', prizeImageUrl);
         console.log('   - Prize value: ₹' + (prize.value || 0));
         console.log('   - Order value: ₹' + orderValue);
         console.log('   - Order number:', orderNumber);
+        console.log('   - Category:', categorizePrize(prize.name, prize.value));
         
-        // ✅ ENHANCED: Complete WebEngage payload with all product details
-        const enhancedWebEngagePayload = {
+        // ✅ OPTIMIZED: WebEngage payload for journey trigger (No SKU)
+        const journeyEventPayload = {
             "userId": cleanEmail,
-            "eventName": "arcade_prize_won", // WebEngage-friendly event name
+            "eventName": "arcade_prize_won", // Your journey listens for this event
             "eventTime": new Date().toISOString(),
             "eventData": {
-                // ✅ Prize Information
+                // ✅ Prize Information (No SKU)
                 "prize_name": cleanPrizeName,
                 "prize_original_name": prize.name || 'Unknown Prize',
-                "prize_sku": prize.sku || 'N/A',
                 "prize_value": parseInt(prize.value) || 0,
                 "prize_image_url": prizeImageUrl,
                 "prize_category": categorizePrize(prize.name, prize.value),
@@ -203,15 +204,7 @@ async function sendEnhancedWebEngageNotification(cleanEmail, prize, isTestUser, 
                 "customer_name": getCustomerName(originalOrderData),
                 "customer_segment": orderValue >= 10000 ? "premium" : "standard",
                 
-                // ✅ Event Metadata
-                "event_timestamp": new Date().toISOString(),
-                "event_date": new Date().toISOString().split('T')[0],
-                "is_test_allocation": false,
-                "platform": "web",
-                "source": "pb_days_arcade",
-                "user_agent": "arcade_game",
-                
-                // ✅ Email Template Data (for dynamic content)
+                // ✅ Journey Template Data (available in your journey)
                 "email_subject": `🎉 You Won: ${cleanPrizeName}!`,
                 "email_heading": "Congratulations! You're a Winner!",
                 "email_subheading": `You've won ${cleanPrizeName} worth ₹${prize.value}`,
@@ -220,16 +213,18 @@ async function sendEnhancedWebEngageNotification(cleanEmail, prize, isTestUser, 
                 "cta_url": "https://pinkblue.in/arcade-winners",
                 "footer_text": "PinkBlue - Your Dental Care Partner",
                 
-                // ✅ Additional Marketing Data
-                "prize_availability": "limited",
-                "next_action": "wait_for_delivery",
+                // ✅ Event Metadata
+                "event_timestamp": new Date().toISOString(),
+                "event_date": new Date().toISOString().split('T')[0],
+                "platform": "web",
+                "source": "pb_days_arcade",
                 "estimated_delivery": getEstimatedDelivery(),
                 "support_email": "support@pinkblue.in",
                 "website_url": "https://pinkblue.in"
             }
         };
         
-        console.log('📤 Enhanced WebEngage payload:', JSON.stringify(enhancedWebEngagePayload, null, 2));
+        console.log('📤 WebEngage journey event payload (No SKU):', JSON.stringify(journeyEventPayload, null, 2));
         
         // ✅ Method 1: Try WebEngage Events API
         try {
@@ -243,17 +238,18 @@ async function sendEnhancedWebEngageNotification(cleanEmail, prize, isTestUser, 
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
-                body: JSON.stringify(enhancedWebEngagePayload)
+                body: JSON.stringify(journeyEventPayload)
             });
             
             console.log('📥 WebEngage API response status:', webEngageResponse.status);
             
             if (webEngageResponse.ok) {
                 const webEngageResult = await webEngageResponse.json();
-                console.log('✅ Enhanced WebEngage event sent successfully');
+                console.log('✅ WebEngage journey event sent successfully');
                 console.log('📋 WebEngage response:', JSON.stringify(webEngageResult));
+                console.log('🚀 Your dedicated journey will now handle email delivery');
                 
-                // ✅ Additional: Send user attributes for better personalization
+                // ✅ Update user attributes for better personalization
                 await sendWebEngageUserAttributes(cleanEmail, prize, originalOrderData);
                 
                 return true;
@@ -267,7 +263,7 @@ async function sendEnhancedWebEngageNotification(cleanEmail, prize, isTestUser, 
         } catch (method1Error) {
             console.log('🔄 WebEngage Method 1 failed, trying alternative format...');
             
-            // ✅ Method 2: Try alternative payload format
+            // ✅ Method 2: Alternative format for journey trigger
             try {
                 const alternativePayload = {
                     "users": [
@@ -285,6 +281,7 @@ async function sendEnhancedWebEngageNotification(cleanEmail, prize, isTestUser, 
                                         "order_value": orderValue,
                                         "campaign": "PB Days Arcade",
                                         "prize_category": categorizePrize(prize.name, prize.value)
+                                        // ✅ No SKU included
                                     }
                                 }
                             ]
@@ -292,7 +289,7 @@ async function sendEnhancedWebEngageNotification(cleanEmail, prize, isTestUser, 
                     ]
                 };
                 
-                console.log('🔄 Alternative WebEngage payload:', JSON.stringify(alternativePayload, null, 2));
+                console.log('🔄 Alternative WebEngage payload (No SKU):', JSON.stringify(alternativePayload, null, 2));
                 
                 const alternativeEndpoint = `https://api.webengage.com/v1/accounts/${WEBENGAGE_API_KEY}/bulk-api`;
                 
@@ -311,6 +308,7 @@ async function sendEnhancedWebEngageNotification(cleanEmail, prize, isTestUser, 
                     const altResult = await altResponse.json();
                     console.log('✅ Alternative WebEngage method successful');
                     console.log('📋 Alternative response:', JSON.stringify(altResult));
+                    console.log('🚀 Your journey will handle email delivery from this event');
                     return true;
                 } else {
                     const altErrorText = await altResponse.text();
@@ -321,23 +319,23 @@ async function sendEnhancedWebEngageNotification(cleanEmail, prize, isTestUser, 
             } catch (method2Error) {
                 console.log('🔄 Both WebEngage methods failed, using enhanced logging fallback...');
                 
-                // ✅ Enhanced fallback logging with complete details
-                logEnhancedEmailFallback(cleanEmail, prize, originalOrderData);
+                // ✅ Enhanced fallback logging
+                logJourneyEventFallback(cleanEmail, prize, originalOrderData);
                 return true;
             }
         }
         
     } catch (error) {
-        console.error('❌ Enhanced WebEngage notification error:', error.message);
+        console.error('❌ WebEngage journey event error:', error.message);
         console.error('❌ Full error stack:', error.stack);
         
         // ✅ Final enhanced fallback
-        logEnhancedEmailFallback(cleanEmail, prize, originalOrderData);
+        logJourneyEventFallback(cleanEmail, prize, originalOrderData);
         return false;
     }
 }
 
-// ✅ NEW: Send user attributes to WebEngage for better personalization
+// ✅ UPDATED: User attributes (No SKU)
 async function sendWebEngageUserAttributes(cleanEmail, prize, originalOrderData) {
     try {
         const WEBENGAGE_API_KEY = process.env.WEBENGAGE_API_KEY || '~4c6729b7';
@@ -352,13 +350,14 @@ async function sendWebEngageUserAttributes(cleanEmail, prize, originalOrderData)
                 "arcade_participant": true,
                 "last_game_played": new Date().toISOString(),
                 "customer_segment": (originalOrderData?.orderValue || 0) >= 10000 ? "premium" : "standard",
-                "total_arcade_wins": 1, // This could be incremented if you track history
+                "total_arcade_wins": 1,
                 "preferred_prize_category": categorizePrize(prize.name, prize.value),
                 "last_activity": new Date().toISOString()
+                // ✅ No SKU attributes
             }
         };
         
-        console.log('👤 Sending user attributes:', JSON.stringify(userAttributesPayload, null, 2));
+        console.log('👤 Sending user attributes (No SKU):', JSON.stringify(userAttributesPayload, null, 2));
         
         const attributesEndpoint = `https://api.webengage.com/v1/accounts/${WEBENGAGE_API_KEY}/users`;
         
@@ -375,11 +374,9 @@ async function sendWebEngageUserAttributes(cleanEmail, prize, originalOrderData)
         
         if (response.ok) {
             const result = await response.json();
-            console.log('✅ User attributes sent to WebEngage successfully');
-            console.log('👤 Attributes response:', JSON.stringify(result));
+            console.log('✅ User attributes sent successfully (No SKU)');
         } else {
-            const errorText = await response.text();
-            console.log('⚠️ User attributes failed (non-critical):', errorText);
+            console.log('⚠️ User attributes failed (non-critical)');
         }
         
     } catch (error) {
@@ -387,16 +384,15 @@ async function sendWebEngageUserAttributes(cleanEmail, prize, originalOrderData)
     }
 }
 
-// ✅ NEW: Enhanced test user email details logging
-function logEnhancedTestUserEmailDetails(cleanEmail, prize, originalOrderData) {
-    console.log('🧪 ENHANCED TEST USER EMAIL DETAILS:');
-    console.log('=====================================');
-    console.log('📧 Would send to:', cleanEmail);
-    console.log('🎉 Email Subject: You Won: ' + cleanProductName(prize.name) + '!');
+// ✅ UPDATED: Test user logging (No SKU)
+function logTestUserJourneyEvent(cleanEmail, prize, originalOrderData) {
+    console.log('🧪 TEST USER JOURNEY EVENT (No SKU):');
+    console.log('====================================');
+    console.log('📧 Would trigger journey for:', cleanEmail);
+    console.log('🎉 Event: arcade_prize_won');
     console.log('🎁 Prize Details:');
     console.log('   - Clean Name:', cleanProductName(prize.name));
     console.log('   - Original Name:', prize.name);
-    console.log('   - SKU:', prize.sku || 'N/A');
     console.log('   - Value: ₹' + (prize.value || 0));
     console.log('   - Category:', categorizePrize(prize.name, prize.value));
     console.log('   - Tier:', (prize.value >= 10000 ? "premium" : prize.value >= 1000 ? "standard" : "basic"));
@@ -404,75 +400,46 @@ function logEnhancedTestUserEmailDetails(cleanEmail, prize, originalOrderData) {
     console.log('💰 Order Details:');
     console.log('   - Order Value: ₹' + (originalOrderData?.orderValue || 0));
     console.log('   - Order Number:', originalOrderData?.orderNumber || 'N/A');
-    console.log('   - Customer Segment:', (originalOrderData?.orderValue || 0) >= 10000 ? "premium" : "standard");
-    console.log('📅 Event Details:');
-    console.log('   - Timestamp:', new Date().toISOString());
-    console.log('   - Campaign: PB Days Arcade');
-    console.log('   - Source: arcade_game');
-    console.log('📧 Email Template Data:');
-    console.log('   - Heading: Congratulations! You\'re a Winner!');
-    console.log('   - CTA: View Your Prize');
-    console.log('   - Support: support@pinkblue.in');
-    console.log('=====================================');
+    console.log('🚀 Journey would handle email delivery');
+    console.log('====================================');
 }
 
-// ✅ NEW: Enhanced email fallback logging
-function logEnhancedEmailFallback(cleanEmail, prize, originalOrderData) {
-    console.log('📨 ENHANCED FALLBACK EMAIL NOTIFICATION:');
-    console.log('==========================================');
-    console.log('📧 To:', cleanEmail);
-    console.log('🎉 Subject: You Won: ' + cleanProductName(prize.name) + '!');
-    console.log('');
-    console.log('🎁 PRIZE DETAILS:');
-    console.log('   Name:', cleanProductName(prize.name));
-    console.log('   Original Name:', prize.name);
-    console.log('   SKU:', prize.sku);
-    console.log('   Value: ₹' + (prize.value || 0));
-    console.log('   Image URL:', prize.image || 'No image available');
-    console.log('   Category:', categorizePrize(prize.name, prize.value));
-    console.log('   Tier:', prize.value >= 10000 ? "premium" : prize.value >= 1000 ? "standard" : "basic");
-    console.log('');
-    console.log('💰 ORDER DETAILS:');
-    console.log('   Order Value: ₹' + (originalOrderData?.orderValue || 0));
-    console.log('   Order Number:', originalOrderData?.orderNumber || 'N/A');
-    console.log('   Customer Segment:', (originalOrderData?.orderValue || 0) >= 10000 ? "premium" : "standard");
-    console.log('');
-    console.log('📧 EMAIL CONTENT:');
-    console.log('   Heading: Congratulations! You\'re a Winner!');
-    console.log('   Message: You\'ve won ' + cleanProductName(prize.name) + ' worth ₹' + (prize.value || 0));
-    console.log('   Body: Your prize will be sent once your order is delivered.');
-    console.log('   CTA: View Your Prize → https://pinkblue.in/arcade-winners');
-    console.log('   Support: support@pinkblue.in');
-    console.log('');
-    console.log('⏰ TIMESTAMP:', new Date().toISOString());
-    console.log('🏷️ CAMPAIGN: PB Days Arcade');
-    console.log('==========================================');
-    console.log('✅ Enhanced fallback email notification logged successfully');
+// ✅ UPDATED: Journey event fallback logging (No SKU)
+function logJourneyEventFallback(cleanEmail, prize, originalOrderData) {
+    console.log('📨 JOURNEY EVENT FALLBACK (No SKU):');
+    console.log('===================================');
+    console.log('📧 Email:', cleanEmail);
+    console.log('🎉 Event: arcade_prize_won');
+    console.log('🎁 Prize:', cleanProductName(prize.name));
+    console.log('💰 Value: ₹' + (prize.value || 0));
+    console.log('🖼️ Image:', prize.image || 'No image');
+    console.log('📦 Order: #' + (originalOrderData?.orderNumber || 'N/A'));
+    console.log('💰 Order Value: ₹' + (originalOrderData?.orderValue || 0));
+    console.log('🏷️ Category:', categorizePrize(prize.name, prize.value));
+    console.log('🚀 Journey would trigger from this event');
+    console.log('===================================');
+    console.log('✅ Journey event logged (WebEngage unavailable)');
 }
 
-// ✅ HELPER FUNCTIONS
+// ✅ HELPER FUNCTIONS (Updated - No SKU)
 
-// Get customer name from order data
 function getCustomerName(originalOrderData) {
     const firstName = originalOrderData?.orderData?.customer_firstname || '';
     const lastName = originalOrderData?.orderData?.customer_lastname || '';
     return (firstName + ' ' + lastName).trim() || 'Valued Customer';
 }
 
-// Get estimated delivery date
 function getEstimatedDelivery() {
     const deliveryDate = new Date();
-    deliveryDate.setDate(deliveryDate.getDate() + 7); // Add 7 days
-    return deliveryDate.toISOString().split('T')[0]; // Return YYYY-MM-DD format
+    deliveryDate.setDate(deliveryDate.getDate() + 7);
+    return deliveryDate.toISOString().split('T')[0];
 }
 
-// ✅ NEW: Prize categorization helper
 function categorizePrize(prizeName, prizeValue) {
     if (!prizeName) return 'unknown';
     
     const name = prizeName.toLowerCase();
     
-    // Specific product categories
     if (name.includes('cashback')) return 'cashback';
     if (name.includes('drill') || name.includes('bur')) return 'dental_tools';
     if (name.includes('gate') || name.includes('reamer') || name.includes('endo')) return 'endo_tools';
@@ -483,7 +450,6 @@ function categorizePrize(prizeName, prizeValue) {
     if (name.includes('syringe') || name.includes('needle')) return 'injection_supplies';
     if (name.includes('suture') || name.includes('surgical')) return 'surgical_supplies';
     
-    // Categorize by value if name doesn't match specific categories
     if (prizeValue >= 10000) return 'premium_equipment';
     if (prizeValue >= 5000) return 'advanced_tools';
     if (prizeValue >= 1000) return 'standard_tools';
@@ -492,19 +458,18 @@ function categorizePrize(prizeName, prizeValue) {
     return 'dental_supplies';
 }
 
-// ✅ Enhanced product name cleaning
 function cleanProductName(prizeName) {
     if (!prizeName) return 'Mystery Prize';
     
     let cleanName = prizeName
-        .replace(/^[A-Z0-9_]+\s*[-_]\s*/i, '') // Remove codes like "PB01_001_02 - "
-        .replace(/\s*[-_]\s*[A-Z0-9_]+$/i, '') // Remove suffix codes
-        .replace(/\([^)]*\)$/g, '') // Remove parentheses content at end
-        .replace(/\s+/g, ' ') // Clean multiple spaces
-        .replace(/[-_]+/g, ' ') // Replace dashes and underscores with spaces
+        .replace(/^[A-Z0-9_]+\s*[-_]\s*/i, '')
+        .replace(/^[A-Z]{2,}\s+/i, '')
+        .replace(/\s*[-_]\s*[A-Z0-9_]+$/i, '')
+        .replace(/\([^)]*\)$/g, '')
+        .replace(/\s+/g, ' ')
+        .replace(/[-_]+/g, ' ')
         .trim();
     
-    // Capitalize first letter of each word
     cleanName = cleanName.toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
     
     if (!cleanName || cleanName.length < 3) {
