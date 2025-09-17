@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PB DAYS - Premium Arcade Slot Machine</title>
+    <title>PB DAYS - Premium Slot Machine (Fixed Mobile)</title>
     <link rel="preload" as="image" href="https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/Slot-machine.png">
     <link rel="preload" as="image" href="https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/7.png">
     <link rel="preload" as="image" href="https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/Star.png">
@@ -36,7 +36,6 @@
             50% { filter: brightness(1.1) hue-rotate(15deg); }
         }
 
-        /* PREMIUM ARCADE BACKGROUND */
         .arcade-background {
             position: fixed;
             top: 0;
@@ -49,15 +48,29 @@
                 radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.05) 0%, transparent 70%),
                 linear-gradient(135deg, #000428 0%, #004e92 100%);
             z-index: -1;
-            animation: backgroundGlow 8s ease-in-out infinite alternate;
         }
 
-        @keyframes backgroundGlow {
-            0% { opacity: 0.8; }
-            100% { opacity: 1; }
+        /* EMAIL INPUT FIELD */
+        .email-container {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
         }
 
-        /* MUTE/UNMUTE BUTTON FOR SOUND EFFECTS */
+        #customerEmail {
+            width: 250px;
+            padding: 8px 12px;
+            border: 2px solid #ffd700;
+            border-radius: 15px;
+            background: rgba(255,255,255,0.95);
+            font-family: 'Exo 2', sans-serif;
+            font-size: 12px;
+            color: #333;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
         .audio-control {
             position: fixed;
             top: 20px;
@@ -73,42 +86,13 @@
             align-items: center;
             justify-content: center;
             font-size: 20px;
-            box-shadow: 
-                0 8px 20px rgba(255,181,0,0.4),
-                inset 0 2px 8px rgba(255,255,255,0.3),
-                0 0 30px rgba(255,215,0,0.3);
-            transition: all 0.3s ease;
-            border: 2px solid rgba(255,255,255,0.4);
-            animation: buttonGlow 3s ease-in-out infinite alternate;
-        }
-
-        @keyframes buttonGlow {
-            0% { 
-                box-shadow: 
-                    0 8px 20px rgba(255,181,0,0.4),
-                    inset 0 2px 8px rgba(255,255,255,0.3),
-                    0 0 30px rgba(255,215,0,0.3);
-            }
-            100% { 
-                box-shadow: 
-                    0 12px 30px rgba(255,181,0,0.6),
-                    inset 0 3px 12px rgba(255,255,255,0.4),
-                    0 0 50px rgba(255,215,0,0.5);
-            }
+            box-shadow: 0 8px 20px rgba(255,181,0,0.4);
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform;
         }
 
         .audio-control:hover {
-            transform: scale(1.1) rotate(5deg);
-            box-shadow: 
-                0 15px 40px rgba(255,181,0,0.7),
-                inset 0 4px 15px rgba(255,255,255,0.5),
-                0 0 70px rgba(255,215,0,0.8);
-        }
-
-        .audio-control.muted {
-            background: linear-gradient(145deg, #666 0%, #444 100%);
-            color: #888;
-            animation: none;
+            transform: scale(1.1);
         }
 
         .slot-machine-container {
@@ -117,13 +101,13 @@
             height: 600px;
             transform-style: preserve-3d;
             filter: drop-shadow(0 30px 60px rgba(0,0,0,0.8));
-            will-change: transform;
             animation: machineFloat 6s ease-in-out infinite;
+            will-change: transform;
         }
 
         @keyframes machineFloat {
-            0%, 100% { transform: translateY(0px) rotateX(-2deg) rotateY(3deg); }
-            50% { transform: translateY(-5px) rotateX(-1deg) rotateY(2deg); }
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
         }
 
         .slot-machine-bg {
@@ -136,7 +120,6 @@
             position: relative;
         }
 
-        /* PREMIUM ARCADE HEADER */
         .header-text {
             position: absolute;
             top: 15px;
@@ -144,8 +127,7 @@
             transform: translateX(-50%);
             text-align: center;
             color: #333;
-            background: 
-                linear-gradient(145deg, rgba(255,255,255,0.95) 0%, rgba(240,240,240,0.9) 100%);
+            background: rgba(255,255,255,0.95);
             padding: 12px 20px;
             border-radius: 18px;
             border: 3px solid rgba(255,181,0,0.9);
@@ -153,26 +135,16 @@
             z-index: 10;
             box-shadow: 
                 0 10px 30px rgba(0,0,0,0.4),
-                inset 0 3px 10px rgba(255,255,255,0.8),
                 0 0 40px rgba(255,181,0,0.6);
             width: 300px;
             font-family: 'Orbitron', monospace;
             animation: headerGlow 3s ease-in-out infinite alternate;
+            will-change: box-shadow;
         }
 
         @keyframes headerGlow {
-            0% { 
-                box-shadow: 
-                    0 10px 30px rgba(0,0,0,0.4),
-                    inset 0 3px 10px rgba(255,255,255,0.8),
-                    0 0 40px rgba(255,181,0,0.6);
-            }
-            100% { 
-                box-shadow: 
-                    0 15px 40px rgba(0,0,0,0.5),
-                    inset 0 4px 15px rgba(255,255,255,0.9),
-                    0 0 70px rgba(255,181,0,0.9);
-            }
+            0% { box-shadow: 0 10px 30px rgba(0,0,0,0.4), 0 0 40px rgba(255,181,0,0.6); }
+            100% { box-shadow: 0 15px 40px rgba(0,0,0,0.5), 0 0 70px rgba(255,181,0,0.9); }
         }
 
         .header-text h3 {
@@ -180,10 +152,7 @@
             font-weight: 700;
             margin-bottom: 4px;
             color: #e65100;
-            line-height: 1.3;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            text-shadow: 0 0 10px rgba(230, 81, 0, 0.5);
         }
 
         .header-text p {
@@ -191,10 +160,8 @@
             font-weight: 600;
             color: #ff8f00;
             font-family: 'Exo 2', sans-serif;
-            text-shadow: 0 0 8px rgba(255, 143, 0, 0.5);
         }
 
-        /* PREMIUM REELS WITH EXTRA GLOW */
         .reels-overlay {
             position: absolute;
             top: 315px;
@@ -215,13 +182,6 @@
             overflow: hidden;
             border-radius: 8px;
             background: transparent;
-            box-shadow: 0 0 20px rgba(255,215,0,0.2);
-            animation: reelGlow 4s ease-in-out infinite alternate;
-        }
-
-        @keyframes reelGlow {
-            0% { box-shadow: 0 0 20px rgba(255,215,0,0.2); }
-            100% { box-shadow: 0 0 30px rgba(255,215,0,0.4); }
         }
 
         .reel-window:first-child {
@@ -235,7 +195,7 @@
             right: 0;
             display: flex;
             flex-direction: column;
-            transition: transform 0.1s ease-out;
+            transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
             will-change: transform;
         }
 
@@ -257,7 +217,6 @@
             background: transparent;
             border-radius: 6px;
             margin-bottom: 1px;
-            position: relative;
         }
 
         .symbol img {
@@ -265,30 +224,24 @@
             height: 50px;
             object-fit: contain;
             filter: brightness(1.2) contrast(1.3) drop-shadow(0 2px 6px rgba(0,0,0,0.4));
-            transition: all 0.2s ease;
-        }
-
-        .symbol.winning {
-            animation: symbolWin 0.3s ease-in-out infinite alternate;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform, filter;
+            backface-visibility: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
         .symbol.winning img {
-            filter: brightness(1.6) contrast(1.7) drop-shadow(0 0 20px #ffd700) drop-shadow(0 0 40px #ff8f00);
+            filter: brightness(1.6) contrast(1.7) drop-shadow(0 0 20px #ffd700);
             transform: scale(1.2);
+            animation: symbolWin 0.3s ease-in-out infinite alternate;
         }
 
         @keyframes symbolWin {
-            0% { 
-                transform: scale(1);
-                box-shadow: 0 0 30px rgba(255,215,0,0.8);
-            }
-            100% { 
-                transform: scale(1.05);
-                box-shadow: 0 0 60px rgba(255,215,0,1);
-            }
+            0% { transform: scale(1.2); }
+            100% { transform: scale(1.25); }
         }
 
-        /* ULTRA PREMIUM GOLDEN SPIN BUTTON */
+        /* FIXED SPIN BUTTON POSITIONING */
         .spin-button-container {
             position: absolute;
             bottom: 150px;
@@ -300,75 +253,40 @@
         .spin-button {
             width: 160px;
             height: 42px;
-            background: 
-                linear-gradient(145deg, #ffd700 0%, #ffed4e 30%, #daa520 60%, #b8860b 100%);
+            background: linear-gradient(145deg, #ffd700 0%, #ffed4e 30%, #b8860b 100%);
             border: none;
             border-radius: 21px;
             color: #333;
             font-family: 'Press Start 2P', monospace;
-            font-weight: 400;
             font-size: 8px;
             cursor: pointer;
             box-shadow: 
                 0 10px 25px rgba(255,181,0,0.6),
-                0 5px 10px rgba(0,0,0,0.4),
-                inset 0 4px 12px rgba(255,255,255,0.5),
                 0 0 50px rgba(255,215,0,0.4);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             text-transform: uppercase;
             letter-spacing: 1px;
-            text-shadow: 
-                0 2px 4px rgba(0,0,0,0.4),
-                0 0 10px rgba(255,215,0,0.6);
             border: 3px solid rgba(255,255,255,0.4);
             animation: buttonPulse 2s ease-in-out infinite;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .spin-button:before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -100%;
-            width: 100%;
-            height: calc(100% + 4px);
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
-            animation: shimmer 3s linear infinite;
-        }
-
-        @keyframes shimmer {
-            0% { left: -100%; }
-            100% { left: 100%; }
+            will-change: transform, box-shadow;
+            backface-visibility: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
         @keyframes buttonPulse {
             0%, 100% { 
-                box-shadow: 
-                    0 10px 25px rgba(255,181,0,0.6),
-                    0 5px 10px rgba(0,0,0,0.4),
-                    inset 0 4px 12px rgba(255,255,255,0.5),
-                    0 0 50px rgba(255,215,0,0.4);
+                box-shadow: 0 10px 25px rgba(255,181,0,0.6), 0 0 50px rgba(255,215,0,0.4);
                 transform: scale(1);
             }
             50% { 
-                box-shadow: 
-                    0 15px 35px rgba(255,181,0,0.8),
-                    0 8px 16px rgba(0,0,0,0.5),
-                    inset 0 6px 18px rgba(255,255,255,0.6),
-                    0 0 80px rgba(255,215,0,0.7);
+                box-shadow: 0 15px 35px rgba(255,181,0,0.8), 0 0 80px rgba(255,215,0,0.7);
                 transform: scale(1.02);
             }
         }
 
         .spin-button:hover {
             transform: translateY(-3px) scale(1.05);
-            box-shadow: 
-                0 20px 50px rgba(255,181,0,0.8),
-                0 10px 20px rgba(0,0,0,0.6),
-                inset 0 8px 20px rgba(255,255,255,0.6),
-                0 0 100px rgba(255,215,0,1);
-            animation: buttonPulse 1s ease-in-out infinite;
+            box-shadow: 0 20px 50px rgba(255,181,0,0.8), 0 0 100px rgba(255,215,0,1);
         }
 
         .spin-button:active {
@@ -378,13 +296,9 @@
         .spin-button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-            transform: none;
             background: linear-gradient(145deg, #888 0%, #666 100%);
             animation: none;
-        }
-
-        .spin-button:disabled:before {
-            display: none;
+            transform: none;
         }
 
         .status-overlay {
@@ -401,27 +315,10 @@
             padding: 8px 15px;
             border-radius: 15px;
             border: 3px solid rgba(255,181,0,0.9);
-            box-shadow: 
-                0 6px 18px rgba(0,0,0,0.4),
-                0 0 30px rgba(255,181,0,0.4);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.4);
             font-size: 8px;
             font-family: 'Press Start 2P', monospace;
-            font-weight: 400;
             backdrop-filter: blur(15px);
-            animation: statusGlow 4s ease-in-out infinite alternate;
-        }
-
-        @keyframes statusGlow {
-            0% { 
-                box-shadow: 
-                    0 6px 18px rgba(0,0,0,0.4),
-                    0 0 30px rgba(255,181,0,0.4);
-            }
-            100% { 
-                box-shadow: 
-                    0 8px 25px rgba(0,0,0,0.5),
-                    0 0 50px rgba(255,181,0,0.7);
-            }
         }
 
         .details-button {
@@ -436,25 +333,20 @@
             border-radius: 18px;
             font-size: 8px;
             font-family: 'Press Start 2P', monospace;
-            font-weight: 400;
             cursor: pointer;
             backdrop-filter: blur(15px);
             border: 2px solid rgba(255,181,0,0.8);
-            box-shadow: 
-                0 6px 18px rgba(0,0,0,0.4),
-                0 0 25px rgba(255,181,0,0.3);
-            transition: all 0.3s ease;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 10;
+            will-change: transform;
         }
 
         .details-button:hover {
-            transform: translateX(-50%) translateY(-3px) scale(1.1);
-            box-shadow: 
-                0 10px 30px rgba(0,0,0,0.5),
-                0 0 40px rgba(255,181,0,0.6);
+            transform: translateX(-50%) translateY(-2px) scale(1.05);
         }
 
-        /* ULTRA PREMIUM EUREKA CARD */
+        /* OPTIMIZED GOLDEN CARD - NO LAG */
         .golden-card {
             position: absolute;
             top: 50%;
@@ -462,15 +354,10 @@
             transform: translate(-50%, -50%) scale(0);
             width: 360px;
             height: 320px;
-            background: 
-                linear-gradient(145deg, #ffd700 0%, #ffed4e 20%, #daa520 60%, #b8860b 100%);
+            background: linear-gradient(145deg, #ffd700 0%, #ffed4e 20%, #b8860b 100%);
             border-radius: 25px;
             border: 8px solid #8b4513;
-            box-shadow: 
-                0 0 80px rgba(255,215,0,1),
-                inset 0 20px 40px rgba(255,255,255,0.4),
-                inset 0 -10px 30px rgba(0,0,0,0.3),
-                0 0 120px rgba(255,215,0,0.8);
+            box-shadow: 0 0 80px rgba(255,215,0,1);
             z-index: 1000;
             display: flex;
             flex-direction: column;
@@ -478,7 +365,10 @@
             justify-content: center;
             text-align: center;
             opacity: 0;
-            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            will-change: transform, opacity;
+            backface-visibility: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
         .golden-card.show {
@@ -488,64 +378,33 @@
         }
 
         @keyframes cardGlow {
-            0% { 
-                box-shadow: 
-                    0 0 80px rgba(255,215,0,1),
-                    inset 0 20px 40px rgba(255,255,255,0.4),
-                    0 0 120px rgba(255,215,0,0.8);
-            }
-            100% { 
-                box-shadow: 
-                    0 0 140px rgba(255,215,0,1),
-                    inset 0 25px 50px rgba(255,255,255,0.5),
-                    0 0 200px rgba(255,215,0,1);
-            }
+            0% { box-shadow: 0 0 80px rgba(255,215,0,1); }
+            100% { box-shadow: 0 0 120px rgba(255,215,0,1); }
         }
 
-        /* EUREKA HEADER WITH EXTRA GLOW */
         .eureka-header {
             font-size: 24px;
             font-family: 'Press Start 2P', monospace;
-            font-weight: 400;
             color: #8b4513;
             margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: 
-                0 4px 8px rgba(0,0,0,0.4),
-                0 0 30px rgba(255,215,0,1),
-                0 0 60px rgba(255,255,255,0.8);
+            text-shadow: 0 0 30px rgba(255,215,0,1);
             animation: headerShimmer 2s ease-in-out infinite alternate;
+            will-change: text-shadow;
         }
 
         @keyframes headerShimmer {
-            0% { 
-                text-shadow: 
-                    0 4px 8px rgba(0,0,0,0.4),
-                    0 0 30px rgba(255,215,0,1),
-                    0 0 60px rgba(255,255,255,0.8);
-            }
-            100% { 
-                text-shadow: 
-                    0 4px 8px rgba(0,0,0,0.4),
-                    0 0 50px rgba(255,255,255,1),
-                    0 0 100px rgba(255,215,0,1);
-            }
+            0% { text-shadow: 0 0 30px rgba(255,215,0,1); }
+            100% { text-shadow: 0 0 50px rgba(255,255,255,1); }
         }
 
-        /* PREMIUM BROWN TEXTBOX */
         .prize-textbox {
-            background: 
-                linear-gradient(145deg, #8b4513 0%, #654321 40%, #3e2723 100%);
+            background: linear-gradient(145deg, #8b4513 0%, #3e2723 100%);
             border: 4px solid #a0522d;
             border-radius: 15px;
             padding: 20px;
             margin-bottom: 20px;
-            box-shadow: 
-                inset 0 8px 20px rgba(0,0,0,0.5),
-                inset 0 -3px 15px rgba(255,255,255,0.2),
-                0 0 40px rgba(160,82,45,0.5);
             width: 320px;
+            box-shadow: inset 0 4px 12px rgba(0,0,0,0.4);
         }
 
         .golden-text {
@@ -553,30 +412,15 @@
             font-size: 12px;
             font-family: 'Orbitron', monospace;
             font-weight: 700;
-            text-shadow: 
-                0 0 15px rgba(255,215,0,1),
-                0 0 30px rgba(255,215,0,0.8),
-                0 0 50px rgba(255,255,255,0.6),
-                0 3px 6px rgba(0,0,0,0.5);
-            line-height: 1.4;
+            text-shadow: 0 0 15px rgba(255,215,0,1);
             margin-bottom: 10px;
             animation: textGlow 2s ease-in-out infinite alternate;
+            will-change: text-shadow;
         }
 
         @keyframes textGlow {
-            0% { 
-                text-shadow: 
-                    0 0 15px rgba(255,215,0,1),
-                    0 0 30px rgba(255,215,0,0.8),
-                    0 3px 6px rgba(0,0,0,0.5);
-            }
-            100% { 
-                text-shadow: 
-                    0 0 30px rgba(255,255,255,1),
-                    0 0 60px rgba(255,215,0,1),
-                    0 0 100px rgba(255,215,0,0.8),
-                    0 3px 6px rgba(0,0,0,0.5);
-            }
+            0% { text-shadow: 0 0 15px rgba(255,215,0,1); }
+            100% { text-shadow: 0 0 25px rgba(255,255,255,1); }
         }
 
         .golden-subtitle {
@@ -584,50 +428,37 @@
             font-size: 10px;
             font-family: 'Exo 2', sans-serif;
             font-weight: 600;
-            text-shadow: 
-                0 0 12px rgba(255,237,78,0.9),
-                0 2px 4px rgba(0,0,0,0.5);
-            line-height: 1.3;
+            text-shadow: 0 0 12px rgba(255,237,78,0.9);
         }
 
         .golden-card-close {
-            background: 
-                linear-gradient(145deg, #8b4513 0%, #654321 40%, #5d4037 100%);
+            background: linear-gradient(145deg, #8b4513 0%, #5d4037 100%);
             color: #ffd700;
             border: none;
             padding: 12px 30px;
             border-radius: 15px;
             font-size: 10px;
             font-family: 'Press Start 2P', monospace;
-            font-weight: 400;
             cursor: pointer;
-            box-shadow: 
-                0 8px 20px rgba(0,0,0,0.5),
-                inset 0 3px 12px rgba(255,255,255,0.3),
-                0 0 30px rgba(255,215,0,0.4);
-            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             text-transform: uppercase;
-            letter-spacing: 1px;
-            text-shadow: 
-                0 0 12px rgba(255,215,0,0.9),
-                0 2px 4px rgba(0,0,0,0.5);
+            text-shadow: 0 0 12px rgba(255,215,0,0.9);
             border: 3px solid #a0522d;
+            will-change: transform;
         }
 
         .golden-card-close:hover {
             transform: translateY(-3px) scale(1.1);
-            box-shadow: 
-                0 12px 30px rgba(0,0,0,0.6),
-                inset 0 4px 15px rgba(255,255,255,0.4),
-                0 0 50px rgba(255,215,0,0.7);
         }
 
-        /* ENHANCED WIN PARTICLES */
+        /* PARTICLE ANIMATIONS - OPTIMIZED */
         .particle {
             position: absolute;
             pointer-events: none;
             border-radius: 50%;
-            animation: particleExplode 3s ease-out forwards;
+            animation: particleExplode 1.5s ease-out forwards;
+            will-change: transform, opacity;
         }
 
         @keyframes particleExplode {
@@ -637,26 +468,41 @@
             }
             100% {
                 opacity: 0;
-                transform: translateY(-350px) scale(0.2) rotate(720deg);
+                transform: translateY(-200px) scale(0.3) rotate(180deg);
             }
         }
 
-        /* MOBILE OPTIMIZATIONS */
+        /* MOBILE RESPONSIVE - FIXED POSITIONING */
         @media (max-width: 768px) {
-            .audio-control {
-                width: 45px;
-                height: 45px;
-                font-size: 18px;
-            }
-            
             .slot-machine-container {
                 width: 350px;
                 height: 520px;
                 transform: scale(0.95);
             }
             
+            #customerEmail {
+                width: 220px;
+                font-size: 11px;
+                padding: 6px 10px;
+            }
+            
+            .audio-control {
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+            
             .header-text {
                 width: 280px;
+                padding: 10px 16px;
+            }
+            
+            .header-text h3 {
+                font-size: 10px;
+            }
+            
+            .header-text p {
+                font-size: 9px;
             }
             
             .reels-overlay {
@@ -683,23 +529,112 @@
                 height: 46px;
             }
             
+            /* FIXED MOBILE SPIN BUTTON POSITIONING */
+            .spin-button-container {
+                position: absolute !important;
+                bottom: 120px !important;
+                left: 50% !important;
+                transform: translateX(-50%) !important;
+                z-index: 10 !important;
+            }
+            
+            .spin-button {
+                width: 140px !important;
+                height: 38px !important;
+                font-size: 7px !important;
+                letter-spacing: 0.5px;
+                padding: 0;
+                margin: 0;
+                position: relative;
+                top: 0;
+            }
+            
+            .status-overlay {
+                bottom: 70px;
+            }
+            
+            .spins-left {
+                font-size: 7px;
+                padding: 6px 12px;
+            }
+            
+            .details-button {
+                font-size: 7px;
+                padding: 6px 15px;
+                bottom: 30px;
+            }
+            
+            /* OPTIMIZED MOBILE GOLDEN CARD */
             .golden-card {
-                width: 320px;
-                height: 280px;
+                width: 320px !important;
+                height: 280px !important;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                animation-duration: 1.5s !important;
             }
             
             .prize-textbox {
                 width: 280px;
                 padding: 16px;
             }
+            
+            .eureka-header {
+                font-size: 18px;
+                margin-bottom: 12px;
+            }
+            
+            .golden-text {
+                font-size: 11px;
+            }
+            
+            .golden-subtitle {
+                font-size: 9px;
+            }
+            
+            .golden-card-close {
+                font-size: 9px;
+                padding: 10px 25px;
+            }
+        }
+
+        /* EXTRA SMALL SCREENS */
+        @media (max-width: 480px) {
+            .slot-machine-container {
+                width: 320px;
+                height: 480px;
+                transform: scale(0.9);
+            }
+            
+            .spin-button-container {
+                bottom: 100px !important;
+            }
+            
+            .spin-button {
+                width: 120px !important;
+                height: 35px !important;
+                font-size: 6px !important;
+            }
+            
+            .golden-card {
+                width: 290px !important;
+                height: 250px !important;
+            }
+            
+            .prize-textbox {
+                width: 250px;
+                padding: 14px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- PREMIUM ARCADE BACKGROUND -->
     <div class="arcade-background"></div>
 
-    <!-- AUDIO CONTROL FOR SOUND EFFECTS ONLY -->
+    <!-- EMAIL INPUT -->
+    <div class="email-container">
+        <input type="email" id="customerEmail" placeholder="Enter your email for prize delivery" required>
+    </div>
+
+    <!-- AUDIO CONTROL -->
     <button class="audio-control" id="audioControl">🔊</button>
 
     <div class="slot-machine-container">
@@ -738,226 +673,95 @@
             ⓘ details
         </button>
 
-        <!-- ULTRA PREMIUM GOLDEN CARD -->
+        <!-- OPTIMIZED GOLDEN PRIZE CARD -->
         <div class="golden-card" id="goldenCard">
             <div class="eureka-header">🎉 EUREKA! 🎉</div>
             <div class="prize-textbox">
                 <div class="golden-text" id="prizeTitle">YOU WON THIS AMAZING PRIZE!</div>
-                <div class="golden-subtitle" id="prizeDescription">Premium dental equipment package with exclusive bonuses</div>
+                <div class="golden-subtitle" id="prizeDescription">Premium dental equipment package</div>
             </div>
             <button class="golden-card-close" id="closeCard">CLAIM PRIZE</button>
         </div>
     </div>
 
     <script>
-        // SOUND EFFECTS ONLY AUDIO SYSTEM (NO BACKGROUND MUSIC)
-        class PremiumSoundEffectsSystem {
-            constructor() {
-                this.audioContext = null;
-                this.isMuted = false;
-                this.masterGain = null;
-                this.init();
-            }
+        // GOOGLE SHEETS INTEGRATION
+        const GOOGLE_SHEETS_WEBHOOK = 'https://slotmachine-cms.netlify.app/.netlify/functions/allocate-prize';
 
-            async init() {
-                try {
-                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                    this.masterGain = this.audioContext.createGain();
-                    this.masterGain.connect(this.audioContext.destination);
-                    this.masterGain.gain.setValueAtTime(0.4, this.audioContext.currentTime);
-                } catch (error) {
-                    console.log('Audio not supported');
+        // Prize allocation function
+        async function allocatePrize(customerEmail, orderValue) {
+            try {
+                console.log('🎯 Allocating prize for:', customerEmail, 'Order Value:', orderValue);
+                
+                const postData = {
+                    customerEmail: customerEmail || 'anonymous@example.com',
+                    orderValue: orderValue || 4999,
+                    sessionId: 'session_' + Date.now()
+                };
+
+                const response = await fetch(GOOGLE_SHEETS_WEBHOOK, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(postData)
+                });
+
+                console.log('📡 Response status:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status} ${response.statusText}`);
                 }
-            }
 
-            // ULTRA PREMIUM EXPENSIVE SPIN SOUND
-            playUltraPremiumSpinSound() {
-                if (!this.audioContext || this.isMuted) return;
+                const data = await response.json();
+                console.log('📦 Prize data received:', data);
                 
-                const currentTime = this.audioContext.currentTime;
-                
-                // Layer 1: Deep luxury mechanical whir
-                const baseOsc = this.audioContext.createOscillator();
-                const baseGain = this.audioContext.createGain();
-                const baseFilter = this.audioContext.createBiquadFilter();
-                
-                baseOsc.connect(baseFilter);
-                baseFilter.connect(baseGain);
-                baseGain.connect(this.masterGain);
-                
-                baseOsc.frequency.setValueAtTime(90, currentTime);
-                baseOsc.frequency.exponentialRampToValueAtTime(35, currentTime + 2);
-                baseOsc.type = 'sawtooth';
-                
-                baseFilter.type = 'lowpass';
-                baseFilter.frequency.setValueAtTime(1200, currentTime);
-                baseFilter.frequency.exponentialRampToValueAtTime(600, currentTime + 2);
-                baseFilter.Q.setValueAtTime(8, currentTime);
-                
-                baseGain.gain.setValueAtTime(0.3, currentTime);
-                baseGain.gain.exponentialRampToValueAtTime(0.001, currentTime + 2);
-                
-                // Layer 2: Premium crystal sparkle
-                const sparkleOsc = this.audioContext.createOscillator();
-                const sparkleGain = this.audioContext.createGain();
-                const sparkleFilter = this.audioContext.createBiquadFilter();
-                
-                sparkleOsc.connect(sparkleFilter);
-                sparkleFilter.connect(sparkleGain);
-                sparkleGain.connect(this.masterGain);
-                
-                sparkleOsc.frequency.setValueAtTime(2500, currentTime);
-                sparkleOsc.frequency.exponentialRampToValueAtTime(1000, currentTime + 1.2);
-                sparkleOsc.type = 'sine';
-                
-                sparkleFilter.type = 'highpass';
-                sparkleFilter.frequency.setValueAtTime(2000, currentTime);
-                sparkleFilter.Q.setValueAtTime(3, currentTime);
-                
-                sparkleGain.gain.setValueAtTime(0.2, currentTime);
-                sparkleGain.gain.exponentialRampToValueAtTime(0.001, currentTime + 1.2);
-                
-                // Layer 3: Luxury casino chimes
-                const chimeFreqs = [1047, 1319, 1568, 2093]; // C6, E6, G6, C7
-                chimeFreqs.forEach((freq, index) => {
-                    setTimeout(() => {
-                        const chimeOsc = this.audioContext.createOscillator();
-                        const chimeGain = this.audioContext.createGain();
-                        const chimeFilter = this.audioContext.createBiquadFilter();
-                        
-                        chimeOsc.connect(chimeFilter);
-                        chimeFilter.connect(chimeGain);
-                        chimeGain.connect(this.masterGain);
-                        
-                        chimeOsc.frequency.setValueAtTime(freq, this.audioContext.currentTime);
-                        chimeOsc.type = 'sine';
-                        
-                        chimeFilter.type = 'lowpass';
-                        chimeFilter.frequency.setValueAtTime(freq * 2, this.audioContext.currentTime);
-                        
-                        chimeGain.gain.setValueAtTime(0.15, this.audioContext.currentTime);
-                        chimeGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.5);
-                        
-                        chimeOsc.start();
-                        chimeOsc.stop(this.audioContext.currentTime + 0.5);
-                    }, index * 150);
-                });
-                
-                baseOsc.start(currentTime);
-                baseOsc.stop(currentTime + 2);
-                sparkleOsc.start(currentTime);
-                sparkleOsc.stop(currentTime + 1.2);
-            }
-
-            playVictorySound() {
-                if (!this.audioContext || this.isMuted) return;
-                
-                // Epic victory fanfare
-                const victorySequence = [523, 659, 784, 1047, 1319, 1568]; // C major ascending
-                
-                victorySequence.forEach((freq, index) => {
-                    setTimeout(() => {
-                        const osc = this.audioContext.createOscillator();
-                        const gain = this.audioContext.createGain();
-                        const filter = this.audioContext.createBiquadFilter();
-                        
-                        osc.connect(filter);
-                        filter.connect(gain);
-                        gain.connect(this.masterGain);
-                        
-                        osc.frequency.setValueAtTime(freq, this.audioContext.currentTime);
-                        osc.type = 'sine';
-                        
-                        filter.type = 'lowpass';
-                        filter.frequency.setValueAtTime(freq * 3, this.audioContext.currentTime);
-                        
-                        gain.gain.setValueAtTime(0.25, this.audioContext.currentTime);
-                        gain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 1);
-                        
-                        osc.start();
-                        osc.stop(this.audioContext.currentTime + 1);
-                    }, index * 120);
-                });
-            }
-
-            playStopSound() {
-                if (!this.audioContext || this.isMuted) return;
-                
-                const osc = this.audioContext.createOscillator();
-                const gain = this.audioContext.createGain();
-                const filter = this.audioContext.createBiquadFilter();
-                
-                osc.connect(filter);
-                filter.connect(gain);
-                gain.connect(this.masterGain);
-                
-                osc.frequency.setValueAtTime(520, this.audioContext.currentTime);
-                osc.type = 'triangle';
-                
-                filter.type = 'lowpass';
-                filter.frequency.setValueAtTime(1000, this.audioContext.currentTime);
-                
-                gain.gain.setValueAtTime(0.15, this.audioContext.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.4);
-                
-                osc.start();
-                osc.stop(this.audioContext.currentTime + 0.4);
-            }
-
-            toggleMute() {
-                this.isMuted = !this.isMuted;
-                
-                if (this.isMuted) {
-                    this.masterGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.1);
+                if (data.success) {
+                    return { 
+                        success: true, 
+                        prize: {
+                            name: data.prize.name || data.prize['Product Name'] || 'Premium Prize',
+                            value: data.prize.value || data.prize['Product Value'] || '4999',
+                            sku: data.prize.sku || data.prize['SKU'] || 'PREMIUM001',
+                            code: data.prize.code || 'PB' + Date.now()
+                        }
+                    };
                 } else {
-                    this.masterGain.gain.exponentialRampToValueAtTime(0.4, this.audioContext.currentTime + 0.1);
+                    throw new Error(data.message || 'Unknown allocation error');
                 }
-                
-                return this.isMuted;
+            } catch (err) {
+                console.error('❌ Prize allocation failed:', err);
+                return { 
+                    success: false, 
+                    message: err.message,
+                    fallback: {
+                        name: 'SPECIAL BONUS PRIZE',
+                        value: '4999',
+                        description: 'AI Course + Exclusive Dental Supplies Discount',
+                        code: 'PB' + Date.now()
+                    }
+                };
             }
         }
-
-        // Initialize sound effects system
-        const audioSystem = new PremiumSoundEffectsSystem();
 
         // SLOT MACHINE LOGIC
         const symbols = [
             {
                 name: '7',
                 image: 'https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/7.png',
-                value: 100000
             },
             {
                 name: 'Star',
                 image: 'https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/Star.png',
-                value: 50000
             },
             {
                 name: 'Grape',
                 image: 'https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/Grape.png',
-                value: 25000
             }
         ];
 
-        const jackpotPrizes = {
-            '777': { name: 'TRIPLE SEVENS MEGA JACKPOT', description: 'Premium Dental Equipment Package Worth ₹5,00,000' },
-            'StarStarStar': { name: 'TRIPLE STARS JACKPOT', description: 'Advanced Dental Tools Set Worth ₹1,50,000' },
-            'GrapeGrapeGrape': { name: 'TRIPLE GRAPES JACKPOT', description: 'Professional Dental Supplies Worth ₹75,000' },
-            '7Star7': { name: 'LUCKY COMBINATION', description: 'Dental Starter Kit Worth ₹25,000' },
-            'StarGrapeStar': { name: 'SPECIAL BONUS', description: 'AI Course + Dental Bonus Worth ₹15,000' }
-        };
-
-        let spinsLeft = 1;
         let spinning = false;
         let hasSpun = false;
-
-        // Fast image preloading
-        function preloadImages() {
-            symbols.forEach(symbol => {
-                const img = new Image();
-                img.src = symbol.image;
-            });
-        }
 
         // Initialize reels
         function initializeReels() {
@@ -975,7 +779,7 @@
                         img.alt = symbol.name;
                         img.loading = 'eager';
                         img.onerror = function() {
-                            symbolDiv.innerHTML = `<div style="font-size: 24px; color: #ffd700; filter: drop-shadow(0 0 10px #ffd700);">${symbol.name === '7' ? '7️⃣' : symbol.name === 'Star' ? '⭐' : '🍇'}</div>`;
+                            symbolDiv.innerHTML = `<div style="font-size: 24px; color: #ffd700;">${symbol.name === '7' ? '7️⃣' : symbol.name === 'Star' ? '⭐' : '🍇'}</div>`;
                         };
                         
                         symbolDiv.appendChild(img);
@@ -985,64 +789,77 @@
             }
         }
 
-        // Show golden card
-        function showGoldenCard(prizeName, prizeDescription) {
-            const card = document.getElementById('goldenCard');
-            const titleElement = document.getElementById('prizeTitle');
-            const descElement = document.getElementById('prizeDescription');
-            
-            titleElement.textContent = prizeName;
-            descElement.textContent = prizeDescription;
-            
-            card.classList.add('show');
-            createUltraWinParticles(40);
-            audioSystem.playVictorySound();
+        // Show golden card with prize - OPTIMIZED
+        function showGoldenCard(prize) {
+            requestAnimationFrame(() => {
+                const card = document.getElementById('goldenCard');
+                const titleElement = document.getElementById('prizeTitle');
+                const descElement = document.getElementById('prizeDescription');
+                
+                titleElement.textContent = prize.name;
+                descElement.textContent = `Worth ₹${prize.value} - Code: ${prize.code}`;
+                
+                card.classList.add('show');
+                createWinParticles(30);
+            });
         }
 
         function closeGoldenCard() {
-            document.getElementById('goldenCard').classList.remove('show');
+            const card = document.getElementById('goldenCard');
+            card.classList.remove('show');
         }
 
-        // Enhanced win particles
-        function createUltraWinParticles(count) {
+        // OPTIMIZED particle system - reduced count for performance
+        function createWinParticles(count) {
             for (let i = 0; i < count; i++) {
                 setTimeout(() => {
                     const particle = document.createElement('div');
                     particle.className = 'particle';
-                    particle.style.width = (Math.random() * 12 + 6) + 'px';
+                    particle.style.width = (Math.random() * 6 + 3) + 'px';
                     particle.style.height = particle.style.width;
-                    particle.style.background = `radial-gradient(circle, #ffd700, #ffb300, #ff8f00)`;
-                    particle.style.boxShadow = '0 0 20px rgba(255,215,0,1)';
+                    particle.style.background = `radial-gradient(circle, #ffd700, #ffb300)`;
                     particle.style.left = (Math.random() * window.innerWidth) + 'px';
-                    particle.style.top = (window.innerHeight - 50) + 'px';
+                    particle.style.top = (window.innerHeight - 100) + 'px';
                     
                     document.body.appendChild(particle);
-                    setTimeout(() => particle.remove(), 3000);
-                }, i * 25);
+                    setTimeout(() => particle.remove(), 1500);
+                }, i * 20);
             }
         }
 
-        // Premium spin function
-        function spinReels() {
-            if (spinning || hasSpun || spinsLeft <= 0) return;
+        // OPTIMIZED spin function
+        async function spinReels() {
+            if (spinning || hasSpun) return;
+            
+            // Validate email
+            const emailInput = document.getElementById('customerEmail');
+            const customerEmail = emailInput.value.trim();
+            
+            if (!customerEmail || !customerEmail.includes('@')) {
+                alert('Please enter a valid email address to continue!');
+                emailInput.focus();
+                return;
+            }
             
             spinning = true;
             hasSpun = true;
-            spinsLeft = 0;
             
-            document.getElementById('spinsLeft').textContent = spinsLeft;
-            document.getElementById('spinBtn').disabled = true;
+            const spinBtn = document.getElementById('spinBtn');
+            spinBtn.disabled = true;
+            spinBtn.textContent = 'SPINNING...';
             
-            audioSystem.playUltraPremiumSpinSound();
+            document.getElementById('spinsLeft').textContent = '0';
             
+            // OPTIMIZED reel animation
             const results = [];
-            const spinDurations = [2000, 2500, 3000];
+            const spinDurations = [1800, 2200, 2600]; // Reduced for mobile performance
             
-            // Start spinning
+            // Start all reels spinning
             for (let i = 1; i <= 3; i++) {
                 document.getElementById(`reel${i}`).classList.add('spinning');
             }
             
+            // Stop reels one by one
             spinDurations.forEach((duration, index) => {
                 setTimeout(() => {
                     const strip = document.getElementById(`reel${index + 1}`);
@@ -1057,67 +874,58 @@
                     
                     strip.style.transform = `translateY(-${translateDistance}px)`;
                     
-                    audioSystem.playStopSound();
-                    
+                    // When all reels stopped, allocate prize
                     if (results.length === 3) {
-                        setTimeout(() => checkWin(results), 500);
+                        setTimeout(() => processPrize(customerEmail), 600);
                     }
                 }, duration);
             });
         }
 
-        function checkWin(results) {
-            const resultKey = results.map(r => r.name).join('');
-            const symbolNames = results.map(r => r.name);
+        // Process prize allocation
+        async function processPrize(customerEmail) {
+            console.log('🎲 Processing prize for:', customerEmail);
             
-            let prize;
-            if (jackpotPrizes[resultKey]) {
-                prize = jackpotPrizes[resultKey];
+            const spinBtn = document.getElementById('spinBtn');
+            spinBtn.textContent = 'PROCESSING...';
+            
+            // Allocate prize from Google Sheets
+            const orderValue = 4999;
+            const allocationResult = await allocatePrize(customerEmail, orderValue);
+            
+            if (allocationResult.success) {
+                console.log('✅ Prize allocated successfully:', allocationResult.prize);
+                showGoldenCard(allocationResult.prize);
             } else {
-                prize = {
-                    name: 'SPECIAL BONUS PRIZE',
-                    description: 'AI Course Worth ₹4,999 + Exclusive Dental Supplies Discount'
-                };
+                console.log('⚠️ Using fallback prize:', allocationResult.fallback);
+                showGoldenCard(allocationResult.fallback);
             }
             
-            document.querySelectorAll('.symbol').forEach(symbol => {
-                if (symbolNames.includes(symbol.dataset.symbol)) {
-                    symbol.classList.add('winning');
-                }
-            });
-            
-            setTimeout(() => {
-                showGoldenCard(prize.name, prize.description);
-            }, 800);
-            
+            spinBtn.textContent = 'COMPLETED';
             spinning = false;
-        }
-
-        // Audio control
-        function toggleAudio() {
-            const button = document.getElementById('audioControl');
-            const isMuted = audioSystem.toggleMute();
-            
-            button.textContent = isMuted ? '🔇' : '🔊';
-            button.classList.toggle('muted', isMuted);
         }
 
         // Event listeners
         document.getElementById('spinBtn').addEventListener('click', spinReels);
         document.getElementById('closeCard').addEventListener('click', closeGoldenCard);
-        document.getElementById('audioControl').addEventListener('click', toggleAudio);
         
         document.getElementById('detailsBtn').addEventListener('click', () => {
             const details = document.createElement('div');
             details.innerHTML = `
                 <div style="position: fixed; top: 20px; left: 20px; right: 20px; background: rgba(255,255,255,0.95); padding: 20px; border-radius: 15px; border: 3px solid #ffd700; z-index: 999; text-align: center; color: #333; font-weight: 600; box-shadow: 0 20px 60px rgba(0,0,0,0.4);">
-                    <h3 style="color: #e65100; margin-bottom: 10px; font-family: 'Press Start 2P', monospace; font-size: 12px;">🎰 PB DAYS ULTRA PREMIUM 🎰</h3>
-                    <p style="font-family: 'Orbitron', monospace;">The most addictive slot machine experience!</p>
-                    <p style="margin-top: 10px; font-size: 14px;">🎯 Every spin guarantees amazing prizes!</p>
-                    <button onclick="this.parentElement.parentElement.remove()" style="margin-top: 15px; background: linear-gradient(145deg, #ffd700, #ffb300); border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: bold; color: #333; font-family: 'Press Start 2P', monospace; font-size: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">GOT IT!</button>
+                    <h3 style="color: #e65100; margin-bottom: 10px; font-family: 'Press Start 2P', monospace; font-size: 12px;">🎰 PB DAYS PREMIUM 🎰</h3>
+                    <p style="font-family: 'Orbitron', monospace;">Enter your email and spin to win real prizes!</p>
+                    <p style="margin-top: 10px; font-size: 14px;">🎯 Every spin guarantees a prize from our inventory!</p>
+                    <button onclick="this.parentElement.parentElement.remove()" style="margin-top: 15px; background: linear-gradient(145deg, #ffd700, #ffb300); border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: bold; color: #333; font-family: 'Press Start 2P', monospace; font-size: 8px;">GOT IT!</button>
                 </div>
             `;
             document.body.appendChild(details);
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeReels();
+            document.getElementById('customerEmail').focus();
         });
 
         // Keyboard support
@@ -1126,23 +934,7 @@
                 e.preventDefault();
                 spinReels();
             }
-            if (e.code === 'KeyM') {
-                toggleAudio();
-            }
         });
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            preloadImages();
-            initializeReels();
-        });
-
-        // Enable audio on first interaction
-        document.body.addEventListener('click', () => {
-            if (audioSystem.audioContext && audioSystem.audioContext.state === 'suspended') {
-                audioSystem.audioContext.resume();
-            }
-        }, { once: true });
     </script>
 </body>
 </html>
