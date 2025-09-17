@@ -210,7 +210,7 @@ async function sendWebEngageJourneyEvent(cleanEmail, prize, isTestUser, original
                 "email_subheading": `You've won ${cleanPrizeName} worth ₹${prize.value}`,
                 "email_body": `Thank you for participating in PB Days Arcade! Your prize ${cleanPrizeName} worth ₹${prize.value} will be sent once your order #${orderNumber} is delivered.`,
                 "cta_text": "View Your Prize",
-                "cta_url": "https://pinkblue.in/arcade-winners",
+                "cta_url": "https://pinkblue.in/",
                 "footer_text": "PinkBlue - Your Dental Care Partner",
                 
                 // ✅ Event Metadata
