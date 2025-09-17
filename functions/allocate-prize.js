@@ -177,7 +177,7 @@ async function sendWebEngageJourneyEvent(cleanEmail, prize, isTestUser, original
         // ✅ OPTIMIZED: WebEngage payload for journey trigger (No SKU)
         const journeyEventPayload = {
             "userId": cleanEmail,
-            "eventName": "arcade_prize_won", // Your journey listens for this event
+            "eventName": "prize_won", // Your journey listens for this event
             "eventTime": new Date().toISOString(),
             "eventData": {
                 // ✅ Prize Information (No SKU)
@@ -272,7 +272,7 @@ async function sendWebEngageJourneyEvent(cleanEmail, prize, isTestUser, original
                             "email": cleanEmail,
                             "events": [
                                 {
-                                    "name": "arcade_prize_won",
+                                    "name": "prize_won",
                                     "time": new Date().toISOString(),
                                     "attributes": {
                                         "prize_name": cleanPrizeName,
@@ -389,7 +389,7 @@ function logTestUserJourneyEvent(cleanEmail, prize, originalOrderData) {
     console.log('🧪 TEST USER JOURNEY EVENT (No SKU):');
     console.log('====================================');
     console.log('📧 Would trigger journey for:', cleanEmail);
-    console.log('🎉 Event: arcade_prize_won');
+    console.log('🎉 Event: prize_won');
     console.log('🎁 Prize Details:');
     console.log('   - Clean Name:', cleanProductName(prize.name));
     console.log('   - Original Name:', prize.name);
@@ -409,7 +409,7 @@ function logJourneyEventFallback(cleanEmail, prize, originalOrderData) {
     console.log('📨 JOURNEY EVENT FALLBACK (No SKU):');
     console.log('===================================');
     console.log('📧 Email:', cleanEmail);
-    console.log('🎉 Event: arcade_prize_won');
+    console.log('🎉 Event: prize_won');
     console.log('🎁 Prize:', cleanProductName(prize.name));
     console.log('💰 Value: ₹' + (prize.value || 0));
     console.log('🖼️ Image:', prize.image || 'No image');
