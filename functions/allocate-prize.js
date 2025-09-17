@@ -192,8 +192,7 @@ function cleanProductName(prizeName) {
     
     // Remove common product codes and prefixes
     let cleanName = prizeName
-        .replace(/^[A-Z0-9_]+\s*[-_]\s*/i, '') // Remove codes like "PB01_001_02 - "
-        .replace(/^[A-Z]{2,}\s+/i, '') // Remove prefix codes like "PB "
+        .replace(/^[A-Z0-9_]+\s*[-_]\s*/i, '') // Remove codes like "PB01_001_02 - 
         .replace(/\s*[-_]\s*[A-Z0-9_]+$/i, '') // Remove suffix codes
         .trim();
     
