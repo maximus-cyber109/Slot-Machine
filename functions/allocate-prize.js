@@ -111,57 +111,45 @@ exports.handler = async (event, context) => {
 
         console.log('✅ Allocation logged successfully');
 
-       // Fixed WebEngage event sender (replace existing function)
-async function sendWebEngageEvent(email, prize, prizeCode, orderData) {
-    try {
-        console.log('📧 Sending WebEngage event for:', email);
-        
-        // Fix date format for WebEngage compatibility
-        const eventTime = new Date().toISOString().split('.')[0] + 'Z'; // Remove milliseconds
-        
-        const eventData = {
-            userId: email,
-            eventName: 'prize_won',
-            eventTime: eventTime, // Use fixed format
-            eventData: {
-                prize_name: prize.name,
-                prize_value: prize.value.toString(),
-                prize_code: prizeCode,
-                prize_sku: prize.sku,
-                customer_name: orderData?.customer_firstname || 'Valued Customer',
-                customer_email: email,
-                order_number: orderData?.increment_id || 'N/A',
-                order_value: orderData?.grand_total?.toString() || 'N/A',
-                support_email: 'support@pinkblue.in'
-            }
+        // Send WebEngage event for prize winners
+        try {
+            await sendWebEngageEvent(email, selectedPrize, prizeCode, orderData);
+            console.log('✅ WebEngage event sent successfully');
+        } catch (webengageError) {
+            console.error('⚠️ WebEngage error (non-critical):', webengageError.message);
+        }
+
+        return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify({
+                success: true,
+                prize: {
+                    ...selectedPrize,
+                    prizeCode
+                },
+                message: 'Prize allocated successfully!',
+                tier: tier
+            })
         };
 
-        console.log('📤 Sending event with fixed date format:', eventTime);
-
-        const response = await fetch('https://api.webengage.com/v1/accounts/82618240/events', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer 997ecae4-4632-4cb0-a65d-8427472e8f31'
-            },
-            body: JSON.stringify(eventData)
-        });
-
-        if (response.ok) {
-            console.log('✅ WebEngage event sent successfully');
-        } else {
-            const errorText = await response.text();
-            console.error('❌ WebEngage API error:', response.status, errorText);
-        }
     } catch (error) {
-        console.error('❌ WebEngage event error:', error);
+        console.error('💥 Prize allocation error:', error);
+        return {
+            statusCode: 500,
+            headers,
+            body: JSON.stringify({
+                success: false,
+                error: 'Internal server error: ' + error.message
+            })
+        };
     }
-}
+};
 
 // Select available prize based on tier and inventory
 function selectAvailablePrize(tier, inventory) {
     const PRIZE_POOLS = {
-        premium: [ // For orders >= ₹10,000
+        premium: [ // For orders >= Rs.10,000
             {sku: 'SPE02_016_01', name: 'Speedendo E Mate Pro Endomotor', value: 13000, weight: 5},
             {sku: 'DEN06_231_03', name: 'Dentsply SDR Flowable Bulk (Refill Of 50)', value: 10580, weight: 8},
             {sku: 'SPE02_018_01', name: 'Speedendo Apex S Apex Locator', value: 6000, weight: 12},
@@ -196,10 +184,10 @@ function selectAvailablePrize(tier, inventory) {
     if (availablePrizes.length === 0) {
         console.log('💰 Falling back to cashback prizes...');
         const cashbackPrizes = [
-            {sku: 'PB_CASHBACK_100', name: 'PB CASHBACK ₹100', value: 100, weight: 40},
-            {sku: 'PB_CASHBACK_150', name: 'PB CASHBACK ₹150', value: 150, weight: 30},
-            {sku: 'PB_CASHBACK_200', name: 'PB CASHBACK ₹200', value: 200, weight: 20},
-            {sku: 'PB_CASHBACK_250', name: 'PB CASHBACK ₹250', value: 250, weight: 10}
+            {sku: 'PB_CASHBACK_100', name: 'PB CASHBACK Rs.100', value: 100, weight: 40},
+            {sku: 'PB_CASHBACK_150', name: 'PB CASHBACK Rs.150', value: 150, weight: 30},
+            {sku: 'PB_CASHBACK_200', name: 'PB CASHBACK Rs.200', value: 200, weight: 20},
+            {sku: 'PB_CASHBACK_250', name: 'PB CASHBACK Rs.250', value: 250, weight: 10}
         ];
         
         availablePrizes = cashbackPrizes.filter(prize => {
@@ -239,10 +227,13 @@ async function sendWebEngageEvent(email, prize, prizeCode, orderData) {
     try {
         console.log('📧 Sending WebEngage event for:', email);
         
+        // Fix date format for WebEngage compatibility
+        const eventTime = new Date().toISOString().split('.')[0] + 'Z';
+        
         const eventData = {
             userId: email,
             eventName: 'prize_won',
-            eventTime: new Date().toISOString(),
+            eventTime: eventTime,
             eventData: {
                 prize_name: prize.name,
                 prize_value: prize.value.toString(),
@@ -273,5 +264,6 @@ async function sendWebEngageEvent(email, prize, prizeCode, orderData) {
         }
     } catch (error) {
         console.error('❌ WebEngage event error:', error);
+        throw error;
     }
 }
