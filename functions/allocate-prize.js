@@ -111,13 +111,12 @@ exports.handler = async (event, context) => {
 
         console.log('✅ Allocation logged successfully');
 
-        // Send WebEngage event (if configured)
-        if (process.env.WEBENGAGE_API_KEY && process.env.WEBENGAGE_LICENSE_CODE) {
-            try {
-                await sendWebEngageEvent(email, selectedPrize, prizeCode, orderData);
-            } catch (webengageError) {
-                console.error('⚠️ WebEngage error (non-critical):', webengageError.message);
-            }
+        // Send WebEngage event for real prize winners
+        try {
+            await sendWebEngageEvent(email, selectedPrize, prizeCode, orderData);
+            console.log('✅ WebEngage event sent successfully');
+        } catch (webengageError) {
+            console.error('⚠️ WebEngage error (non-critical):', webengageError.message);
         }
 
         return {
@@ -223,50 +222,44 @@ function generatePrizeCode(sku) {
     return `PB${sku.substring(0, 6)}_${timestamp}_${random}`;
 }
 
-// Test function to create the 'prize_won' event in WebEngage
-async function createTestEvent() {
+// Send WebEngage event for real prize winners
+async function sendWebEngageEvent(email, prize, prizeCode, orderData) {
     try {
-        const testEventData = {
-            userId: 'test@pinkblue.in', // Use a real email you can check
+        console.log('📧 Sending WebEngage event for:', email);
+        
+        const eventData = {
+            userId: email,
             eventName: 'prize_won',
             eventTime: new Date().toISOString(),
             eventData: {
-                prize_name: 'Test Prize - Speedendo E Mate Pro',
-                prize_value: '13000',
-                prize_code: 'TEST_PB123456',
-                prize_sku: 'SPE02_016_01',
-                customer_name: 'Test User',
-                customer_email: 'test@pinkblue.in',
-                order_number: 'TEST001',
-                order_value: '15000',
+                prize_name: prize.name,
+                prize_value: prize.value.toString(),
+                prize_code: prizeCode,
+                prize_sku: prize.sku,
+                customer_name: orderData?.customer_firstname || 'Valued Customer',
+                customer_email: email,
+                order_number: orderData?.increment_id || 'N/A',
+                order_value: orderData?.grand_total?.toString() || 'N/A',
                 support_email: 'support@pinkblue.in'
             }
         };
 
-        console.log('🔄 Sending test event to WebEngage...');
-        
         const response = await fetch('https://api.webengage.com/v1/accounts/82618240/events', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer 997ecae4-4632-4cb0-a65d-8427472e8f31'
             },
-            body: JSON.stringify(testEventData)
+            body: JSON.stringify(eventData)
         });
 
-        const responseText = await response.text();
-        console.log('✅ Test event response:', response.status, responseText);
-        
         if (response.ok) {
-            console.log('✅ Test event sent successfully! Check WebEngage dashboard.');
+            console.log('✅ WebEngage event sent successfully');
         } else {
-            console.error('❌ Test event failed:', response.status, responseText);
+            const errorText = await response.text();
+            console.error('❌ WebEngage API error:', response.status, errorText);
         }
     } catch (error) {
-        console.error('❌ Test event error:', error);
+        console.error('❌ WebEngage event error:', error);
     }
 }
-
-// Call this function once to create the event
-createTestEvent();
-
