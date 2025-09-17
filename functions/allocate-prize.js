@@ -1,5 +1,5 @@
 exports.handler = async (event, context) => {
-    console.log('🎁 Prize allocation started');
+    console.log('🎁 Prize allocation started with Google Sheets');
     
     const headers = {
         'Access-Control-Allow-Origin': '*',
@@ -61,32 +61,67 @@ exports.handler = async (event, context) => {
         const testEmails = ['syed.ahmed@theraoralcare.com', 'valliappan.km@theraoralcare.com'];
         const isTestUser = testEmails.includes(email);
 
-        // Simple prize allocation for now (bypass Google Sheets temporarily)
-        const mockPrizes = [
-            {
-                sku: 'SPE02_010_02',
-                name: 'Speedendo W-One Gold Files 21mm #25',
-                value: 750,
-                image: 'https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/se-w-one.png'
+        // Validate Google Sheets webhook URL
+        if (!process.env.GOOGLE_SHEETS_WEBHOOK) {
+            console.error('❌ GOOGLE_SHEETS_WEBHOOK not configured');
+            // Fallback to mock data if not configured
+            return await handleMockAllocation(email, orderValue, orderData, orderNumber, headers);
+        }
+
+        // Prepare allocation request for Google Sheets
+        const allocationRequest = {
+            action: 'allocatePrize',
+            email: email,
+            orderValue: orderValue || 0,
+            orderData: orderData,
+            orderNumber: orderNumber,
+            sessionId: sessionId,
+            isTestUser: isTestUser,
+            timestamp: new Date().toISOString()
+        };
+
+        console.log('📤 Sending to Google Sheets:', JSON.stringify(allocationRequest));
+
+        // Call Google Sheets for prize allocation
+        const allocationResponse = await fetch(process.env.GOOGLE_SHEETS_WEBHOOK, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
             },
-            {
-                sku: 'PB01_001_01',
-                name: 'PB CASHBACK Rs.100',
-                value: 100,
-                image: ''
-            }
-        ];
+            body: JSON.stringify(allocationRequest)
+        });
 
-        // Select prize based on order value or test user
-        const selectedPrize = (orderValue >= 1000 || isTestUser) ? mockPrizes[0] : mockPrizes[1];
+        console.log('📥 Google Sheets response status:', allocationResponse.status);
 
-        console.log('✅ Prize allocated:', selectedPrize.name);
+        if (!allocationResponse.ok) {
+            const errorText = await allocationResponse.text();
+            console.error('❌ Google Sheets error:', errorText);
+            
+            // Fallback to mock allocation on Google Sheets failure
+            console.log('🔄 Falling back to mock allocation');
+            return await handleMockAllocation(email, orderValue, orderData, orderNumber, headers);
+        }
 
-        // Send WebEngage event (optional)
+        let allocationData;
         try {
-            if (process.env.WEBENGAGE_API_KEY) {
-                await sendWebEngageEvent(email, selectedPrize, orderData, orderNumber);
-            }
+            allocationData = await allocationResponse.json();
+        } catch (parseError) {
+            console.error('❌ Google Sheets response parse error:', parseError);
+            return await handleMockAllocation(email, orderValue, orderData, orderNumber, headers);
+        }
+
+        console.log('📋 Allocation result:', JSON.stringify(allocationData));
+        
+        if (!allocationData.success) {
+            throw new Error(allocationData.error || 'Prize allocation failed');
+        }
+
+        console.log('✅ Prize allocated:', allocationData.prize?.name);
+
+        // Send WebEngage event for email notification
+        try {
+            await sendWebEngageEvent(email, allocationData.prize, orderData, orderNumber);
+            console.log('✅ Email notification sent');
         } catch (webengageError) {
             console.error('⚠️ Email notification failed (non-critical):', webengageError.message);
         }
@@ -97,23 +132,85 @@ exports.handler = async (event, context) => {
             headers,
             body: JSON.stringify({
                 success: true,
-                prize: selectedPrize,
-                message: 'Prize won successfully! Check your email for details.'
+                prize: allocationData.prize,
+                message: 'Prize won successfully! Check your email for details.',
+                source: 'google_sheets'
             })
         };
 
     } catch (error) {
         console.error('💥 Prize allocation error:', error);
-        return {
-            statusCode: 500,
-            headers,
-            body: JSON.stringify({
-                success: false,
-                error: 'Server error. Please try again.'
-            })
-        };
+        
+        // Final fallback to mock allocation
+        try {
+            const { email, orderValue, orderData, orderNumber } = JSON.parse(event.body || '{}');
+            return await handleMockAllocation(email, orderValue, orderData, orderNumber, headers);
+        } catch (fallbackError) {
+            return {
+                statusCode: 500,
+                headers,
+                body: JSON.stringify({
+                    success: false,
+                    error: 'Server error. Please try again.'
+                })
+            };
+        }
     }
 };
+
+// Fallback mock allocation when Google Sheets is unavailable
+async function handleMockAllocation(email, orderValue, orderData, orderNumber, headers) {
+    console.log('🎭 Using mock allocation for:', email);
+    
+    const mockPrizes = [
+        {
+            sku: 'SPE02_010_02',
+            name: 'Speedendo W-One Gold Files 21mm #25',
+            value: 750,
+            image: 'https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/se-w-one.png'
+        },
+        {
+            sku: 'DEN14_028_04',
+            name: 'DenSafe Rotary File F1 21mm',
+            value: 900,
+            image: 'https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/medicept_k_files.png'
+        },
+        {
+            sku: 'PB01_001_01',
+            name: 'PB CASHBACK Rs.100',
+            value: 100,
+            image: ''
+        }
+    ];
+
+    // Select prize based on order value
+    let selectedPrize;
+    if (orderValue >= 10000) {
+        selectedPrize = mockPrizes[0]; // High value prize
+    } else if (orderValue >= 1000) {
+        selectedPrize = mockPrizes[1]; // Medium value prize
+    } else {
+        selectedPrize = mockPrizes[2]; // Cashback
+    }
+
+    // Send WebEngage event
+    try {
+        await sendWebEngageEvent(email, selectedPrize, orderData, orderNumber);
+    } catch (error) {
+        console.error('⚠️ Mock allocation email failed:', error.message);
+    }
+
+    return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({
+            success: true,
+            prize: selectedPrize,
+            message: 'Prize won successfully! Check your email for details.',
+            source: 'mock_fallback'
+        })
+    };
+}
 
 // Send WebEngage email notification
 async function sendWebEngageEvent(email, prize, orderData, orderNumber) {
