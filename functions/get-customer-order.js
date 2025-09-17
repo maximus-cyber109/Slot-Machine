@@ -1,16 +1,13 @@
 exports.handler = async (event, context) => {
     console.log('🎰 Enhanced function called with method:', event.httpMethod);
-
     const headers = {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': 'Content-Type',
         'Access-Control-Allow-Methods': 'POST, OPTIONS'
     };
-
     if (event.httpMethod === 'OPTIONS') {
         return { statusCode: 200, headers, body: '' };
     }
-
     if (event.httpMethod !== 'POST') {
         return {
             statusCode: 405,
@@ -21,12 +18,11 @@ exports.handler = async (event, context) => {
             })
         };
     }
-
     try {
         const { email, sessionId, detectionMethod, source } = JSON.parse(event.body || '{}');
         console.log('🔍 Processing email:', email);
         console.log('🎯 Detection method:', detectionMethod);
-
+        
         if (!email) {
             return {
                 statusCode: 400,
@@ -38,10 +34,26 @@ exports.handler = async (event, context) => {
             };
         }
 
+        // ✅ SECURE: Get credentials from environment variables
+        const MAGENTO_API_TOKEN = process.env.MAGENTO_API_TOKEN;
+        const MAGENTO_BASE_URL = process.env.MAGENTO_BASE_URL || 'https://pinkblue.in/rest/V1';
+
+        if (!MAGENTO_API_TOKEN) {
+            console.error('❌ MAGENTO_API_TOKEN environment variable not set');
+            return {
+                statusCode: 500,
+                headers,
+                body: JSON.stringify({
+                    success: false,
+                    error: 'Server configuration error'
+                })
+            };
+        }
+
         // TEST EMAIL - Always works for your testing
         if (email.toLowerCase() === 'syed.ahmed@theraoralcare.com') {
             console.log('✅ Test email detected, returning mock order');
-            const mockOrder = {
+            const mockOrderData = {
                 entity_id: '789123',
                 increment_id: 'PB000789',
                 grand_total: '2450.00',
@@ -52,28 +64,25 @@ exports.handler = async (event, context) => {
                 customer_lastname: 'Ahmed',
                 order_currency_code: 'INR'
             };
-
             return {
                 statusCode: 200,
                 headers,
                 body: JSON.stringify({
                     success: true,
-                    order: mockOrder,
+                    orderData: mockOrderData, // ✅ FIXED: Changed from 'order' to 'orderData'
                     message: `Auto-detected via ${detectionMethod || 'unknown method'}!`,
                     detectionMethod: detectionMethod
                 })
             };
         }
 
-        // Real Magento API call
+        // Real Magento API call with secure credentials
         console.log('🛒 Calling Magento API for email:', email);
-        const API_TOKEN = 't5xkjvxlgitd25cuhxixl9dflw008f4e';
-        const BASE_URL = 'https://pinkblue.in/rest/V1';
-
+        
         const weekAgo = new Date();
         weekAgo.setDate(weekAgo.getDate() - 7);
         
-        const searchUrl = `${BASE_URL}/orders?` +
+        const searchUrl = `${MAGENTO_BASE_URL}/orders?` +
             `searchCriteria[filterGroups][0][filters][0][field]=customer_email&` +
             `searchCriteria[filterGroups][0][filters][0][value]=${encodeURIComponent(email)}&` +
             `searchCriteria[filterGroups][0][filters][0][conditionType]=eq&` +
@@ -89,15 +98,16 @@ exports.handler = async (event, context) => {
 
         const response = await fetch(searchUrl, {
             headers: {
-                'Authorization': `Bearer ${API_TOKEN}`,
+                'Authorization': `Bearer ${MAGENTO_API_TOKEN}`, // ✅ SECURE: Using environment variable
                 'Content-Type': 'application/json'
             }
         });
 
         const orderData = await response.json();
         console.log('📊 Magento API response status:', response.status);
-
+        
         if (!response.ok) {
+            console.error('❌ Magento API error:', response.status, response.statusText);
             return {
                 statusCode: 200,
                 headers,
@@ -119,7 +129,7 @@ exports.handler = async (event, context) => {
                     headers,
                     body: JSON.stringify({
                         success: true,
-                        order: {
+                        orderData: { // ✅ FIXED: Changed from 'order' to 'orderData'
                             entity_id: recentOrder.entity_id,
                             increment_id: recentOrder.increment_id,
                             grand_total: recentOrder.grand_total,
@@ -154,7 +164,6 @@ exports.handler = async (event, context) => {
                 })
             };
         }
-
     } catch (error) {
         console.error('💥 Function error:', error);
         return {
