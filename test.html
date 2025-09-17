@@ -80,10 +80,10 @@
         /* Interactive Reels Overlay - PRECISELY ALIGNED */
         .reels-overlay {
             position: absolute;
-            top: 315px; /* Fine-tuned positioning */
+            top: 315px;
             left: 50%;
             transform: translateX(-50%);
-            width: 220px; /* Adjusted for better fit */
+            width: 220px;
             height: 100px;
             display: flex;
             justify-content: space-around;
@@ -93,7 +93,7 @@
 
         /* Individual Reel Windows */
         .reel-window {
-            width: 58px; /* Precise sizing to match background windows */
+            width: 58px;
             height: 75px;
             position: relative;
             overflow: hidden;
@@ -132,17 +132,17 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: transparent; /* REMOVED WHITE BACKGROUND */
+            background: transparent;
             border-radius: 6px;
             margin-bottom: 1px;
             position: relative;
         }
 
         .symbol img {
-            width: 50px; /* Slightly larger for better visibility */
+            width: 50px;
             height: 50px;
             object-fit: contain;
-            filter: brightness(1.1) contrast(1.2) drop-shadow(0 2px 4px rgba(0,0,0,0.3)); /* Added shadow for depth */
+            filter: brightness(1.1) contrast(1.2) drop-shadow(0 2px 4px rgba(0,0,0,0.3));
             transition: all 0.3s ease;
         }
 
@@ -156,18 +156,14 @@
         }
 
         @keyframes symbolWin {
-            0% { 
-                transform: scale(1);
-            }
-            100% { 
-                transform: scale(1.05);
-            }
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
         }
 
-        /* Spin Button Overlay - Aligned with background button */
+        /* Spin Button Overlay */
         .spin-button-container {
             position: absolute;
-            bottom: 155px; /* Precise alignment with background button */
+            bottom: 155px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 10;
@@ -234,7 +230,7 @@
             transform: none;
         }
 
-        /* Status Bar Overlay - Aligned with background */
+        /* Status Bar Overlay */
         .status-overlay {
             position: absolute;
             bottom: 85px;
@@ -328,7 +324,7 @@
             }
         }
 
-        /* Mobile Responsive */
+        /* FIXED MOBILE RESPONSIVE - MAINTAINS ALIGNMENT */
         @media (max-width: 768px) {
             .slot-machine-container {
                 width: 350px;
@@ -338,17 +334,100 @@
             
             .header-text {
                 width: 260px;
-                top: 10px;
+                top: 12px;
+                font-size: 11px;
             }
             
+            .header-text h3 {
+                font-size: 12px;
+            }
+            
+            .header-text p {
+                font-size: 11px;
+            }
+            
+            /* REELS - PROPORTIONALLY SCALED */
             .reels-overlay {
-                width: 190px;
-                top: 270px;
+                width: 195px; /* Proportional scaling */
+                top: 275px; /* Adjusted for mobile */
+                height: 90px;
             }
             
             .reel-window {
-                width: 50px;
-                height: 65px;
+                width: 52px; /* Proportional to background */
+                height: 68px;
+            }
+            
+            /* MAINTAIN FIRST REEL OFFSET */
+            .reel-window:first-child {
+                transform: translateX(-7px); /* Proportionally adjusted */
+            }
+            
+            .symbol {
+                width: 52px;
+                height: 68px;
+            }
+            
+            .symbol img {
+                width: 45px;
+                height: 45px;
+            }
+            
+            /* MOBILE REEL ANIMATION */
+            .reel-strip.spinning {
+                animation: reelSpinMobile 0.08s linear infinite;
+            }
+            
+            @keyframes reelSpinMobile {
+                0% { transform: translateY(0); }
+                100% { transform: translateY(-68px); } /* Match mobile symbol height */
+            }
+            
+            .spin-button {
+                width: 150px;
+                height: 40px;
+                font-size: 13px;
+                letter-spacing: 1px;
+            }
+            
+            .spin-button-container {
+                bottom: 135px;
+            }
+            
+            .status-overlay {
+                bottom: 75px;
+                left: 15px;
+                right: 15px;
+            }
+            
+            .spins-left, .players-count {
+                padding: 5px 10px;
+                font-size: 10px;
+            }
+            
+            .details-button {
+                bottom: 30px;
+                padding: 7px 16px;
+                font-size: 11px;
+            }
+        }
+
+        /* EXTRA SMALL SCREENS */
+        @media (max-width: 480px) {
+            .slot-machine-container {
+                width: 320px;
+                height: 480px;
+                transform: scale(0.85);
+            }
+            
+            .reels-overlay {
+                width: 180px;
+                top: 260px;
+            }
+            
+            .reel-window {
+                width: 48px;
+                height: 62px;
             }
             
             .reel-window:first-child {
@@ -356,31 +435,22 @@
             }
             
             .symbol {
-                width: 50px;
-                height: 65px;
+                width: 48px;
+                height: 62px;
             }
             
             .symbol img {
-                width: 42px;
-                height: 42px;
-            }
-            
-            .spin-button {
-                width: 140px;
+                width: 40px;
                 height: 40px;
-                font-size: 13px;
             }
             
-            .spin-button-container {
-                bottom: 130px;
+            @keyframes reelSpinExtraSmall {
+                0% { transform: translateY(0); }
+                100% { transform: translateY(-62px); }
             }
             
-            .status-overlay {
-                bottom: 70px;
-            }
-            
-            .details-button {
-                bottom: 30px;
+            .reel-strip.spinning {
+                animation: reelSpinExtraSmall 0.08s linear infinite;
             }
         }
     </style>
@@ -422,7 +492,7 @@
                     <span id="spinsLeft">10</span> / 10 SPINS LEFT
                 </div>
                 <div class="players-count">
-                    <span id="playersCount">1,358,178</span> played
+                    <span id="playersCount">1,358,377</span> played
                     <div class="user-avatars">
                         <div class="avatar"></div>
                         <div class="avatar"></div>
@@ -467,7 +537,7 @@
         };
 
         let spinsLeft = 10;
-        let playersCount = 1358178;
+        let playersCount = 1358377;
         let spinning = false;
 
         // Initialize reels with custom symbols
@@ -547,7 +617,7 @@
             }
         }
 
-        // Main spin function
+        // Main spin function with mobile-aware animation
         function spinReels() {
             if (spinning || spinsLeft <= 0) return;
             
@@ -580,9 +650,21 @@
                     const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
                     results.push(randomSymbol);
                     
-                    // Position strip to show selected symbol
+                    // Position strip to show selected symbol (mobile-aware)
                     const symbolIndex = symbols.findIndex(s => s.name === randomSymbol.name);
-                    strip.style.transform = `translateY(-${symbolIndex * 75}px)`;
+                    const isMobile = window.innerWidth <= 768;
+                    const isExtraSmall = window.innerWidth <= 480;
+                    
+                    let translateDistance;
+                    if (isExtraSmall) {
+                        translateDistance = symbolIndex * 62; // Extra small screens
+                    } else if (isMobile) {
+                        translateDistance = symbolIndex * 68; // Mobile screens
+                    } else {
+                        translateDistance = symbolIndex * 75; // Desktop
+                    }
+                    
+                    strip.style.transform = `translateY(-${translateDistance}px)`;
                     
                     playSound(480, 0.3);
                     
