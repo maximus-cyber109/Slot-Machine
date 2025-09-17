@@ -45,6 +45,12 @@
             font-size: 2.5rem;
             font-weight: 900;
             margin-bottom: 10px;
+            animation: logoGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes logoGlow {
+            from { filter: drop-shadow(0 0 20px #00d4ff); }
+            to { filter: drop-shadow(0 0 30px #00d4ff) drop-shadow(0 0 40px #00d4ff); }
         }
 
         .order-status {
@@ -114,6 +120,7 @@
             margin: 0 auto;
             display: block;
             transition: all 0.3s ease;
+            box-shadow: 0 8px 16px rgba(255, 71, 87, 0.4);
         }
 
         .spin-button:hover {
@@ -128,7 +135,7 @@
         .prize-display {
             text-align: center;
             margin-top: 25px;
-            min-height: 100px;
+            min-height: 120px;
             padding: 20px;
             background: rgba(0, 0, 0, 0.5);
             border-radius: 15px;
@@ -156,10 +163,23 @@
             font-weight: bold;
         }
 
-        .stock-info {
+        .tier-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
             font-size: 0.8rem;
-            color: #888;
-            margin-top: 10px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .tier-premium {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #000;
+        }
+
+        .tier-standard {
+            background: linear-gradient(45deg, #c0c0c0, #e8e8e8);
+            color: #000;
         }
 
         .email-prompt {
@@ -183,6 +203,12 @@
             margin: 10px 0;
         }
 
+        .email-input:focus {
+            outline: none;
+            border-color: #00d4ff;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+        }
+
         .lookup-button {
             background: linear-gradient(145deg, #00d4ff, #0099cc);
             border: none;
@@ -191,10 +217,37 @@
             color: white;
             cursor: pointer;
             font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .lookup-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0, 212, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #00d4ff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         .hidden {
             display: none;
+        }
+
+        @media (max-width: 768px) {
+            .arcade-container { padding: 30px 20px; }
+            .logo { font-size: 2rem; }
+            .reel { width: 100px; height: 130px; }
+            .symbol { width: 100px; height: 43px; font-size: 1.6rem; }
+            .spin-button { width: 80px; height: 80px; font-size: 1rem; }
         }
     </style>
 </head>
@@ -236,40 +289,10 @@
 
         <div class="prize-display" id="prizeDisplay">
             <p style="color: #888;">🎁 Spin to discover your prize!</p>
-            <div class="stock-info" id="stockInfo"></div>
         </div>
     </div>
 
     <script>
-        // Prize configuration based on your specifications
-        const PRIZE_CONFIG = {
-            premium: [ // Order > 10000
-                {sku: 'SPE02_016_01', name: 'Speedendo E Mate Pro Endomotor', value: 13000, qty: 1},
-                {sku: 'DEN06_231_03', name: 'Dentsply SDR Flowable Bulk', value: 10580, qty: 1},
-                {sku: 'SPE02_018_01', name: 'Speedendo Apex S Apex Locator', value: 6000, qty: 1},
-                {sku: 'HAG01_023_01', name: 'Hager Mira 2 Ton Solution', value: 4668, qty: 1},
-                {sku: 'DEN03_019_01', name: 'Dental Avenue Avue T Crown', value: 4553, qty: 1},
-                {sku: 'DDT01_009_01', name: 'DDT Walsch Low Speed Handpiece Kit', value: 4000, qty: 2},
-                {sku: 'END01_031_10', name: 'EndoStar E3 Azure 8%', value: 1700, qty: 5},
-                {sku: 'DEN18_046_04', name: 'Denext Handpiece Push Type', value: 1651, qty: 1},
-                {sku: 'NUS01_002_01', name: 'NuSmile ZR Posterior Crown', value: 1650, qty: 1},
-                {sku: 'DDT01_010_01', name: 'DDT Walsch Air Motor Handpiece', value: 1500, qty: 1}
-            ],
-            standard: [ // All customers
-                {sku: 'DEN14_028_04', name: 'DenSafe Rotary File F1 21mm', value: 900, qty: 1},
-                {sku: 'SPE02_010_02', name: 'Speedendo W-One Gold Files', value: 750, qty: 5},
-                {sku: 'GCX02_034_02', name: 'GC Tooth Mousse Plus', value: 678, qty: 1},
-                {sku: 'RAB01_068_01', name: 'Rabbit Force Titanium Mini Screws', value: 490, qty: 1},
-                {sku: 'GDC01_125_04', name: 'GDC Root Elevators', value: 400, qty: 1}
-            ],
-            cashback: [
-                {sku: 'PB_CASHBACK_100', name: 'PB CASHBACK ₹100', value: 100, qty: 500},
-                {sku: 'PB_CASHBACK_150', name: 'PB CASHBACK ₹150', value: 150, qty: 500},
-                {sku: 'PB_CASHBACK_200', name: 'PB CASHBACK ₹200', value: 200, qty: 500},
-                {sku: 'PB_CASHBACK_250', name: 'PB CASHBACK ₹250', value: 250, qty: 500}
-            ]
-        };
-
         let userSession = {
             email: null,
             orderValue: 0,
@@ -341,7 +364,8 @@
 
         async function lookupOrdersByEmail(email) {
             try {
-                document.getElementById('orderStatus').innerHTML = '🔍 Looking up your recent orders...';
+                document.getElementById('orderStatus').innerHTML = 
+                    '<div class="loading"></div> Looking up your recent orders...';
                 
                 const response = await fetch('/.netlify/functions/get-customer-order', {
                     method: 'POST',
@@ -374,8 +398,8 @@
         function showOrderFound() {
             const orderValue = userSession.orderValue;
             const tierInfo = orderValue >= 10000 ? 
-                `🏆 PREMIUM TIER (Order: ₹${orderValue})` : 
-                `🎮 STANDARD TIER (Order: ₹${orderValue})`;
+                `🏆 PREMIUM TIER (Order: ₹${orderValue.toLocaleString()})` : 
+                `🎮 STANDARD TIER (Order: ₹${orderValue.toLocaleString()})`;
             
             document.getElementById('orderStatus').innerHTML = 
                 `✅ Order Found! ${tierInfo}<br>
@@ -411,16 +435,16 @@
             spinButton.disabled = true;
             spinButton.textContent = 'SPINNING...';
             
-            // Animate reels
+            // Show spinning animation
+            document.getElementById('prizeDisplay').innerHTML = 
+                '<div class="loading"></div> <p style="color: #00d4ff;">🎲 Spinning the reels...</p>';
+            
+            // Animate reels for 3 seconds
             for (let i = 1; i <= 3; i++) {
                 animateReel(i);
             }
             
-            // Show loading message
-            document.getElementById('prizeDisplay').innerHTML = 
-                '<p style="color: #00d4ff;">🎲 Determining your prize...</p>';
-            
-            // Call prize allocation API
+            // After animation, allocate prize
             setTimeout(async () => {
                 await allocatePrize();
                 isSpinning = false;
@@ -446,6 +470,9 @@
 
         async function allocatePrize() {
             try {
+                document.getElementById('prizeDisplay').innerHTML = 
+                    '<div class="loading"></div> <p style="color: #00d4ff;">🎁 Allocating your prize...</p>';
+                
                 const response = await fetch('/.netlify/functions/allocate-prize', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
@@ -460,7 +487,7 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    displayWinResult(result.prize, result.stockInfo);
+                    displayWinResult(result.prize, result.tier);
                 } else {
                     displayError(result.error);
                 }
@@ -470,22 +497,27 @@
             }
         }
 
-        function displayWinResult(prize, stockInfo) {
+        function displayWinResult(prize, tier) {
+            const tierBadge = tier === 'premium' ? 
+                '<span class="tier-badge tier-premium">🏆 PREMIUM TIER</span>' :
+                '<span class="tier-badge tier-standard">🎮 STANDARD TIER</span>';
+            
             document.getElementById('prizeDisplay').innerHTML = `
                 <div class="win-animation">
                     🎉 CONGRATULATIONS! 🎉
                 </div>
+                ${tierBadge}
                 <div class="prize-details">
                     <h3>${prize.name}</h3>
                     <p><strong>SKU:</strong> ${prize.sku}</p>
-                    <p><strong>Value:</strong> ₹${prize.value}</p>
-                    <p><strong>Prize Code:</strong> ${prize.prizeCode}</p>
+                    <p><strong>Value:</strong> ₹${prize.value.toLocaleString()}</p>
+                    <p><strong>Prize Code:</strong> <code style="background: #fff; color: #000; padding: 4px 8px; border-radius: 4px;">${prize.prizeCode}</code></p>
                 </div>
-                <div class="stock-info">
-                    ${stockInfo}
-                </div>
-                <p style="color: #00ff88; margin-top: 15px;">
-                    📧 Check your email for redemption details!
+                <p style="color: #00ff88; margin-top: 20px; font-size: 1.1rem;">
+                    📧 Check your email for redemption instructions!
+                </p>
+                <p style="color: #888; font-size: 0.9rem; margin-top: 10px;">
+                    Save your prize code: <strong>${prize.prizeCode}</strong>
                 </p>
             `;
         }
@@ -500,6 +532,13 @@
         // Initialize the game
         document.addEventListener('DOMContentLoaded', function() {
             initializeAutoDetection();
+        });
+
+        // Add ESC key support to close
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                window.history.back();
+            }
         });
     </script>
 </body>
