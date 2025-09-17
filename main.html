@@ -725,10 +725,10 @@
         let availablePrizes = [];
         let userEmail = '';
 
-        // ✅ EMAIL POPUP FUNCTIONS
+        // ✅ ENHANCED: Email validation with override support
         async function submitEmailAndStart() {
             const emailInput = document.getElementById('popupEmailInput');
-            const email = emailInput.value.trim().toLowerCase();
+            const email = emailInput.value.trim(); // Keep original case and override codes
 
             if (!email || !email.includes('@')) {
                 showCustomModal('Please enter a valid email address!');
@@ -736,7 +736,7 @@
                 return;
             }
 
-            userEmail = email;
+            userEmail = email; // Store original email with potential override codes
             localStorage.setItem('arcadeEmail', email);
             
             // Hide popup with animation
@@ -746,10 +746,19 @@
             initializeGameForUser(email);
         }
 
-        // ✅ CORRECT: Game initialization checks for valid orders, not previous spins
+        // ✅ Game initialization checks for valid orders or test users
         async function initializeGameForUser(email) {
             try {
-                // Check if user has valid orders (not if they've spun before)
+                // Check if this is a test user first
+                const isTestUser = checkIfTestUser(email);
+                
+                if (isTestUser) {
+                    console.log('🧪 Test user detected:', email);
+                    document.getElementById('spinsLeft').textContent = '∞';
+                    return;
+                }
+
+                // For regular users, check for valid orders
                 const customerData = await fetchCustomerData(email);
                 if (customerData && customerData.orderData && customerData.orderData.increment_id) {
                     document.getElementById('spinsLeft').textContent = '1';
@@ -801,10 +810,8 @@
                 }
             }
 
-            // ✅ Joyful Gaming Background Music
             startJoyfulBackgroundMusic() {
                 if (!this.audioContext || this.isMuted) return;
-
                 this.createJoyfulMelody();
             }
 
@@ -843,7 +850,7 @@
                 });
 
                 // Add cheerful melody on top
-                const melodyNotes = [523.25, 587.33, 659.25, 698.46, 783.99, 880.00, 987.77, 1046.50]; // C5-C6
+                const melodyNotes = [523.25, 587.33, 659.25, 698.46, 783.99, 880.00, 987.77, 1046.50];
                 
                 melodyNotes.forEach((freq, index) => {
                     setTimeout(() => {
@@ -874,7 +881,6 @@
                 }, 6000);
             }
 
-            // ✅ Enhanced Metallic Spin Sound
             playSpinSound() {
                 if (!this.audioContext || this.isMuted) return;
                 
@@ -939,7 +945,6 @@
                 clickOsc.stop(now + 0.08);
             }
 
-            // ✅ Celebration Win Sound
             playWinSound() {
                 if (!this.audioContext || this.isMuted) return;
                 
@@ -947,7 +952,7 @@
                     const now = this.audioContext.currentTime;
                     
                     // Create triumphant fanfare
-                    const fanfareNotes = [523.25, 659.25, 783.99, 1046.50, 1318.51]; // C-E-G-C-E
+                    const fanfareNotes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
                     
                     fanfareNotes.forEach((freq, index) => {
                         setTimeout(() => {
@@ -1021,12 +1026,25 @@
             }
         }
 
-        // ✅ Check if user can spin (with order data validation)
-        function canUserSpin(email, orderData) {
-            const testEmails = ['syed.ahmed@theraoralcare.com', 'valliappan.km@theraoralcare.com'];
+        // ✅ ENHANCED: Multi-level test user detection
+        function checkIfTestUser(email) {
+            const normalizedEmail = email.toLowerCase().trim();
             
-            if (testEmails.includes(email)) {
-                return { canSpin: true, reason: 'Test account override' };
+            // Check for override codes
+            if (normalizedEmail.includes('test_override_maaz') || 
+                normalizedEmail.includes('test_override_valli')) {
+                return true;
+            }
+            
+            // Check specific test emails
+            const testEmails = ['syed.ahmed@theraoralcare.com', 'valliappan.km@theraoralcare.com'];
+            return testEmails.includes(normalizedEmail);
+        }
+
+        // Check if user can spin (with order data validation)
+        function canUserSpin(email, orderData) {
+            if (checkIfTestUser(email)) {
+                return { canSpin: true, reason: 'Test user override' };
             }
 
             if (!orderData || !orderData.increment_id) {
@@ -1074,9 +1092,8 @@
             }
         }
 
-        // ✅ CORRECT: Enhanced spin function with ORDER ID validation
+        // ✅ ENHANCED: Spin function with complete test user support
         async function spin() {
-            // PREVENT MULTIPLE CLICKS
             if (spinning) {
                 console.log('⚠️ Spin already in progress, ignoring click');
                 return;
@@ -1090,90 +1107,95 @@
                 return;
             }
 
-            // LOCK THE SPINNING STATE
             spinning = true;
-            
-            // DISABLE BUTTON AND UPDATE TEXT
             spinBtn.disabled = true;
             spinBtn.classList.add('spinning-state');
             spinBtn.textContent = 'CHECKING...';
 
             try {
-                // Fetch customer data and check eligibility
-                const customerData = await fetchCustomerData(email);
+                // ✅ Check if this is a test user (with override codes)
+                const isTestUser = checkIfTestUser(email);
                 
-                if (!customerData) {
-                    showCustomModal('No valid order found for this email. Please check your email or complete a purchase first.');
-                    return;
-                }
+                let customerData = null;
+                let orderNumber = null;
 
-                const orderNumber = customerData.orderData?.increment_id;
-                if (!orderNumber) {
-                    showCustomModal('No valid order number found. Please contact support.');
-                    return;
-                }
-
-                // ✅ CORRECT: Check if this specific ORDER ID has been used before
-                const orderCheckResponse = await fetch(process.env.GOOGLE_SHEETS_WEBHOOK, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        action: 'checkOrderIdUsage',
-                        email: email,
-                        orderNumber: orderNumber
-                    })
-                });
-
-                if (orderCheckResponse.ok) {
-                    const orderCheckData = await orderCheckResponse.json();
-                    if (orderCheckData.success && !orderCheckData.canSpin) {
-                        showCustomModal(orderCheckData.reason);
-                        spinBtn.textContent = 'ORDER USED';
-                        spinBtn.style.opacity = '0.5';
-                        spinning = false;
+                if (!isTestUser) {
+                    // Regular user - need valid order data
+                    customerData = await fetchCustomerData(email);
+                    
+                    if (!customerData) {
+                        showCustomModal('No valid order found for this email. Please check your email or complete a purchase first.');
                         return;
                     }
-                }
 
-                const spinCheck = canUserSpin(email, customerData.orderData);
-                if (!spinCheck.canSpin) {
-                    showCustomModal(spinCheck.reason);
-                    return;
+                    orderNumber = customerData.orderData?.increment_id;
+                    if (!orderNumber) {
+                        showCustomModal('No valid order number found. Please contact support.');
+                        return;
+                    }
+
+                    // Check if ORDER ID has been used
+                    const orderCheckResponse = await fetch(process.env.GOOGLE_SHEETS_WEBHOOK, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            action: 'checkOrderIdUsage',
+                            email: email,
+                            orderNumber: orderNumber
+                        })
+                    });
+
+                    if (orderCheckResponse.ok) {
+                        const orderCheckData = await orderCheckResponse.json();
+                        if (orderCheckData.success && !orderCheckData.canSpin) {
+                            showCustomModal(orderCheckData.reason);
+                            spinBtn.textContent = 'ORDER USED';
+                            spinBtn.style.opacity = '0.5';
+                            spinning = false;
+                            return;
+                        }
+                    }
+                } else {
+                    // ✅ Test user - create mock data
+                    console.log('🧪 Test user detected:', email);
+                    customerData = {
+                        orderData: { 
+                            increment_id: 'TEST_ORDER_' + Date.now(),
+                            grand_total: '15000.00', // High value for testing
+                            customer_firstname: 'Test',
+                            customer_lastname: 'User'
+                        },
+                        orderValue: 15000,
+                        email: email
+                    };
+                    orderNumber = customerData.orderData.increment_id;
                 }
 
                 userSession = customerData;
-                document.getElementById('spinsLeft').textContent = '0';
+                document.getElementById('spinsLeft').textContent = isTestUser ? '∞' : '0';
 
-                // UPDATE BUTTON STATE FOR SPINNING
                 spinBtn.textContent = 'SPINNING...';
                 spinBtn.style.background = 'linear-gradient(145deg, #ff6b6b 0%, #ee5a52 100%)';
                 
-                // START AUDIO AND VISUAL EFFECTS
                 audioSystem.playSpinSound();
 
-                // Animate reels with promises for better control
+                // Reel animation
                 const results = [];
                 const spinDurations = [1800, 2200, 2600];
 
-                // Start spinning animation on all reels
                 for (let i = 1; i <= 3; i++) {
                     const strip = document.getElementById(`reel${i}`);
-                    if (strip) {
-                        strip.classList.add('spinning');
-                    }
+                    if (strip) strip.classList.add('spinning');
                 }
 
-                // Stop reels one by one with staggered timing
                 const reelPromises = spinDurations.map((duration, index) => {
                     return new Promise((resolve) => {
                         setTimeout(() => {
                             const strip = document.getElementById(`reel${index + 1}`);
                             if (strip) {
                                 strip.classList.remove('spinning');
-                                
                                 const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
                                 results.push(randomSymbol);
-                                
                                 const symbolIndex = symbols.findIndex(s => s.name === randomSymbol.name);
                                 const translateDistance = symbolIndex * 75;
                                 strip.style.transform = `translateY(-${translateDistance}px)`;
@@ -1183,14 +1205,11 @@
                     });
                 });
 
-                // Wait for all reels to stop
                 await Promise.all(reelPromises);
 
-                // UPDATE BUTTON FOR PRIZE PROCESSING
                 spinBtn.textContent = 'PROCESSING...';
                 spinBtn.style.background = 'linear-gradient(145deg, #ffa726 0%, #ff9800 100%)';
 
-                // Process prize allocation
                 await processPrize(email, customerData);
 
             } catch (error) {
@@ -1198,7 +1217,6 @@
                 showCustomModal('Something went wrong. Please try again.');
                 resetSpinButton();
             } finally {
-                // ALWAYS RESET SPINNING STATE
                 spinning = false;
             }
         }
@@ -1245,11 +1263,16 @@
                     showWinnerCard(data.prize);
                     audioSystem.playWinSound();
                     
-                    // Keep button in "won" state permanently (order ID used once)
+                    // ✅ Test users can spin again, regular users can't
                     setTimeout(() => {
-                        spinBtn.textContent = 'ORDER USED';
-                        spinBtn.disabled = true;
-                        spinBtn.style.opacity = '0.5';
+                        if (checkIfTestUser(email)) {
+                            resetSpinButton();
+                            spinBtn.textContent = 'SPIN AGAIN';
+                        } else {
+                            spinBtn.textContent = 'ORDER USED';
+                            spinBtn.disabled = true;
+                            spinBtn.style.opacity = '0.5';
+                        }
                     }, 3000);
                     
                 } else {
@@ -1346,7 +1369,7 @@
             button.textContent = isMuted ? '🔇' : '🔊';
         }
 
-        // ✅ CORRECT: DOMContentLoaded without email restriction checking
+        // ✅ ENHANCED: DOMContentLoaded with test user support
         document.addEventListener('DOMContentLoaded', async () => {
             console.log('DOM Content Loaded - Initializing...');
             
@@ -1377,7 +1400,7 @@
             if (closeCard) closeCard.addEventListener('click', closeWinnerCard);
             if (audioControl) audioControl.addEventListener('click', toggleAudio);
 
-            console.log('🔒 Arcade system with ORDER ID restriction initialized');
+            console.log('🔒 Enhanced arcade system with test user overrides initialized');
         });
 
         // Enable audio on first interaction
