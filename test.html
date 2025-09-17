@@ -77,7 +77,7 @@
             color: #ff8f00;
         }
 
-        /* Interactive Reels Overlay - PRECISELY ALIGNED */
+        /* Interactive Reels Overlay */
         .reels-overlay {
             position: absolute;
             top: 315px;
@@ -125,7 +125,7 @@
             100% { transform: translateY(-75px); }
         }
 
-        /* Symbol Containers - TRANSPARENT BACKGROUND */
+        /* Symbol Containers */
         .symbol {
             width: 58px;
             height: 75px;
@@ -194,27 +194,12 @@
             overflow: hidden;
         }
 
-        .spin-button:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transition: left 0.6s;
-        }
-
         .spin-button:hover {
             transform: translateY(-2px) scale(1.02);
             box-shadow: 
                 0 16px 32px rgba(255,181,0,0.6),
                 0 8px 16px rgba(0,0,0,0.5),
                 inset 0 6px 16px rgba(255,255,255,0.5);
-        }
-
-        .spin-button:hover:before {
-            left: 100%;
         }
 
         .spin-button:active {
@@ -225,24 +210,22 @@
         }
 
         .spin-button:disabled {
-            opacity: 0.6;
+            opacity: 0.4;
             cursor: not-allowed;
             transform: none;
+            background: linear-gradient(145deg, #888 0%, #666 50%, #444 100%);
         }
 
-        /* Status Bar Overlay */
+        /* Status Bar Overlay - SIMPLIFIED */
         .status-overlay {
             position: absolute;
             bottom: 85px;
-            left: 20px;
-            right: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            left: 50%;
+            transform: translateX(-50%);
             z-index: 10;
         }
 
-        .spins-left, .players-count {
+        .spins-left {
             background: rgba(255,255,255,0.95);
             color: #333;
             padding: 6px 12px;
@@ -253,30 +236,6 @@
             font-weight: 700;
             backdrop-filter: blur(10px);
         }
-
-        .players-count {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .user-avatars {
-            display: flex;
-            gap: -2px;
-        }
-
-        .avatar {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            border: 2px solid #ff8f00;
-            margin-left: -2px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-        }
-
-        .avatar:nth-child(1) { background: linear-gradient(145deg, #e53935, #c62828); }
-        .avatar:nth-child(2) { background: linear-gradient(145deg, #43a047, #2e7d32); }
-        .avatar:nth-child(3) { background: linear-gradient(145deg, #1e88e5, #1565c0); }
 
         /* Details Button */
         .details-button {
@@ -305,6 +264,89 @@
             box-shadow: 0 6px 20px rgba(0,0,0,0.4);
         }
 
+        /* GOLDEN PRIZE CARD */
+        .golden-card {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 320px;
+            height: 200px;
+            background: linear-gradient(145deg, #ffd700 0%, #ffed4e 50%, #b8860b 100%);
+            border-radius: 25px;
+            border: 6px solid #b8860b;
+            box-shadow: 
+                0 0 50px rgba(255,215,0,0.8),
+                inset 0 10px 30px rgba(255,255,255,0.3),
+                inset 0 -5px 20px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #8b4513;
+            font-weight: 800;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .golden-card.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+            animation: cardGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes cardGlow {
+            0% { 
+                box-shadow: 
+                    0 0 50px rgba(255,215,0,0.8),
+                    inset 0 10px 30px rgba(255,255,255,0.3);
+            }
+            100% { 
+                box-shadow: 
+                    0 0 80px rgba(255,215,0,1),
+                    inset 0 10px 30px rgba(255,255,255,0.4);
+            }
+        }
+
+        .golden-card-header {
+            font-size: 24px;
+            margin-bottom: 15px;
+            text-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+
+        .golden-card-prize {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #654321;
+        }
+
+        .golden-card-close {
+            background: linear-gradient(145deg, #8b4513 0%, #654321 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 
+                0 6px 15px rgba(0,0,0,0.3),
+                inset 0 2px 8px rgba(255,255,255,0.2);
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .golden-card-close:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 8px 20px rgba(0,0,0,0.4),
+                inset 0 3px 10px rgba(255,255,255,0.3);
+        }
+
         /* Win Particles */
         .particle {
             position: absolute;
@@ -324,7 +366,7 @@
             }
         }
 
-        /* FIXED MOBILE RESPONSIVE - MAINTAINS ALIGNMENT */
+        /* Mobile Responsive */
         @media (max-width: 768px) {
             .slot-machine-container {
                 width: 350px;
@@ -338,29 +380,19 @@
                 font-size: 11px;
             }
             
-            .header-text h3 {
-                font-size: 12px;
-            }
-            
-            .header-text p {
-                font-size: 11px;
-            }
-            
-            /* REELS - PROPORTIONALLY SCALED */
             .reels-overlay {
-                width: 195px; /* Proportional scaling */
-                top: 275px; /* Adjusted for mobile */
+                width: 195px;
+                top: 275px;
                 height: 90px;
             }
             
             .reel-window {
-                width: 52px; /* Proportional to background */
+                width: 52px;
                 height: 68px;
             }
             
-            /* MAINTAIN FIRST REEL OFFSET */
             .reel-window:first-child {
-                transform: translateX(-7px); /* Proportionally adjusted */
+                transform: translateX(-7px);
             }
             
             .symbol {
@@ -373,84 +405,17 @@
                 height: 45px;
             }
             
-            /* MOBILE REEL ANIMATION */
-            .reel-strip.spinning {
-                animation: reelSpinMobile 0.08s linear infinite;
+            .golden-card {
+                width: 280px;
+                height: 180px;
             }
             
-            @keyframes reelSpinMobile {
-                0% { transform: translateY(0); }
-                100% { transform: translateY(-68px); } /* Match mobile symbol height */
+            .golden-card-header {
+                font-size: 20px;
             }
             
-            .spin-button {
-                width: 150px;
-                height: 40px;
-                font-size: 13px;
-                letter-spacing: 1px;
-            }
-            
-            .spin-button-container {
-                bottom: 135px;
-            }
-            
-            .status-overlay {
-                bottom: 75px;
-                left: 15px;
-                right: 15px;
-            }
-            
-            .spins-left, .players-count {
-                padding: 5px 10px;
-                font-size: 10px;
-            }
-            
-            .details-button {
-                bottom: 30px;
-                padding: 7px 16px;
-                font-size: 11px;
-            }
-        }
-
-        /* EXTRA SMALL SCREENS */
-        @media (max-width: 480px) {
-            .slot-machine-container {
-                width: 320px;
-                height: 480px;
-                transform: scale(0.85);
-            }
-            
-            .reels-overlay {
-                width: 180px;
-                top: 260px;
-            }
-            
-            .reel-window {
-                width: 48px;
-                height: 62px;
-            }
-            
-            .reel-window:first-child {
-                transform: translateX(-6px);
-            }
-            
-            .symbol {
-                width: 48px;
-                height: 62px;
-            }
-            
-            .symbol img {
-                width: 40px;
-                height: 40px;
-            }
-            
-            @keyframes reelSpinExtraSmall {
-                0% { transform: translateY(0); }
-                100% { transform: translateY(-62px); }
-            }
-            
-            .reel-strip.spinning {
-                animation: reelSpinExtraSmall 0.08s linear infinite;
+            .golden-card-prize {
+                font-size: 16px;
             }
         }
     </style>
@@ -466,7 +431,7 @@
                 <p>₹4,999 for free</p>
             </div>
 
-            <!-- Interactive Reels Overlay - PERFECTLY ALIGNED -->
+            <!-- Interactive Reels Overlay -->
             <div class="reels-overlay">
                 <div class="reel-window">
                     <div class="reel-strip" id="reel1"></div>
@@ -486,18 +451,10 @@
                 </button>
             </div>
 
-            <!-- Status Bar Overlay -->
+            <!-- Status Bar Overlay - SIMPLIFIED -->
             <div class="status-overlay">
                 <div class="spins-left">
-                    <span id="spinsLeft">10</span> / 10 SPINS LEFT
-                </div>
-                <div class="players-count">
-                    <span id="playersCount">1,358,377</span> played
-                    <div class="user-avatars">
-                        <div class="avatar"></div>
-                        <div class="avatar"></div>
-                        <div class="avatar"></div>
-                    </div>
+                    <span id="spinsLeft">1</span> / 1 SPIN LEFT
                 </div>
             </div>
         </div>
@@ -506,6 +463,13 @@
         <button class="details-button" id="detailsBtn">
             ⓘ details
         </button>
+
+        <!-- GOLDEN PRIZE CARD -->
+        <div class="golden-card" id="goldenCard">
+            <div class="golden-card-header">🎉 CONGRATULATIONS! 🎉</div>
+            <div class="golden-card-prize" id="prizeName">You won this amazing prize!</div>
+            <button class="golden-card-close" id="closeCard">CLAIM PRIZE</button>
+        </div>
     </div>
 
     <script>
@@ -529,16 +493,16 @@
         ];
 
         const jackpotPrizes = {
-            '777': { name: 'TRIPLE SEVENS MEGA JACKPOT', value: 500000 },
-            'StarStarStar': { name: 'TRIPLE STARS JACKPOT', value: 150000 },
-            'GrapeGrapeGrape': { name: 'TRIPLE GRAPES JACKPOT', value: 75000 },
-            '7Star7': { name: 'LUCKY SEVENS & STAR', value: 25000 },
-            'StarGrapeStar': { name: 'FRUIT STAR COMBO', value: 15000 }
+            '777': { name: 'TRIPLE SEVENS MEGA JACKPOT', value: 500000, description: 'Premium Dental Equipment Package' },
+            'StarStarStar': { name: 'TRIPLE STARS JACKPOT', value: 150000, description: 'Advanced Dental Tools Set' },
+            'GrapeGrapeGrape': { name: 'TRIPLE GRAPES JACKPOT', value: 75000, description: 'Professional Dental Supplies' },
+            '7Star7': { name: 'LUCKY SEVENS & STAR', value: 25000, description: 'Dental Starter Kit' },
+            'StarGrapeStar': { name: 'FRUIT STAR COMBO', value: 15000, description: 'AI Course + Dental Bonus' }
         };
 
-        let spinsLeft = 10;
-        let playersCount = 1358377;
+        let spinsLeft = 1; // RESTRICTED TO ONE SPIN
         let spinning = false;
+        let hasSpun = false; // Track if user has already spun
 
         // Initialize reels with custom symbols
         function initializeReels() {
@@ -565,6 +529,24 @@
                     });
                 }
             }
+        }
+
+        // Show golden prize card
+        function showGoldenCard(prizeName, prizeDescription) {
+            const card = document.getElementById('goldenCard');
+            const prizeNameElement = document.getElementById('prizeName');
+            
+            prizeNameElement.innerHTML = `<strong>${prizeName}</strong><br><small>${prizeDescription}</small>`;
+            card.classList.add('show');
+            
+            // Create extra particles for celebration
+            createParticles(50, true);
+        }
+
+        // Close golden card
+        function closeGoldenCard() {
+            const card = document.getElementById('goldenCard');
+            card.classList.remove('show');
         }
 
         // Create spectacular particles
@@ -617,16 +599,15 @@
             }
         }
 
-        // Main spin function with mobile-aware animation
+        // Main spin function - RESTRICTED TO ONE SPIN
         function spinReels() {
-            if (spinning || spinsLeft <= 0) return;
+            if (spinning || hasSpun || spinsLeft <= 0) return;
             
             spinning = true;
-            spinsLeft--;
-            playersCount += Math.floor(Math.random() * 8) + 3;
+            hasSpun = true; // Mark as spun
+            spinsLeft = 0;
             
             document.getElementById('spinsLeft').textContent = spinsLeft;
-            document.getElementById('playersCount').textContent = playersCount.toLocaleString();
             document.getElementById('spinBtn').disabled = true;
             
             // Epic spin sound
@@ -650,19 +631,10 @@
                     const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
                     results.push(randomSymbol);
                     
-                    // Position strip to show selected symbol (mobile-aware)
+                    // Position strip to show selected symbol
                     const symbolIndex = symbols.findIndex(s => s.name === randomSymbol.name);
                     const isMobile = window.innerWidth <= 768;
-                    const isExtraSmall = window.innerWidth <= 480;
-                    
-                    let translateDistance;
-                    if (isExtraSmall) {
-                        translateDistance = symbolIndex * 62; // Extra small screens
-                    } else if (isMobile) {
-                        translateDistance = symbolIndex * 68; // Mobile screens
-                    } else {
-                        translateDistance = symbolIndex * 75; // Desktop
-                    }
+                    const translateDistance = isMobile ? symbolIndex * 68 : symbolIndex * 75;
                     
                     strip.style.transform = `translateY(-${translateDistance}px)`;
                     
@@ -676,101 +648,69 @@
             });
         }
 
-        // Check for epic wins
+        // Check for wins and show golden card
         function checkWin(results) {
             const resultKey = results.map(r => r.name).join('');
             const symbolNames = results.map(r => r.name);
             
-            // Check for jackpot combinations
+            // Always ensure user wins something (guaranteed win)
+            let prize;
             if (jackpotPrizes[resultKey]) {
-                const prize = jackpotPrizes[resultKey];
-                
-                // Highlight all winning symbols
-                document.querySelectorAll('.symbol').forEach(symbol => {
-                    if (symbolNames.includes(symbol.dataset.symbol)) {
-                        symbol.classList.add('winning');
-                    }
-                });
-                
-                createParticles(40, prize.value >= 100000);
-                
-                // Epic victory sound sequence
-                [523, 659, 784, 988, 1175].forEach((freq, i) => {
-                    setTimeout(() => playSound(freq, 0.6, 'sine', 0.15), i * 250);
-                });
-                
-                setTimeout(() => {
-                    alert(`🎰 ${prize.name}! 🎰\n\nINCREDIBLE WIN!\nYou won ₹${prize.value.toLocaleString()}!\n\nCongratulations! 🎉`);
-                }, 1200);
-                
-            } else if (new Set(symbolNames).size === 2) {
-                // Near miss - 2 matching symbols
-                playSound(350, 0.6);
-                createParticles(15);
-                
-                setTimeout(() => {
-                    alert('🎯 So close! Two matching symbols!\nKeep spinning for the jackpot! 🎰');
-                }, 800);
-                
-            } else if (new Set(symbolNames).size === 1) {
-                // All same but not a defined jackpot combo
-                const winValue = results[0].value;
-                
-                document.querySelectorAll('.symbol').forEach(symbol => {
-                    if (symbol.dataset.symbol === symbolNames[0]) {
-                        symbol.classList.add('winning');
-                    }
-                });
-                
-                createParticles(30, true);
-                playSound(740, 0.8);
-                
-                setTimeout(() => {
-                    alert(`🎉 TRIPLE ${symbolNames[0].toUpperCase()}S! 🎉\n\nYou won ₹${winValue.toLocaleString()}!`);
-                }, 1000);
-                
+                prize = jackpotPrizes[resultKey];
             } else {
-                // No match
-                playSound(200, 0.4);
-                createParticles(8);
+                // If no exact match, give them a consolation prize
+                prize = {
+                    name: 'SPECIAL BONUS PRIZE',
+                    description: 'AI Course Worth ₹4,999 + Dental Supplies Discount',
+                    value: 4999
+                };
             }
             
-            // Reset for next spin
-            setTimeout(() => {
-                document.querySelectorAll('.symbol').forEach(symbol => {
-                    symbol.classList.remove('winning');
-                });
-                spinning = false;
-                document.getElementById('spinBtn').disabled = false;
-                
-                if (spinsLeft <= 0) {
-                    setTimeout(() => {
-                        alert('🎰 Game Over! Thanks for playing PB DAYS!\n\nYour final score: ' + playersCount.toLocaleString() + ' points! 🏆');
-                    }, 500);
+            // Highlight winning symbols
+            document.querySelectorAll('.symbol').forEach(symbol => {
+                if (symbolNames.includes(symbol.dataset.symbol)) {
+                    symbol.classList.add('winning');
                 }
-            }, 3500);
+            });
+            
+            // Epic victory sound sequence
+            [523, 659, 784, 988, 1175].forEach((freq, i) => {
+                setTimeout(() => playSound(freq, 0.6, 'sine', 0.15), i * 250);
+            });
+            
+            // Show golden card after 1.5 seconds
+            setTimeout(() => {
+                showGoldenCard(prize.name, prize.description);
+            }, 1500);
+            
+            spinning = false;
         }
 
         // Event listeners
         document.getElementById('spinBtn').addEventListener('click', spinReels);
+        document.getElementById('closeCard').addEventListener('click', closeGoldenCard);
         
         document.getElementById('detailsBtn').addEventListener('click', () => {
-            alert('🎰 PB DAYS Interactive Slot Machine 🎰\n\nMatch symbols to win amazing prizes!\n\n🎯 Triple 7s = Mega Jackpot\n⭐ Triple Stars = Big Win\n🍇 Triple Grapes = Good Prize\n\nGood luck spinning!');
+            // NO POPUP - Keep everything on page
+            const details = document.createElement('div');
+            details.innerHTML = `
+                <div style="position: fixed; top: 20px; left: 20px; right: 20px; background: rgba(255,255,255,0.95); padding: 20px; border-radius: 15px; border: 3px solid #ffd700; z-index: 999; text-align: center; color: #333; font-weight: 600;">
+                    <h3 style="color: #e65100; margin-bottom: 10px;">🎰 PB DAYS Slot Machine 🎰</h3>
+                    <p>Spin once to win amazing dental equipment and AI courses!</p>
+                    <p style="margin-top: 10px; font-size: 14px;">🎯 Every spin is a guaranteed win!</p>
+                    <button onclick="this.parentElement.parentElement.remove()" style="margin-top: 15px; background: #ffd700; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold;">Got it!</button>
+                </div>
+            `;
+            document.body.appendChild(details);
         });
 
         // Keyboard support
         document.addEventListener('keydown', (e) => {
-            if (e.code === 'Space' && !spinning) {
+            if (e.code === 'Space' && !spinning && !hasSpun) {
                 e.preventDefault();
                 spinReels();
             }
         });
-
-        // Auto-update players count
-        setInterval(() => {
-            playersCount += Math.floor(Math.random() * 12) + 5;
-            document.getElementById('playersCount').textContent = playersCount.toLocaleString();
-        }, 7000);
 
         // Initialize everything
         document.addEventListener('DOMContentLoaded', () => {
