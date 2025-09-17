@@ -3,9 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PB Days Arcade - Prize Allocation System</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>PB DAYS ARCADE - SPIN THE WHEEL</title>
+    
+    <!-- Preload images for faster loading -->
+    <link rel="preload" as="image" href="https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/Slot-machine.png">
+    <link rel="preload" as="image" href="https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/7.png">
+    <link rel="preload" as="image" href="https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/Star.png">
+    <link rel="preload" as="image" href="https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/Grape.png">
+    
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700;900&family=Exo+2:wght@400;600;700;800&display=swap');
+
         * {
             margin: 0;
             padding: 0;
@@ -13,533 +21,902 @@
         }
 
         body {
-            font-family: 'Orbitron', monospace;
-            background: linear-gradient(135deg, #0c1445 0%, #1e3c72 50%, #2a5298 100%);
+            font-family: 'Press Start 2P', monospace;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow-x: hidden;
-        }
-
-        .arcade-container {
-            background: linear-gradient(145deg, #2c2c2c, #1a1a1a);
-            border: 8px solid #444;
-            border-radius: 25px;
-            box-shadow: 0 0 50px rgba(0, 100, 255, 0.3);
-            padding: 40px 30px;
-            max-width: 600px;
-            width: 90%;
-            position: relative;
-        }
-
-        .machine-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .logo {
-            background: linear-gradient(45deg, #00d4ff, #0099cc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-size: 2.5rem;
-            font-weight: 900;
-            margin-bottom: 10px;
-            animation: logoGlow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes logoGlow {
-            from { filter: drop-shadow(0 0 20px #00d4ff); }
-            to { filter: drop-shadow(0 0 30px #00d4ff) drop-shadow(0 0 40px #00d4ff); }
-        }
-
-        .order-status {
-            background: rgba(0, 50, 100, 0.8);
-            border: 2px solid #0099cc;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 25px;
-            text-align: center;
-            color: #00d4ff;
-            font-size: 0.9rem;
-        }
-
-        .slot-machine {
-            background: linear-gradient(145deg, #1a1a1a, #000);
-            border: 6px solid #333;
-            border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 20px;
-        }
-
-        .reels-container {
-            display: flex;
-            justify-content: space-between;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .reel {
-            width: 120px;
-            height: 150px;
-            background: linear-gradient(145deg, #222, #111);
-            border: 3px solid #444;
-            border-radius: 10px;
+            perspective: 1200px;
             overflow: hidden;
-            position: relative;
+            background: radial-gradient(ellipse at center, #1a0033 0%, #000000 70%), linear-gradient(45deg, rgba(25, 25, 112, 0.3) 0%, rgba(75, 0, 130, 0.2) 100%);
+            animation: backgroundShift 10s ease-in-out infinite;
         }
 
-        .reel-content {
-            position: absolute;
+        @keyframes backgroundShift {
+            0%, 100% { filter: brightness(1) hue-rotate(0deg); }
+            50% { filter: brightness(1.1) hue-rotate(15deg); }
+        }
+
+        .arcade-background {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            transition: transform 0.1s ease-out;
+            height: 100%;
+            background: radial-gradient(circle at 20% 80%, rgba(138, 43, 226, 0.15) 0%, transparent 50%),
+                       radial-gradient(circle at 80% 20%, rgba(255, 20, 147, 0.15) 0%, transparent 50%),
+                       radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.05) 0%, transparent 70%),
+                       linear-gradient(135deg, #000428 0%, #004e92 100%);
+            z-index: -1;
+            animation: backgroundGlow 8s ease-in-out infinite alternate;
         }
 
-        .symbol {
-            width: 120px;
+        @keyframes backgroundGlow {
+            0% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+
+        /* Email Input */
+        .email-container {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+        }
+
+        #customerEmail {
+            width: 250px;
+            padding: 8px 12px;
+            border: 2px solid #ffd700;
+            border-radius: 15px;
+            background: rgba(255,255,255,0.95);
+            font-family: 'Exo 2', sans-serif;
+            font-size: 12px;
+            color: #333;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        /* Audio Control */
+        .audio-control {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
             height: 50px;
+            background: linear-gradient(145deg, #ffd700 0%, #ffb300 100%);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1001;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
-            border-bottom: 1px solid #333;
-            background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+            font-size: 20px;
+            box-shadow: 0 8px 20px rgba(255,181,0,0.4), 0 0 30px rgba(255,215,0,0.6);
+            transition: all 0.3s ease;
+            animation: audioButtonGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes audioButtonGlow {
+            0% { 
+                box-shadow: 0 8px 20px rgba(255,181,0,0.4), 0 0 30px rgba(255,215,0,0.6);
+                transform: scale(1);
+            }
+            100% { 
+                box-shadow: 0 12px 30px rgba(255,181,0,0.7), 0 0 50px rgba(255,215,0,0.9);
+                transform: scale(1.05);
+            }
+        }
+
+        /* Slot Machine */
+        .slot-machine-container {
+            position: relative;
+            width: 400px;
+            height: 600px;
+            transform-style: preserve-3d;
+            filter: drop-shadow(0 30px 60px rgba(0,0,0,0.8));
+            animation: machineFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes machineFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .slot-machine-bg {
+            width: 100%;
+            height: 100%;
+            background-image: url('https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/Slot-machine.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            position: relative;
+        }
+
+        .header-text {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            color: #333;
+            background: rgba(255,255,255,0.95);
+            padding: 12px 20px;
+            border-radius: 18px;
+            border: 3px solid rgba(255,181,0,0.9);
+            backdrop-filter: blur(15px);
+            z-index: 10;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4), 0 0 40px rgba(255,181,0,0.6);
+            width: 300px;
+            font-family: 'Orbitron', monospace;
+            animation: headerGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes headerGlow {
+            0% { box-shadow: 0 10px 30px rgba(0,0,0,0.4), 0 0 40px rgba(255,181,0,0.6); }
+            100% { box-shadow: 0 15px 40px rgba(0,0,0,0.5), 0 0 70px rgba(255,181,0,0.9); }
+        }
+
+        .header-text h3 {
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: #e65100;
+            text-transform: uppercase;
+        }
+
+        .header-text p {
+            font-size: 10px;
+            font-weight: 600;
+            color: #ff8f00;
+            font-family: 'Exo 2', sans-serif;
+        }
+
+        /* Spin Wheel / Reels */
+        .reels-overlay {
+            position: absolute;
+            top: 310px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 220px;
+            height: 100px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 5;
+        }
+
+        .reel-window {
+            width: 58px;
+            height: 75px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            background: transparent;
+            box-shadow: 0 0 20px rgba(255,215,0,0.3);
+            animation: reelGlow 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes reelGlow {
+            0% { box-shadow: 0 0 20px rgba(255,215,0,0.3); }
+            100% { box-shadow: 0 0 35px rgba(255,215,0,0.6); }
+        }
+
+        .reel-strip {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reel-strip.spinning {
+            animation: reelSpin 0.05s linear infinite;
+        }
+
+        @keyframes reelSpin {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-75px); }
+        }
+
+        .symbol {
+            width: 58px;
+            height: 75px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border-radius: 6px;
+            margin-bottom: 1px;
+        }
+
+        .symbol img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            filter: brightness(1.2) contrast(1.3) drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .symbol.winning img {
+            filter: brightness(1.6) contrast(1.7) drop-shadow(0 0 25px #ffd700);
+            transform: scale(1.2);
+            animation: symbolWin 0.3s ease-in-out infinite alternate;
+        }
+
+        @keyframes symbolWin {
+            0% { transform: scale(1.2); }
+            100% { transform: scale(1.25); }
+        }
+
+        /* Spin Button */
+        .spin-button-container {
+            position: absolute;
+            bottom: 150px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
         }
 
         .spin-button {
-            background: linear-gradient(145deg, #ff4757, #ff3742);
+            width: 160px;
+            height: 42px;
+            background: linear-gradient(145deg, #ffd700 0%, #ffed4e 30%, #b8860b 100%);
             border: none;
-            border-radius: 50%;
-            width: 100px;
-            height: 100px;
-            font-family: 'Orbitron', monospace;
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: white;
+            border-radius: 21px;
+            color: #333;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
             cursor: pointer;
-            margin: 0 auto;
-            display: block;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 16px rgba(255, 71, 87, 0.4);
+            box-shadow: 0 10px 25px rgba(255,181,0,0.6), 0 0 50px rgba(255,215,0,0.4);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 3px solid rgba(255,255,255,0.4);
+            animation: buttonPulse 2s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes buttonPulse {
+            0%, 100% { 
+                box-shadow: 0 10px 25px rgba(255,181,0,0.6), 0 0 50px rgba(255,215,0,0.4);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 15px 35px rgba(255,181,0,0.8), 0 0 80px rgba(255,215,0,0.7);
+                transform: scale(1.02);
+            }
         }
 
         .spin-button:hover {
-            transform: scale(1.05);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 20px 50px rgba(255,181,0,0.8), 0 0 100px rgba(255,215,0,1);
         }
 
         .spin-button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+            background: linear-gradient(145deg, #888 0%, #666 100%);
+            animation: none;
         }
 
-        .prize-display {
+        /* Status Display */
+        .status-overlay {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+
+        .spins-left {
+            background: rgba(255,255,255,0.95);
+            color: #333;
+            padding: 8px 15px;
+            border-radius: 15px;
+            border: 3px solid rgba(255,181,0,0.9);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+            font-size: 8px;
+            font-family: 'Press Start 2P', monospace;
+            backdrop-filter: blur(15px);
+        }
+
+        /* Winner Card */
+        .golden-card {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 360px;
+            height: 400px;
+            background: linear-gradient(145deg, #ffd700 0%, #ffed4e 20%, #b8860b 100%);
+            border-radius: 25px;
+            border: 8px solid #8b4513;
+            box-shadow: 0 0 80px rgba(255,215,0,1);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             text-align: center;
-            margin-top: 25px;
-            min-height: 120px;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .golden-card.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+            animation: cardGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes cardGlow {
+            0% { box-shadow: 0 0 80px rgba(255,215,0,1); }
+            100% { box-shadow: 0 0 120px rgba(255,215,0,1); }
+        }
+
+        .eureka-header {
+            font-size: 24px;
+            font-family: 'Press Start 2P', monospace;
+            color: #8b4513;
+            margin-bottom: 15px;
+            text-shadow: 0 0 30px rgba(255,215,0,1);
+            animation: headerShimmer 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes headerShimmer {
+            0% { text-shadow: 0 0 30px rgba(255,215,0,1); }
+            100% { text-shadow: 0 0 50px rgba(255,255,255,1); }
+        }
+
+        .prize-image {
+            width: 120px;
+            height: 120px;
+            margin: 15px 0;
+            border-radius: 15px;
+            border: 4px solid #8b4513;
+            object-fit: contain;
+            background: rgba(255,255,255,0.9);
+            animation: prizeGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes prizeGlow {
+            0% { 
+                box-shadow: 0 0 20px rgba(255,215,0,0.8);
+                filter: brightness(1.2) drop-shadow(0 0 15px rgba(255,215,0,0.6));
+            }
+            100% { 
+                box-shadow: 0 0 40px rgba(255,215,0,1);
+                filter: brightness(1.4) drop-shadow(0 0 25px rgba(255,215,0,1));
+            }
+        }
+
+        .prize-textbox {
+            background: linear-gradient(145deg, #8b4513 0%, #3e2723 100%);
+            border: 4px solid #a0522d;
+            border-radius: 15px;
             padding: 20px;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 15px;
+            margin: 15px 0;
+            width: 320px;
         }
 
-        .win-animation {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #00ff88;
-            text-shadow: 0 0 20px rgba(0, 255, 136, 0.6);
-            animation: winGlow 1.5s ease-in-out infinite;
-        }
-
-        @keyframes winGlow {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .prize-details {
-            background: linear-gradient(45deg, #ffd700, #ffed4e);
-            color: #000;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 15px;
-            font-weight: bold;
-        }
-
-        .tier-badge {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-
-        .tier-premium {
-            background: linear-gradient(45deg, #ffd700, #ffed4e);
-            color: #000;
-        }
-
-        .tier-standard {
-            background: linear-gradient(45deg, #c0c0c0, #e8e8e8);
-            color: #000;
-        }
-
-        .email-prompt {
-            background: rgba(0, 0, 0, 0.6);
-            border: 2px solid #00d4ff;
-            border-radius: 15px;
-            padding: 25px;
-            text-align: center;
-            color: white;
-            margin-bottom: 25px;
-        }
-
-        .email-input {
-            width: 100%;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid #333;
-            border-radius: 8px;
-            color: white;
+        .golden-text {
+            color: #ffd700;
+            font-size: 12px;
             font-family: 'Orbitron', monospace;
-            margin: 10px 0;
+            font-weight: 700;
+            text-shadow: 0 0 15px rgba(255,215,0,1);
+            margin-bottom: 10px;
         }
 
-        .email-input:focus {
-            outline: none;
-            border-color: #00d4ff;
-            box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+        .golden-subtitle {
+            color: #ffed4e;
+            font-size: 10px;
+            font-family: 'Exo 2', sans-serif;
+            font-weight: 600;
         }
 
-        .lookup-button {
-            background: linear-gradient(145deg, #00d4ff, #0099cc);
+        .golden-card-close {
+            background: linear-gradient(145deg, #8b4513 0%, #5d4037 100%);
+            color: #ffd700;
             border: none;
-            border-radius: 10px;
-            padding: 12px 25px;
-            color: white;
+            padding: 12px 30px;
+            border-radius: 15px;
+            font-size: 10px;
+            font-family: 'Press Start 2P', monospace;
             cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            border: 3px solid #a0522d;
+            margin-top: 15px;
         }
 
-        .lookup-button:hover {
-            transform: translateY(-2px);
-        }
-
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(0, 212, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: #00d4ff;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .hidden {
-            display: none;
-        }
-
+        /* Mobile Responsive */
         @media (max-width: 768px) {
-            .arcade-container { padding: 30px 20px; }
-            .logo { font-size: 2rem; }
-            .reel { width: 100px; height: 130px; }
-            .symbol { width: 100px; height: 43px; font-size: 1.6rem; }
-            .spin-button { width: 80px; height: 80px; font-size: 1rem; }
+            .slot-machine-container {
+                width: 350px;
+                height: 520px;
+                transform: scale(0.95);
+            }
+            
+            #customerEmail {
+                width: 220px;
+                font-size: 11px;
+            }
+            
+            .golden-card {
+                width: 320px;
+                height: 350px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="arcade-container">
-        <div class="machine-header">
-            <h1 class="logo">🎰 PB DAYS ARCADE</h1>
-            <p style="color: #888; font-size: 0.9rem;">Smart Prize Allocation System</p>
-        </div>
-
-        <div class="email-prompt" id="emailPrompt">
-            <h3>🎮 Welcome to PB Days Arcade!</h3>
-            <p>Enter your email to check your recent orders:</p>
-            <input type="email" id="customerEmail" class="email-input" placeholder="Enter your email address">
-            <button class="lookup-button" onclick="lookupCustomerOrders()">🔍 Find My Orders</button>
-        </div>
-
-        <div class="order-status" id="orderStatus">
-            🔍 Enter your email to start playing...
-        </div>
-
-        <div class="slot-machine">
-            <div class="reels-container">
-                <div class="reel" id="reel1">
-                    <div class="reel-content" id="reelContent1"></div>
+    <div class="arcade-background"></div>
+    
+    <!-- Audio Element -->
+    <audio id="backgroundMusic" autoplay loop muted>
+        <source src="data:audio/mpeg;base64,..." type="audio/mpeg">
+    </audio>
+    
+    <div class="email-container">
+        <input type="email" id="customerEmail" placeholder="Enter your email for prize delivery" required>
+    </div>
+    
+    <button class="audio-control" id="audioControl">🔊</button>
+    
+    <div class="slot-machine-container">
+        <div class="slot-machine-bg">
+            <div class="header-text">
+                <h3>PB DAYS ARCADE - SPIN THE WHEEL</h3>
+                <p>WIN AMAZING DENTAL PRIZES!</p>
+            </div>
+            
+            <div class="reels-overlay">
+                <div class="reel-window">
+                    <div class="reel-strip" id="reel1"></div>
                 </div>
-                <div class="reel" id="reel2">
-                    <div class="reel-content" id="reelContent2"></div>
+                <div class="reel-window">
+                    <div class="reel-strip" id="reel2"></div>
                 </div>
-                <div class="reel" id="reel3">
-                    <div class="reel-content" id="reelContent3"></div>
+                <div class="reel-window">
+                    <div class="reel-strip" id="reel3"></div>
                 </div>
             </div>
-
-            <button class="spin-button" id="spinButton" onclick="spin()" disabled>
-                SPIN TO WIN
-            </button>
+            
+            <div class="spin-button-container">
+                <button class="spin-button" id="spinBtn">SPIN</button>
+            </div>
+            
+            <div class="status-overlay">
+                <div class="spins-left">
+                    <span id="spinsLeft">0</span> SPINS AVAILABLE
+                </div>
+            </div>
         </div>
-
-        <div class="prize-display" id="prizeDisplay">
-            <p style="color: #888;">🎁 Spin to discover your prize!</p>
+    </div>
+    
+    <!-- Winner Card -->
+    <div class="golden-card" id="goldenCard">
+        <div class="eureka-header">EUREKA!</div>
+        <img class="prize-image" id="prizeImage" src="" alt="Prize Image">
+        <div class="prize-textbox">
+            <div class="golden-text" id="prizeTitle">YOU WON THIS AMAZING PRIZE!</div>
+            <div class="golden-subtitle" id="prizeDescription">Your prize will be sent once your order is delivered!</div>
+            <div class="golden-subtitle" id="prizeValue" style="margin-top: 10px; font-size: 12px; color: #ffd700;"></div>
         </div>
+        <div class="golden-subtitle" style="margin: 10px 0; font-style: italic;">🎉 Email notification sent! Check your inbox! 📧</div>
+        <button class="golden-card-close" id="closeCard">AWESOME!</button>
     </div>
 
     <script>
-        let userSession = {
-            email: null,
-            orderValue: 0,
-            orderData: null,
-            hasPlayed: false,
-            detectionMethod: null
-        };
+        // Global variables
+        let userSession = null;
+        let spinning = false;
+        let availablePrizes = [];
 
-        let isSpinning = false;
+        // Audio System
+        class AudioSystem {
+            constructor() {
+                this.audioContext = null;
+                this.masterGain = null;
+                this.isMuted = false;
+                this.backgroundMusic = document.getElementById('backgroundMusic');
+                this.init();
+            }
 
-        // Enhanced auto-detection system
-        async function initializeAutoDetection() {
-            console.log('🎯 Starting enhanced auto-detection...');
-            
-            // URL parameter detection
-            const urlParams = new URLSearchParams(window.location.search);
-            const email = urlParams.get('email');
-            const orderValue = urlParams.get('orderValue');
-            
-            if (email && orderValue) {
-                console.log('✅ Auto-detected from URL:', email, orderValue);
-                userSession.email = email;
-                userSession.orderValue = parseFloat(orderValue);
-                document.getElementById('emailPrompt').classList.add('hidden');
-                showOrderFound();
-                return;
-            }
-            
-            // Parent communication for Magento
-            if (window !== window.top) {
-                window.parent.postMessage({type: 'request_customer_data'}, '*');
-                
-                window.addEventListener('message', function(event) {
-                    if (event.data.type === 'customer_data_response' && event.data.email) {
-                        userSession.email = event.data.email;
-                        userSession.detectionMethod = 'parent_communication';
-                        document.getElementById('emailPrompt').classList.add('hidden');
-                        lookupOrdersByEmail(event.data.email);
-                    }
-                });
-            }
-            
-            // Storage detection
-            const storedEmail = localStorage.getItem('pb_customer_email');
-            if (storedEmail) {
-                document.getElementById('customerEmail').value = storedEmail;
-            }
-            
-            setTimeout(() => {
-                if (!userSession.email) {
-                    console.log('📧 Showing email prompt');
-                    document.getElementById('emailPrompt').classList.remove('hidden');
+            async init() {
+                try {
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    this.masterGain = this.audioContext.createGain();
+                    this.masterGain.connect(this.audioContext.destination);
+                    this.masterGain.gain.setValueAtTime(0.4, this.audioContext.currentTime);
+                } catch (error) {
+                    console.log('Audio not supported');
                 }
-            }, 3000);
-        }
-
-        async function lookupCustomerOrders() {
-            const email = document.getElementById('customerEmail').value.trim();
-            if (!email) {
-                alert('Please enter your email address');
-                return;
             }
-            
-            localStorage.setItem('pb_customer_email', email);
-            userSession.email = email;
-            
-            await lookupOrdersByEmail(email);
+
+            playSpinSound() {
+                if (!this.audioContext || this.isMuted) return;
+                
+                // Create spinning sound
+                const spinOsc = this.audioContext.createOscillator();
+                const spinGain = this.audioContext.createGain();
+                
+                spinOsc.connect(spinGain);
+                spinGain.connect(this.masterGain);
+                
+                spinOsc.frequency.setValueAtTime(200, this.audioContext.currentTime);
+                spinOsc.frequency.exponentialRampToValueAtTime(800, this.audioContext.currentTime + 2);
+                spinOsc.type = 'sawtooth';
+                
+                spinGain.gain.setValueAtTime(0.1, this.audioContext.currentTime);
+                spinGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 2);
+                
+                spinOsc.start();
+                spinOsc.stop(this.audioContext.currentTime + 2);
+            }
+
+            playWinSound() {
+                if (!this.audioContext || this.isMuted) return;
+                
+                // Create win celebration sound
+                for (let i = 0; i < 5; i++) {
+                    setTimeout(() => {
+                        const winOsc = this.audioContext.createOscillator();
+                        const winGain = this.audioContext.createGain();
+                        
+                        winOsc.connect(winGain);
+                        winGain.connect(this.masterGain);
+                        
+                        const freq = 400 + (i * 200);
+                        winOsc.frequency.setValueAtTime(freq, this.audioContext.currentTime);
+                        winOsc.type = 'sine';
+                        
+                        winGain.gain.setValueAtTime(0.2, this.audioContext.currentTime);
+                        winGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.5);
+                        
+                        winOsc.start();
+                        winOsc.stop(this.audioContext.currentTime + 0.5);
+                    }, i * 100);
+                }
+            }
+
+            toggleMute() {
+                this.isMuted = !this.isMuted;
+                if (this.isMuted) {
+                    this.masterGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.2);
+                    this.backgroundMusic.muted = true;
+                } else {
+                    this.masterGain.gain.exponentialRampToValueAtTime(0.4, this.audioContext.currentTime + 0.2);
+                    this.backgroundMusic.muted = false;
+                    this.backgroundMusic.play();
+                }
+                return this.isMuted;
+            }
         }
 
-        async function lookupOrdersByEmail(email) {
+        const audioSystem = new AudioSystem();
+
+        // Slot machine symbols
+        const symbols = [
+            { name: '7', image: 'https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/7.png' },
+            { name: 'Star', image: 'https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/Star.png' },
+            { name: 'Grape', image: 'https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/Grape.png' }
+        ];
+
+        // Initialize reels
+        function initializeReels() {
+            for (let i = 1; i <= 3; i++) {
+                const strip = document.getElementById(`reel${i}`);
+                for (let j = 0; j < 6; j++) {
+                    symbols.forEach(symbol => {
+                        const symbolDiv = document.createElement('div');
+                        symbolDiv.className = 'symbol';
+                        symbolDiv.dataset.symbol = symbol.name;
+                        
+                        const img = document.createElement('img');
+                        img.src = symbol.image;
+                        img.alt = symbol.name;
+                        img.loading = 'eager';
+                        
+                        symbolDiv.appendChild(img);
+                        strip.appendChild(symbolDiv);
+                    });
+                }
+            }
+        }
+
+        // Check if user can spin (testing override)
+        function canUserSpin(email, orderData) {
+            const testEmails = ['syed.ahmed@theraoralcare.com', 'valliappan.km@theraoralcare.com'];
+            
+            if (testEmails.includes(email)) {
+                return { canSpin: true, reason: 'Test account override' };
+            }
+
+            if (!orderData || !orderData.increment_id) {
+                return { canSpin: false, reason: 'No valid order found' };
+            }
+
+            // In production, check if this order ID has been used for spinning
+            return { canSpin: true, reason: 'Valid order found' };
+        }
+
+        // Fetch customer order and prizes
+        async function fetchCustomerData(email) {
             try {
-                document.getElementById('orderStatus').innerHTML = 
-                    '<div class="loading"></div> Looking up your recent orders...';
-                
                 const response = await fetch('/.netlify/functions/get-customer-order', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        email: email,
-                        detectionMethod: userSession.detectionMethod || 'manual_entry'
-                    })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                if (data.success) {
+                    return {
+                        orderData: data.orderData,
+                        orderValue: parseFloat(data.orderData?.grand_total || 0),
+                        email: email
+                    };
+                }
+                return null;
+            } catch (error) {
+                console.error('Error fetching customer data:', error);
+                return null;
+            }
+        }
+
+        // Fetch available prizes from new sheet structure
+        async function fetchPrizes() {
+            try {
+                const response = await fetch('/.netlify/functions/get-prizes', {
+                    method: 'GET'
                 });
                 
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
                 const data = await response.json();
-                
-                if (data.success && data.order) {
-                    userSession.orderData = data.order;
-                    userSession.orderValue = parseFloat(data.order.grand_total);
-                    document.getElementById('emailPrompt').classList.add('hidden');
-                    showOrderFound();
-                } else {
-                    document.getElementById('orderStatus').innerHTML = 
-                        `❌ No eligible orders found for ${email.substring(0,3)}***<br>
-                         <small>Need an order of ₹500+ from last 7 days to play</small>`;
+                if (data.success) {
+                    availablePrizes = data.prizes;
                 }
             } catch (error) {
-                console.error('Order lookup failed:', error);
-                document.getElementById('orderStatus').innerHTML = 
-                    '⚠️ Unable to lookup orders. Please try again.';
+                console.error('Error fetching prizes:', error);
+                availablePrizes = [];
             }
         }
 
-        function showOrderFound() {
-            const orderValue = userSession.orderValue;
-            const tierInfo = orderValue >= 10000 ? 
-                `🏆 PREMIUM TIER (Order: ₹${orderValue.toLocaleString()})` : 
-                `🎮 STANDARD TIER (Order: ₹${orderValue.toLocaleString()})`;
-            
-            document.getElementById('orderStatus').innerHTML = 
-                `✅ Order Found! ${tierInfo}<br>
-                 <small>Ready to spin for amazing prizes!</small>`;
-            
-            document.getElementById('spinButton').disabled = false;
-            initializeReels();
-        }
-
-        function initializeReels() {
-            const symbols = ['🎁', '💎', '🏆', '⭐', '🎯', '🔥', '💫', '🌟'];
-            
-            for (let i = 1; i <= 3; i++) {
-                const reelContent = document.getElementById(`reelContent${i}`);
-                let symbolsHTML = '';
-                
-                for (let j = 0; j < 20; j++) {
-                    const symbol = symbols[Math.floor(Math.random() * symbols.length)];
-                    symbolsHTML += `<div class="symbol">${symbol}</div>`;
-                }
-                
-                reelContent.innerHTML = symbolsHTML;
-            }
-        }
-
+        // Main spin function
         async function spin() {
-            if (isSpinning || userSession.hasPlayed) return;
-            
-            isSpinning = true;
-            userSession.hasPlayed = true;
-            
-            const spinButton = document.getElementById('spinButton');
-            spinButton.disabled = true;
-            spinButton.textContent = 'SPINNING...';
-            
-            // Show spinning animation
-            document.getElementById('prizeDisplay').innerHTML = 
-                '<div class="loading"></div> <p style="color: #00d4ff;">🎲 Spinning the reels...</p>';
-            
-            // Animate reels for 3 seconds
-            for (let i = 1; i <= 3; i++) {
-                animateReel(i);
+            if (spinning) return;
+
+            const emailInput = document.getElementById('customerEmail');
+            const email = emailInput.value.trim();
+
+            if (!email || !email.includes('@')) {
+                alert('Please enter a valid email address!');
+                emailInput.focus();
+                return;
             }
+
+            spinning = true;
+            const spinBtn = document.getElementById('spinBtn');
+            spinBtn.disabled = true;
+            spinBtn.textContent = 'CHECKING...';
+
+            // Fetch customer data and check eligibility
+            const customerData = await fetchCustomerData(email);
             
-            // After animation, allocate prize
-            setTimeout(async () => {
-                await allocatePrize();
-                isSpinning = false;
-                spinButton.textContent = 'GAME COMPLETE';
-            }, 3000);
+            if (!customerData) {
+                alert('No valid order found for this email. Please check your email or complete a purchase first.');
+                spinning = false;
+                spinBtn.disabled = false;
+                spinBtn.textContent = 'SPIN';
+                return;
+            }
+
+            const spinCheck = canUserSpin(email, customerData.orderData);
+            if (!spinCheck.canSpin) {
+                alert(spinCheck.reason);
+                spinning = false;
+                spinBtn.disabled = false;
+                spinBtn.textContent = 'SPIN';
+                return;
+            }
+
+            userSession = customerData;
+            document.getElementById('spinsLeft').textContent = '0';
+
+            // Start spinning
+            spinBtn.textContent = 'SPINNING...';
+            audioSystem.playSpinSound();
+
+            // Animate reels
+            const results = [];
+            const spinDurations = [1800, 2200, 2600];
+
+            // Start spinning animation
+            for (let i = 1; i <= 3; i++) {
+                document.getElementById(`reel${i}`).classList.add('spinning');
+            }
+
+            // Stop reels one by one
+            spinDurations.forEach((duration, index) => {
+                setTimeout(() => {
+                    const strip = document.getElementById(`reel${index + 1}`);
+                    strip.classList.remove('spinning');
+                    
+                    const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+                    results.push(randomSymbol);
+                    
+                    const symbolIndex = symbols.findIndex(s => s.name === randomSymbol.name);
+                    const translateDistance = symbolIndex * 75;
+                    strip.style.transform = `translateY(-${translateDistance}px)`;
+
+                    if (results.length === 3) {
+                        setTimeout(() => processPrize(email, customerData), 600);
+                    }
+                }, duration);
+            });
         }
 
-        function animateReel(reelNum) {
-            const reel = document.getElementById(`reelContent${reelNum}`);
-            let position = 0;
-            
-            const interval = setInterval(() => {
-                position -= 25;
-                reel.style.transform = `translateY(${position}px)`;
-            }, 50);
-            
-            setTimeout(() => {
-                clearInterval(interval);
-                const finalPosition = -(Math.floor(Math.random() * 10) + 5) * 50;
-                reel.style.transform = `translateY(${finalPosition}px)`;
-            }, 2500 + (reelNum * 200));
-        }
+        // Process prize allocation
+        async function processPrize(email, customerData) {
+            const spinBtn = document.getElementById('spinBtn');
+            spinBtn.textContent = 'PROCESSING...';
 
-        async function allocatePrize() {
             try {
-                document.getElementById('prizeDisplay').innerHTML = 
-                    '<div class="loading"></div> <p style="color: #00d4ff;">🎁 Allocating your prize...</p>';
-                
                 const response = await fetch('/.netlify/functions/allocate-prize', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        email: userSession.email,
-                        orderValue: userSession.orderValue,
-                        orderData: userSession.orderData,
+                        email: email,
+                        orderValue: customerData.orderValue,
+                        orderData: customerData.orderData,
+                        orderNumber: customerData.orderData?.increment_id,
                         sessionId: Date.now().toString()
                     })
                 });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
                 
-                const result = await response.json();
-                
-                if (result.success) {
-                    displayWinResult(result.prize, result.tier);
+                if (data.success) {
+                    showWinnerCard(data.prize);
+                    audioSystem.playWinSound();
                 } else {
-                    displayError(result.error);
+                    alert(data.error || 'Unable to allocate prize. Please try again.');
                 }
             } catch (error) {
-                console.error('Prize allocation failed:', error);
-                displayError('Unable to allocate prize. Please contact support.');
+                console.error('Prize allocation error:', error);
+                alert('Something went wrong. Please try again.');
             }
+
+            spinning = false;
+            spinBtn.textContent = 'COMPLETED';
         }
 
-        function displayWinResult(prize, tier) {
-            const tierBadge = tier === 'premium' ? 
-                '<span class="tier-badge tier-premium">🏆 PREMIUM TIER</span>' :
-                '<span class="tier-badge tier-standard">🎮 STANDARD TIER</span>';
+        // Show winner card
+        function showWinnerCard(prize) {
+            const card = document.getElementById('goldenCard');
+            const titleElement = document.getElementById('prizeTitle');
+            const descElement = document.getElementById('prizeDescription');
+            const valueElement = document.getElementById('prizeValue');
+            const imageElement = document.getElementById('prizeImage');
             
-            document.getElementById('prizeDisplay').innerHTML = `
-                <div class="win-animation">
-                    🎉 CONGRATULATIONS! 🎉
-                </div>
-                ${tierBadge}
-                <div class="prize-details">
-                    <h3>${prize.name}</h3>
-                    <p><strong>SKU:</strong> ${prize.sku}</p>
-                    <p><strong>Value:</strong> ₹${prize.value.toLocaleString()}</p>
-                    <p><strong>Prize Code:</strong> <code style="background: #fff; color: #000; padding: 4px 8px; border-radius: 4px;">${prize.prizeCode}</code></p>
-                </div>
-                <p style="color: #00ff88; margin-top: 20px; font-size: 1.1rem;">
-                    📧 Check your email for redemption instructions!
-                </p>
-                <p style="color: #888; font-size: 0.9rem; margin-top: 10px;">
-                    Save your prize code: <strong>${prize.prizeCode}</strong>
-                </p>
-            `;
-        }
-
-        function displayError(error) {
-            document.getElementById('prizeDisplay').innerHTML = `
-                <p style="color: #ff6b6b;">❌ ${error}</p>
-                <p style="color: #888; margin-top: 10px;">Please try again or contact support.</p>
-            `;
-        }
-
-        // Initialize the game
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeAutoDetection();
-        });
-
-        // Add ESC key support to close
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                window.history.back();
+            titleElement.textContent = `YOU WON: ${prize.name}`;
+            
+            if (prize.name.includes('CASHBACK')) {
+                descElement.textContent = 'Your cashback will be credited once your order is delivered!';
+                imageElement.style.display = 'none';
+            } else {
+                descElement.textContent = 'This product will be sent once your order is delivered!';
+                imageElement.src = prize.image || '';
+                imageElement.style.display = 'block';
             }
+            
+            valueElement.textContent = `Value: ₹${prize.value}`;
+            
+            card.classList.add('show');
+            createWinParticles(30);
+        }
+
+        // Close winner card
+        function closeWinnerCard() {
+            document.getElementById('goldenCard').classList.remove('show');
+        }
+
+        // Create celebration particles
+        function createWinParticles(count) {
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.style.position = 'absolute';
+                    particle.style.width = (Math.random() * 6 + 3) + 'px';
+                    particle.style.height = particle.style.width;
+                    particle.style.background = 'radial-gradient(circle, #ffd700, #ffb300)';
+                    particle.style.borderRadius = '50%';
+                    particle.style.left = Math.random() * window.innerWidth + 'px';
+                    particle.style.top = (window.innerHeight - 100) + 'px';
+                    particle.style.pointerEvents = 'none';
+                    particle.style.animation = 'particleExplode 1.5s ease-out forwards';
+                    
+                    document.body.appendChild(particle);
+                    setTimeout(() => particle.remove(), 1500);
+                }, i * 20);
+            }
+        }
+
+        // Audio control
+        function toggleAudio() {
+            const button = document.getElementById('audioControl');
+            const isMuted = audioSystem.toggleMute();
+            button.textContent = isMuted ? '🔇' : '🔊';
+            button.classList.toggle('muted', isMuted);
+        }
+
+        // Email input handler
+        async function handleEmailInput() {
+            const email = document.getElementById('customerEmail').value.trim();
+            if (email && email.includes('@')) {
+                // Fetch customer data when email is entered
+                const customerData = await fetchCustomerData(email);
+                if (customerData) {
+                    document.getElementById('spinsLeft').textContent = '1';
+                } else {
+                    document.getElementById('spinsLeft').textContent = '0';
+                }
+            }
+        }
+
+        // Event listeners
+        document.getElementById('spinBtn').addEventListener('click', spin);
+        document.getElementById('closeCard').addEventListener('click', closeWinnerCard);
+        document.getElementById('audioControl').addEventListener('click', toggleAudio);
+        document.getElementById('customerEmail').addEventListener('input', handleEmailInput);
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeReels();
+            fetchPrizes();
+            document.getElementById('customerEmail').focus();
         });
+
+        // Enable audio on first interaction
+        document.body.addEventListener('click', () => {
+            if (audioSystem.audioContext && audioSystem.audioContext.state === 'suspended') {
+                audioSystem.audioContext.resume();
+            }
+        }, { once: true });
+
+        // Add particle animation CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes particleExplode {
+                0% {
+                    transform: translateY(0) rotate(0deg);
+                    opacity: 1;
+                }
+                100% {
+                    transform: translateY(-200px) rotate(720deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
