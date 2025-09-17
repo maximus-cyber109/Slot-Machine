@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PB DAYS - Premium 3D Slot Machine</title>
+    <title>PB DAYS - Premium Arcade Slot Machine</title>
     <link rel="preload" as="image" href="https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/Slot-machine.png">
     <link rel="preload" as="image" href="https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/7.png">
     <link rel="preload" as="image" href="https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/Star.png">
     <link rel="preload" as="image" href="https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/Grape.png">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700;900&family=Exo+2:wght@400;600;700;800&display=swap');
         
         * {
             margin: 0;
@@ -18,99 +18,97 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Press Start 2P', monospace;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             perspective: 1200px;
             overflow: hidden;
-            background: #000;
-            will-change: transform;
-        }
-
-        /* RETRO ANIMATED BACKGROUND */
-        .retro-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
             background: 
                 radial-gradient(ellipse at center, #1a0033 0%, #000000 70%),
-                linear-gradient(45deg, 
-                    rgba(138, 43, 226, 0.1) 0%, 
-                    rgba(75, 0, 130, 0.05) 25%, 
-                    rgba(25, 25, 112, 0.1) 50%, 
-                    rgba(72, 61, 139, 0.05) 75%);
-            animation: backgroundPulse 8s ease-in-out infinite;
+                linear-gradient(45deg, rgba(25, 25, 112, 0.3) 0%, rgba(75, 0, 130, 0.2) 100%);
+            animation: backgroundShift 10s ease-in-out infinite;
         }
 
-        @keyframes backgroundPulse {
+        @keyframes backgroundShift {
             0%, 100% { filter: brightness(1) hue-rotate(0deg); }
-            50% { filter: brightness(1.2) hue-rotate(30deg); }
+            50% { filter: brightness(1.1) hue-rotate(15deg); }
         }
 
-        /* RETRO GRID OVERLAY */
-        .retro-grid {
+        /* PREMIUM ARCADE BACKGROUND */
+        .arcade-background {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: 
-                linear-gradient(rgba(138, 43, 226, 0.3) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(138, 43, 226, 0.3) 1px, transparent 1px);
-            background-size: 80px 80px;
-            transform: perspective(800px) rotateX(60deg) translateY(50px);
-            animation: gridMove 15s linear infinite;
-            opacity: 0.4;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(138, 43, 226, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 20, 147, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.05) 0%, transparent 70%),
+                linear-gradient(135deg, #000428 0%, #004e92 100%);
             z-index: -1;
+            animation: backgroundGlow 8s ease-in-out infinite alternate;
         }
 
-        @keyframes gridMove {
-            0% { background-position: 0 0; }
-            100% { background-position: 0 400px; }
+        @keyframes backgroundGlow {
+            0% { opacity: 0.8; }
+            100% { opacity: 1; }
         }
 
-        /* FLOATING PARTICLES */
-        .particle-system {
+        /* MUTE/UNMUTE BUTTON FOR SOUND EFFECTS */
+        .audio-control {
             position: fixed;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .floating-particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: radial-gradient(circle, #ff6b9d, #c44569);
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(145deg, #ffd700 0%, #ffb300 100%);
+            border: none;
             border-radius: 50%;
-            opacity: 0.7;
-            animation: float 20s linear infinite;
-            box-shadow: 0 0 10px rgba(255, 107, 157, 0.8);
+            cursor: pointer;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 
+                0 8px 20px rgba(255,181,0,0.4),
+                inset 0 2px 8px rgba(255,255,255,0.3),
+                0 0 30px rgba(255,215,0,0.3);
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255,255,255,0.4);
+            animation: buttonGlow 3s ease-in-out infinite alternate;
         }
 
-        @keyframes float {
-            0% {
-                transform: translateY(100vh) translateX(0px) scale(0);
-                opacity: 0;
+        @keyframes buttonGlow {
+            0% { 
+                box-shadow: 
+                    0 8px 20px rgba(255,181,0,0.4),
+                    inset 0 2px 8px rgba(255,255,255,0.3),
+                    0 0 30px rgba(255,215,0,0.3);
             }
-            10% {
-                opacity: 0.7;
-                transform: translateY(90vh) translateX(20px) scale(1);
+            100% { 
+                box-shadow: 
+                    0 12px 30px rgba(255,181,0,0.6),
+                    inset 0 3px 12px rgba(255,255,255,0.4),
+                    0 0 50px rgba(255,215,0,0.5);
             }
-            90% {
-                opacity: 0.7;
-                transform: translateY(10vh) translateX(-20px) scale(1);
-            }
-            100% {
-                transform: translateY(0px) translateX(0px) scale(0);
-                opacity: 0;
-            }
+        }
+
+        .audio-control:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 
+                0 15px 40px rgba(255,181,0,0.7),
+                inset 0 4px 15px rgba(255,255,255,0.5),
+                0 0 70px rgba(255,215,0,0.8);
+        }
+
+        .audio-control.muted {
+            background: linear-gradient(145deg, #666 0%, #444 100%);
+            color: #888;
+            animation: none;
         }
 
         .slot-machine-container {
@@ -120,9 +118,14 @@
             transform-style: preserve-3d;
             filter: drop-shadow(0 30px 60px rgba(0,0,0,0.8));
             will-change: transform;
+            animation: machineFloat 6s ease-in-out infinite;
         }
 
-        /* ENHANCED SLOT MACHINE */
+        @keyframes machineFloat {
+            0%, 100% { transform: translateY(0px) rotateX(-2deg) rotateY(3deg); }
+            50% { transform: translateY(-5px) rotateX(-1deg) rotateY(2deg); }
+        }
+
         .slot-machine-bg {
             width: 100%;
             height: 100%;
@@ -131,11 +134,9 @@
             background-repeat: no-repeat;
             background-position: center;
             position: relative;
-            image-rendering: -webkit-optimize-contrast;
-            image-rendering: crisp-edges;
         }
 
-        /* PREMIUM HEADER */
+        /* PREMIUM ARCADE HEADER */
         .header-text {
             position: absolute;
             top: 15px;
@@ -145,41 +146,55 @@
             color: #333;
             background: 
                 linear-gradient(145deg, rgba(255,255,255,0.95) 0%, rgba(240,240,240,0.9) 100%);
-            padding: 10px 18px;
+            padding: 12px 20px;
             border-radius: 18px;
-            border: 2px solid rgba(255,181,0,0.8);
+            border: 3px solid rgba(255,181,0,0.9);
             backdrop-filter: blur(15px);
             z-index: 10;
             box-shadow: 
-                0 8px 25px rgba(0,0,0,0.3),
-                inset 0 2px 8px rgba(255,255,255,0.8),
-                0 0 30px rgba(255,181,0,0.4);
+                0 10px 30px rgba(0,0,0,0.4),
+                inset 0 3px 10px rgba(255,255,255,0.8),
+                0 0 40px rgba(255,181,0,0.6);
             width: 300px;
-            font-size: 12px;
+            font-family: 'Orbitron', monospace;
             animation: headerGlow 3s ease-in-out infinite alternate;
-            will-change: transform;
         }
 
         @keyframes headerGlow {
-            0% { box-shadow: 0 8px 25px rgba(0,0,0,0.3), inset 0 2px 8px rgba(255,255,255,0.8), 0 0 30px rgba(255,181,0,0.4); }
-            100% { box-shadow: 0 8px 25px rgba(0,0,0,0.3), inset 0 2px 8px rgba(255,255,255,0.8), 0 0 50px rgba(255,181,0,0.7); }
+            0% { 
+                box-shadow: 
+                    0 10px 30px rgba(0,0,0,0.4),
+                    inset 0 3px 10px rgba(255,255,255,0.8),
+                    0 0 40px rgba(255,181,0,0.6);
+            }
+            100% { 
+                box-shadow: 
+                    0 15px 40px rgba(0,0,0,0.5),
+                    inset 0 4px 15px rgba(255,255,255,0.9),
+                    0 0 70px rgba(255,181,0,0.9);
+            }
         }
 
         .header-text h3 {
-            font-size: 13px;
+            font-size: 11px;
             font-weight: 700;
-            margin-bottom: 3px;
+            margin-bottom: 4px;
             color: #e65100;
-            line-height: 1.2;
+            line-height: 1.3;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(230, 81, 0, 0.5);
         }
 
         .header-text p {
-            font-size: 12px;
+            font-size: 10px;
             font-weight: 600;
             color: #ff8f00;
+            font-family: 'Exo 2', sans-serif;
+            text-shadow: 0 0 8px rgba(255, 143, 0, 0.5);
         }
 
-        /* ENHANCED REELS */
+        /* PREMIUM REELS WITH EXTRA GLOW */
         .reels-overlay {
             position: absolute;
             top: 315px;
@@ -198,9 +213,15 @@
             height: 75px;
             position: relative;
             overflow: hidden;
-            border-radius: 6px;
+            border-radius: 8px;
             background: transparent;
-            will-change: transform;
+            box-shadow: 0 0 20px rgba(255,215,0,0.2);
+            animation: reelGlow 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes reelGlow {
+            0% { box-shadow: 0 0 20px rgba(255,215,0,0.2); }
+            100% { box-shadow: 0 0 30px rgba(255,215,0,0.4); }
         }
 
         .reel-window:first-child {
@@ -214,12 +235,12 @@
             right: 0;
             display: flex;
             flex-direction: column;
-            transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.1s ease-out;
             will-change: transform;
         }
 
         .reel-strip.spinning {
-            animation: reelSpin 0.08s linear infinite;
+            animation: reelSpin 0.06s linear infinite;
         }
 
         @keyframes reelSpin {
@@ -243,105 +264,132 @@
             width: 50px;
             height: 50px;
             object-fit: contain;
-            filter: brightness(1.1) contrast(1.2) drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            will-change: transform;
+            filter: brightness(1.2) contrast(1.3) drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+            transition: all 0.2s ease;
         }
 
         .symbol.winning {
-            animation: symbolWin 0.4s ease-in-out infinite alternate;
+            animation: symbolWin 0.3s ease-in-out infinite alternate;
         }
 
         .symbol.winning img {
-            filter: brightness(1.4) contrast(1.5) drop-shadow(0 0 15px #ffd700) drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+            filter: brightness(1.6) contrast(1.7) drop-shadow(0 0 20px #ffd700) drop-shadow(0 0 40px #ff8f00);
             transform: scale(1.2);
         }
 
         @keyframes symbolWin {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.05); }
+            0% { 
+                transform: scale(1);
+                box-shadow: 0 0 30px rgba(255,215,0,0.8);
+            }
+            100% { 
+                transform: scale(1.05);
+                box-shadow: 0 0 60px rgba(255,215,0,1);
+            }
         }
 
-        /* PREMIUM GOLDEN SPIN BUTTON */
+        /* ULTRA PREMIUM GOLDEN SPIN BUTTON */
         .spin-button-container {
             position: absolute;
-            bottom: 155px;
+            bottom: 150px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 10;
         }
 
         .spin-button {
-            width: 170px;
-            height: 45px;
+            width: 160px;
+            height: 42px;
             background: 
                 linear-gradient(145deg, #ffd700 0%, #ffed4e 30%, #daa520 60%, #b8860b 100%);
             border: none;
-            border-radius: 22px;
+            border-radius: 21px;
             color: #333;
-            font-family: 'Inter', sans-serif;
-            font-weight: 800;
-            font-size: 15px;
+            font-family: 'Press Start 2P', monospace;
+            font-weight: 400;
+            font-size: 8px;
             cursor: pointer;
             box-shadow: 
-                0 12px 25px rgba(255,181,0,0.5),
-                0 6px 12px rgba(0,0,0,0.4),
-                inset 0 4px 12px rgba(255,255,255,0.4),
-                inset 0 -2px 8px rgba(0,0,0,0.2),
-                0 0 40px rgba(255,215,0,0.3);
+                0 10px 25px rgba(255,181,0,0.6),
+                0 5px 10px rgba(0,0,0,0.4),
+                inset 0 4px 12px rgba(255,255,255,0.5),
+                0 0 50px rgba(255,215,0,0.4);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            border: 2px solid rgba(255,255,255,0.4);
+            letter-spacing: 1px;
+            text-shadow: 
+                0 2px 4px rgba(0,0,0,0.4),
+                0 0 10px rgba(255,215,0,0.6);
+            border: 3px solid rgba(255,255,255,0.4);
+            animation: buttonPulse 2s ease-in-out infinite;
             position: relative;
             overflow: hidden;
-            will-change: transform;
-            animation: buttonPulse 2s ease-in-out infinite;
+        }
+
+        .spin-button:before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -100%;
+            width: 100%;
+            height: calc(100% + 4px);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+            animation: shimmer 3s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
         }
 
         @keyframes buttonPulse {
             0%, 100% { 
                 box-shadow: 
-                    0 12px 25px rgba(255,181,0,0.5),
-                    0 6px 12px rgba(0,0,0,0.4),
-                    inset 0 4px 12px rgba(255,255,255,0.4),
-                    0 0 40px rgba(255,215,0,0.3);
+                    0 10px 25px rgba(255,181,0,0.6),
+                    0 5px 10px rgba(0,0,0,0.4),
+                    inset 0 4px 12px rgba(255,255,255,0.5),
+                    0 0 50px rgba(255,215,0,0.4);
+                transform: scale(1);
             }
             50% { 
                 box-shadow: 
-                    0 12px 25px rgba(255,181,0,0.5),
-                    0 6px 12px rgba(0,0,0,0.4),
-                    inset 0 4px 12px rgba(255,255,255,0.4),
-                    0 0 60px rgba(255,215,0,0.6);
+                    0 15px 35px rgba(255,181,0,0.8),
+                    0 8px 16px rgba(0,0,0,0.5),
+                    inset 0 6px 18px rgba(255,255,255,0.6),
+                    0 0 80px rgba(255,215,0,0.7);
+                transform: scale(1.02);
             }
         }
 
         .spin-button:hover {
             transform: translateY(-3px) scale(1.05);
             box-shadow: 
-                0 20px 40px rgba(255,181,0,0.7),
-                0 10px 20px rgba(0,0,0,0.5),
-                inset 0 6px 16px rgba(255,255,255,0.5),
-                0 0 80px rgba(255,215,0,0.8);
+                0 20px 50px rgba(255,181,0,0.8),
+                0 10px 20px rgba(0,0,0,0.6),
+                inset 0 8px 20px rgba(255,255,255,0.6),
+                0 0 100px rgba(255,215,0,1);
+            animation: buttonPulse 1s ease-in-out infinite;
         }
 
         .spin-button:active {
-            transform: translateY(0px) scale(0.98);
+            transform: translateY(-1px) scale(1.02);
         }
 
         .spin-button:disabled {
-            opacity: 0.4;
+            opacity: 0.5;
             cursor: not-allowed;
             transform: none;
-            background: linear-gradient(145deg, #888 0%, #666 50%, #444 100%);
+            background: linear-gradient(145deg, #888 0%, #666 100%);
             animation: none;
         }
 
-        /* SIMPLIFIED STATUS */
+        .spin-button:disabled:before {
+            display: none;
+        }
+
         .status-overlay {
             position: absolute;
-            bottom: 85px;
+            bottom: 80px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 10;
@@ -350,15 +398,30 @@
         .spins-left {
             background: rgba(255,255,255,0.95);
             color: #333;
-            padding: 6px 12px;
+            padding: 8px 15px;
             border-radius: 15px;
-            border: 2px solid rgba(255,181,0,0.8);
+            border: 3px solid rgba(255,181,0,0.9);
             box-shadow: 
-                0 4px 12px rgba(0,0,0,0.3),
-                0 0 20px rgba(255,181,0,0.3);
-            font-size: 11px;
-            font-weight: 700;
-            backdrop-filter: blur(10px);
+                0 6px 18px rgba(0,0,0,0.4),
+                0 0 30px rgba(255,181,0,0.4);
+            font-size: 8px;
+            font-family: 'Press Start 2P', monospace;
+            font-weight: 400;
+            backdrop-filter: blur(15px);
+            animation: statusGlow 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes statusGlow {
+            0% { 
+                box-shadow: 
+                    0 6px 18px rgba(0,0,0,0.4),
+                    0 0 30px rgba(255,181,0,0.4);
+            }
+            100% { 
+                box-shadow: 
+                    0 8px 25px rgba(0,0,0,0.5),
+                    0 0 50px rgba(255,181,0,0.7);
+            }
         }
 
         .details-button {
@@ -371,165 +434,195 @@
             border: none;
             padding: 8px 18px;
             border-radius: 18px;
-            font-size: 12px;
-            font-weight: 600;
+            font-size: 8px;
+            font-family: 'Press Start 2P', monospace;
+            font-weight: 400;
             cursor: pointer;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
             border: 2px solid rgba(255,181,0,0.8);
             box-shadow: 
-                0 4px 15px rgba(0,0,0,0.3),
-                0 0 20px rgba(255,181,0,0.3);
+                0 6px 18px rgba(0,0,0,0.4),
+                0 0 25px rgba(255,181,0,0.3);
             transition: all 0.3s ease;
             z-index: 10;
         }
 
         .details-button:hover {
-            background: rgba(255,255,255,1);
-            transform: translateX(-50%) translateY(-3px) scale(1.05);
+            transform: translateX(-50%) translateY(-3px) scale(1.1);
             box-shadow: 
-                0 6px 20px rgba(0,0,0,0.4),
-                0 0 30px rgba(255,181,0,0.5);
+                0 10px 30px rgba(0,0,0,0.5),
+                0 0 40px rgba(255,181,0,0.6);
         }
 
-        /* PREMIUM GOLDEN PRIZE CARD */
+        /* ULTRA PREMIUM EUREKA CARD */
         .golden-card {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) scale(0);
-            width: 350px;
-            height: 280px;
+            width: 360px;
+            height: 320px;
             background: 
-                linear-gradient(145deg, #ffd700 0%, #ffed4e 30%, #b8860b 100%);
+                linear-gradient(145deg, #ffd700 0%, #ffed4e 20%, #daa520 60%, #b8860b 100%);
             border-radius: 25px;
-            border: 6px solid #8b4513;
+            border: 8px solid #8b4513;
             box-shadow: 
-                0 0 80px rgba(255,215,0,0.9),
-                inset 0 15px 40px rgba(255,255,255,0.3),
-                inset 0 -8px 25px rgba(0,0,0,0.2),
-                0 0 120px rgba(255,215,0,0.6);
+                0 0 80px rgba(255,215,0,1),
+                inset 0 20px 40px rgba(255,255,255,0.4),
+                inset 0 -10px 30px rgba(0,0,0,0.3),
+                0 0 120px rgba(255,215,0,0.8);
             z-index: 1000;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
-            color: #8b4513;
-            font-weight: 800;
             opacity: 0;
-            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            will-change: transform;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
         .golden-card.show {
             transform: translate(-50%, -50%) scale(1);
             opacity: 1;
-            animation: cardGlow 3s ease-in-out infinite alternate;
+            animation: cardGlow 2s ease-in-out infinite alternate;
         }
 
         @keyframes cardGlow {
             0% { 
                 box-shadow: 
-                    0 0 80px rgba(255,215,0,0.9),
-                    inset 0 15px 40px rgba(255,255,255,0.3),
-                    0 0 120px rgba(255,215,0,0.6);
+                    0 0 80px rgba(255,215,0,1),
+                    inset 0 20px 40px rgba(255,255,255,0.4),
+                    0 0 120px rgba(255,215,0,0.8);
             }
             100% { 
                 box-shadow: 
-                    0 0 120px rgba(255,215,0,1),
-                    inset 0 15px 40px rgba(255,255,255,0.4),
-                    0 0 180px rgba(255,215,0,0.8);
+                    0 0 140px rgba(255,215,0,1),
+                    inset 0 25px 50px rgba(255,255,255,0.5),
+                    0 0 200px rgba(255,215,0,1);
             }
         }
 
-        .golden-card-header {
-            font-size: 22px;
-            margin-bottom: 20px;
+        /* EUREKA HEADER WITH EXTRA GLOW */
+        .eureka-header {
+            font-size: 24px;
+            font-family: 'Press Start 2P', monospace;
+            font-weight: 400;
+            color: #8b4513;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
             text-shadow: 
-                0 3px 6px rgba(0,0,0,0.3),
-                0 0 20px rgba(255,215,0,0.8);
+                0 4px 8px rgba(0,0,0,0.4),
+                0 0 30px rgba(255,215,0,1),
+                0 0 60px rgba(255,255,255,0.8);
             animation: headerShimmer 2s ease-in-out infinite alternate;
         }
 
         @keyframes headerShimmer {
-            0% { text-shadow: 0 3px 6px rgba(0,0,0,0.3), 0 0 20px rgba(255,215,0,0.8); }
-            100% { text-shadow: 0 3px 6px rgba(0,0,0,0.3), 0 0 40px rgba(255,255,255,1); }
+            0% { 
+                text-shadow: 
+                    0 4px 8px rgba(0,0,0,0.4),
+                    0 0 30px rgba(255,215,0,1),
+                    0 0 60px rgba(255,255,255,0.8);
+            }
+            100% { 
+                text-shadow: 
+                    0 4px 8px rgba(0,0,0,0.4),
+                    0 0 50px rgba(255,255,255,1),
+                    0 0 100px rgba(255,215,0,1);
+            }
         }
 
-        /* BROWN TEXTBOX WITH GLOWING GOLD TEXT */
+        /* PREMIUM BROWN TEXTBOX */
         .prize-textbox {
             background: 
-                linear-gradient(145deg, #8b4513 0%, #654321 50%, #3e2723 100%);
-            border: 3px solid #a0522d;
+                linear-gradient(145deg, #8b4513 0%, #654321 40%, #3e2723 100%);
+            border: 4px solid #a0522d;
             border-radius: 15px;
-            padding: 15px 20px;
+            padding: 20px;
             margin-bottom: 20px;
             box-shadow: 
-                inset 0 5px 15px rgba(0,0,0,0.4),
-                inset 0 -2px 10px rgba(255,255,255,0.1),
-                0 8px 25px rgba(0,0,0,0.5);
-            width: 280px;
+                inset 0 8px 20px rgba(0,0,0,0.5),
+                inset 0 -3px 15px rgba(255,255,255,0.2),
+                0 0 40px rgba(160,82,45,0.5);
+            width: 320px;
         }
 
         .golden-text {
             color: #ffd700;
-            font-size: 16px;
+            font-size: 12px;
+            font-family: 'Orbitron', monospace;
             font-weight: 700;
             text-shadow: 
-                0 0 10px rgba(255,215,0,1),
-                0 0 20px rgba(255,215,0,0.8),
-                0 0 30px rgba(255,215,0,0.6),
-                0 2px 4px rgba(0,0,0,0.5);
-            animation: textGlow 2s ease-in-out infinite alternate;
+                0 0 15px rgba(255,215,0,1),
+                0 0 30px rgba(255,215,0,0.8),
+                0 0 50px rgba(255,255,255,0.6),
+                0 3px 6px rgba(0,0,0,0.5);
             line-height: 1.4;
+            margin-bottom: 10px;
+            animation: textGlow 2s ease-in-out infinite alternate;
         }
 
         @keyframes textGlow {
             0% { 
                 text-shadow: 
-                    0 0 10px rgba(255,215,0,1),
-                    0 0 20px rgba(255,215,0,0.8),
-                    0 2px 4px rgba(0,0,0,0.5);
+                    0 0 15px rgba(255,215,0,1),
+                    0 0 30px rgba(255,215,0,0.8),
+                    0 3px 6px rgba(0,0,0,0.5);
             }
             100% { 
                 text-shadow: 
-                    0 0 20px rgba(255,215,0,1),
-                    0 0 40px rgba(255,255,255,1),
-                    0 0 60px rgba(255,215,0,0.8),
-                    0 2px 4px rgba(0,0,0,0.5);
+                    0 0 30px rgba(255,255,255,1),
+                    0 0 60px rgba(255,215,0,1),
+                    0 0 100px rgba(255,215,0,0.8),
+                    0 3px 6px rgba(0,0,0,0.5);
             }
+        }
+
+        .golden-subtitle {
+            color: #ffed4e;
+            font-size: 10px;
+            font-family: 'Exo 2', sans-serif;
+            font-weight: 600;
+            text-shadow: 
+                0 0 12px rgba(255,237,78,0.9),
+                0 2px 4px rgba(0,0,0,0.5);
+            line-height: 1.3;
         }
 
         .golden-card-close {
             background: 
-                linear-gradient(145deg, #8b4513 0%, #654321 50%, #5d4037 100%);
+                linear-gradient(145deg, #8b4513 0%, #654321 40%, #5d4037 100%);
             color: #ffd700;
             border: none;
-            padding: 12px 25px;
+            padding: 12px 30px;
             border-radius: 15px;
-            font-size: 14px;
-            font-weight: 700;
+            font-size: 10px;
+            font-family: 'Press Start 2P', monospace;
+            font-weight: 400;
             cursor: pointer;
             box-shadow: 
-                0 8px 20px rgba(0,0,0,0.4),
-                inset 0 3px 10px rgba(255,255,255,0.2),
-                0 0 30px rgba(255,215,0,0.3);
+                0 8px 20px rgba(0,0,0,0.5),
+                inset 0 3px 12px rgba(255,255,255,0.3),
+                0 0 30px rgba(255,215,0,0.4);
             transition: all 0.3s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
-            text-shadow: 0 0 10px rgba(255,215,0,0.8);
-            border: 2px solid #a0522d;
+            text-shadow: 
+                0 0 12px rgba(255,215,0,0.9),
+                0 2px 4px rgba(0,0,0,0.5);
+            border: 3px solid #a0522d;
         }
 
         .golden-card-close:hover {
-            transform: translateY(-3px) scale(1.05);
+            transform: translateY(-3px) scale(1.1);
             box-shadow: 
-                0 12px 30px rgba(0,0,0,0.5),
-                inset 0 4px 12px rgba(255,255,255,0.3),
-                0 0 50px rgba(255,215,0,0.6);
+                0 12px 30px rgba(0,0,0,0.6),
+                inset 0 4px 15px rgba(255,255,255,0.4),
+                0 0 50px rgba(255,215,0,0.7);
         }
 
-        /* WIN PARTICLES */
+        /* ENHANCED WIN PARTICLES */
         .particle {
             position: absolute;
             pointer-events: none;
@@ -544,33 +637,36 @@
             }
             100% {
                 opacity: 0;
-                transform: translateY(-400px) scale(0.2) rotate(720deg);
+                transform: translateY(-350px) scale(0.2) rotate(720deg);
             }
         }
 
-        /* MOBILE RESPONSIVE */
+        /* MOBILE OPTIMIZATIONS */
         @media (max-width: 768px) {
+            .audio-control {
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+            
             .slot-machine-container {
                 width: 350px;
                 height: 520px;
-                transform: scale(0.9);
+                transform: scale(0.95);
             }
             
             .header-text {
-                width: 260px;
-                top: 12px;
-                font-size: 11px;
+                width: 280px;
             }
             
             .reels-overlay {
-                width: 195px;
-                top: 275px;
-                height: 90px;
+                width: 200px;
+                top: 280px;
             }
             
             .reel-window {
-                width: 52px;
-                height: 68px;
+                width: 54px;
+                height: 70px;
             }
             
             .reel-window:first-child {
@@ -578,33 +674,33 @@
             }
             
             .symbol {
-                width: 52px;
-                height: 68px;
+                width: 54px;
+                height: 70px;
             }
             
             .symbol img {
-                width: 45px;
-                height: 45px;
+                width: 46px;
+                height: 46px;
             }
             
             .golden-card {
-                width: 300px;
-                height: 250px;
+                width: 320px;
+                height: 280px;
             }
             
             .prize-textbox {
-                width: 250px;
+                width: 280px;
+                padding: 16px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- RETRO ANIMATED BACKGROUND -->
-    <div class="retro-background"></div>
-    <div class="retro-grid"></div>
-    
-    <!-- FLOATING PARTICLES SYSTEM -->
-    <div class="particle-system" id="particleSystem"></div>
+    <!-- PREMIUM ARCADE BACKGROUND -->
+    <div class="arcade-background"></div>
+
+    <!-- AUDIO CONTROL FOR SOUND EFFECTS ONLY -->
+    <button class="audio-control" id="audioControl">🔊</button>
 
     <div class="slot-machine-container">
         <div class="slot-machine-bg">
@@ -642,180 +738,187 @@
             ⓘ details
         </button>
 
-        <!-- PREMIUM GOLDEN PRIZE CARD -->
+        <!-- ULTRA PREMIUM GOLDEN CARD -->
         <div class="golden-card" id="goldenCard">
-            <div class="golden-card-header">🎉 CONGRATULATIONS! 🎉</div>
+            <div class="eureka-header">🎉 EUREKA! 🎉</div>
             <div class="prize-textbox">
-                <div class="golden-text" id="prizeName">You won this amazing prize!</div>
+                <div class="golden-text" id="prizeTitle">YOU WON THIS AMAZING PRIZE!</div>
+                <div class="golden-subtitle" id="prizeDescription">Premium dental equipment package with exclusive bonuses</div>
             </div>
             <button class="golden-card-close" id="closeCard">CLAIM PRIZE</button>
         </div>
     </div>
 
     <script>
-        // PREMIUM AUDIO SYSTEM
-        class PremiumAudioSystem {
+        // SOUND EFFECTS ONLY AUDIO SYSTEM (NO BACKGROUND MUSIC)
+        class PremiumSoundEffectsSystem {
             constructor() {
                 this.audioContext = null;
-                this.backgroundMusic = null;
-                this.isPlaying = false;
+                this.isMuted = false;
+                this.masterGain = null;
                 this.init();
             }
 
             async init() {
                 try {
                     this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                    this.startBackgroundMusic();
+                    this.masterGain = this.audioContext.createGain();
+                    this.masterGain.connect(this.audioContext.destination);
+                    this.masterGain.gain.setValueAtTime(0.4, this.audioContext.currentTime);
                 } catch (error) {
                     console.log('Audio not supported');
                 }
             }
 
-            // CONTINUOUS BACKGROUND MUSIC
-            startBackgroundMusic() {
-                if (!this.audioContext || this.isPlaying) return;
-                
-                const createTone = (freq, duration, startTime) => {
-                    const oscillator = this.audioContext.createOscillator();
-                    const gainNode = this.audioContext.createGain();
-                    
-                    oscillator.connect(gainNode);
-                    gainNode.connect(this.audioContext.destination);
-                    
-                    oscillator.frequency.setValueAtTime(freq, startTime);
-                    oscillator.type = 'sine';
-                    gainNode.gain.setValueAtTime(0.02, startTime);
-                    gainNode.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
-                    
-                    oscillator.start(startTime);
-                    oscillator.stop(startTime + duration);
-                };
-
-                // AMBIENT BACKGROUND LOOP
-                const playAmbientLoop = () => {
-                    if (!this.audioContext) return;
-                    
-                    const currentTime = this.audioContext.currentTime;
-                    const notes = [220, 293, 329, 440, 493, 523]; // Ambient chord progression
-                    
-                    notes.forEach((freq, index) => {
-                        createTone(freq, 4, currentTime + index * 0.5);
-                    });
-                    
-                    setTimeout(playAmbientLoop, 8000); // Loop every 8 seconds
-                };
-
-                this.isPlaying = true;
-                playAmbientLoop();
-            }
-
-            // PREMIUM SPIN SOUND
-            playSpinSound() {
-                if (!this.audioContext) return;
+            // ULTRA PREMIUM EXPENSIVE SPIN SOUND
+            playUltraPremiumSpinSound() {
+                if (!this.audioContext || this.isMuted) return;
                 
                 const currentTime = this.audioContext.currentTime;
                 
-                // EXPENSIVE REEL SOUND - Multi-layered
-                const createLayeredSpinSound = () => {
-                    // Base mechanical whir
-                    const baseOsc = this.audioContext.createOscillator();
-                    const baseGain = this.audioContext.createGain();
-                    baseOsc.connect(baseGain);
-                    baseGain.connect(this.audioContext.destination);
-                    
-                    baseOsc.frequency.setValueAtTime(150, currentTime);
-                    baseOsc.frequency.exponentialRampToValueAtTime(80, currentTime + 0.8);
-                    baseOsc.type = 'sawtooth';
-                    baseGain.gain.setValueAtTime(0.15, currentTime);
-                    baseGain.gain.exponentialRampToValueAtTime(0.001, currentTime + 0.8);
-                    
-                    // High frequency sparkle
-                    const sparkleOsc = this.audioContext.createOscillator();
-                    const sparkleGain = this.audioContext.createGain();
-                    sparkleOsc.connect(sparkleGain);
-                    sparkleGain.connect(this.audioContext.destination);
-                    
-                    sparkleOsc.frequency.setValueAtTime(2000, currentTime);
-                    sparkleOsc.frequency.exponentialRampToValueAtTime(1200, currentTime + 0.3);
-                    sparkleOsc.type = 'sine';
-                    sparkleGain.gain.setValueAtTime(0.08, currentTime);
-                    sparkleGain.gain.exponentialRampToValueAtTime(0.001, currentTime + 0.3);
-                    
-                    baseOsc.start(currentTime);
-                    baseOsc.stop(currentTime + 0.8);
-                    sparkleOsc.start(currentTime);
-                    sparkleOsc.stop(currentTime + 0.3);
-                };
+                // Layer 1: Deep luxury mechanical whir
+                const baseOsc = this.audioContext.createOscillator();
+                const baseGain = this.audioContext.createGain();
+                const baseFilter = this.audioContext.createBiquadFilter();
                 
-                createLayeredSpinSound();
+                baseOsc.connect(baseFilter);
+                baseFilter.connect(baseGain);
+                baseGain.connect(this.masterGain);
+                
+                baseOsc.frequency.setValueAtTime(90, currentTime);
+                baseOsc.frequency.exponentialRampToValueAtTime(35, currentTime + 2);
+                baseOsc.type = 'sawtooth';
+                
+                baseFilter.type = 'lowpass';
+                baseFilter.frequency.setValueAtTime(1200, currentTime);
+                baseFilter.frequency.exponentialRampToValueAtTime(600, currentTime + 2);
+                baseFilter.Q.setValueAtTime(8, currentTime);
+                
+                baseGain.gain.setValueAtTime(0.3, currentTime);
+                baseGain.gain.exponentialRampToValueAtTime(0.001, currentTime + 2);
+                
+                // Layer 2: Premium crystal sparkle
+                const sparkleOsc = this.audioContext.createOscillator();
+                const sparkleGain = this.audioContext.createGain();
+                const sparkleFilter = this.audioContext.createBiquadFilter();
+                
+                sparkleOsc.connect(sparkleFilter);
+                sparkleFilter.connect(sparkleGain);
+                sparkleGain.connect(this.masterGain);
+                
+                sparkleOsc.frequency.setValueAtTime(2500, currentTime);
+                sparkleOsc.frequency.exponentialRampToValueAtTime(1000, currentTime + 1.2);
+                sparkleOsc.type = 'sine';
+                
+                sparkleFilter.type = 'highpass';
+                sparkleFilter.frequency.setValueAtTime(2000, currentTime);
+                sparkleFilter.Q.setValueAtTime(3, currentTime);
+                
+                sparkleGain.gain.setValueAtTime(0.2, currentTime);
+                sparkleGain.gain.exponentialRampToValueAtTime(0.001, currentTime + 1.2);
+                
+                // Layer 3: Luxury casino chimes
+                const chimeFreqs = [1047, 1319, 1568, 2093]; // C6, E6, G6, C7
+                chimeFreqs.forEach((freq, index) => {
+                    setTimeout(() => {
+                        const chimeOsc = this.audioContext.createOscillator();
+                        const chimeGain = this.audioContext.createGain();
+                        const chimeFilter = this.audioContext.createBiquadFilter();
+                        
+                        chimeOsc.connect(chimeFilter);
+                        chimeFilter.connect(chimeGain);
+                        chimeGain.connect(this.masterGain);
+                        
+                        chimeOsc.frequency.setValueAtTime(freq, this.audioContext.currentTime);
+                        chimeOsc.type = 'sine';
+                        
+                        chimeFilter.type = 'lowpass';
+                        chimeFilter.frequency.setValueAtTime(freq * 2, this.audioContext.currentTime);
+                        
+                        chimeGain.gain.setValueAtTime(0.15, this.audioContext.currentTime);
+                        chimeGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.5);
+                        
+                        chimeOsc.start();
+                        chimeOsc.stop(this.audioContext.currentTime + 0.5);
+                    }, index * 150);
+                });
+                
+                baseOsc.start(currentTime);
+                baseOsc.stop(currentTime + 2);
+                sparkleOsc.start(currentTime);
+                sparkleOsc.stop(currentTime + 1.2);
             }
 
-            // LUXURY WIN SOUND
-            playWinSound() {
-                if (!this.audioContext) return;
+            playVictorySound() {
+                if (!this.audioContext || this.isMuted) return;
                 
-                const currentTime = this.audioContext.currentTime;
-                const frequencies = [523, 659, 784, 988, 1175, 1397]; // C major ascending
+                // Epic victory fanfare
+                const victorySequence = [523, 659, 784, 1047, 1319, 1568]; // C major ascending
                 
-                frequencies.forEach((freq, index) => {
+                victorySequence.forEach((freq, index) => {
                     setTimeout(() => {
                         const osc = this.audioContext.createOscillator();
                         const gain = this.audioContext.createGain();
+                        const filter = this.audioContext.createBiquadFilter();
                         
-                        osc.connect(gain);
-                        gain.connect(this.audioContext.destination);
+                        osc.connect(filter);
+                        filter.connect(gain);
+                        gain.connect(this.masterGain);
                         
                         osc.frequency.setValueAtTime(freq, this.audioContext.currentTime);
                         osc.type = 'sine';
-                        gain.gain.setValueAtTime(0.15, this.audioContext.currentTime);
-                        gain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.8);
+                        
+                        filter.type = 'lowpass';
+                        filter.frequency.setValueAtTime(freq * 3, this.audioContext.currentTime);
+                        
+                        gain.gain.setValueAtTime(0.25, this.audioContext.currentTime);
+                        gain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 1);
                         
                         osc.start();
-                        osc.stop(this.audioContext.currentTime + 0.8);
-                    }, index * 150);
+                        osc.stop(this.audioContext.currentTime + 1);
+                    }, index * 120);
                 });
             }
 
             playStopSound() {
-                if (!this.audioContext) return;
+                if (!this.audioContext || this.isMuted) return;
                 
                 const osc = this.audioContext.createOscillator();
                 const gain = this.audioContext.createGain();
+                const filter = this.audioContext.createBiquadFilter();
                 
-                osc.connect(gain);
-                gain.connect(this.audioContext.destination);
+                osc.connect(filter);
+                filter.connect(gain);
+                gain.connect(this.masterGain);
                 
-                osc.frequency.setValueAtTime(480, this.audioContext.currentTime);
+                osc.frequency.setValueAtTime(520, this.audioContext.currentTime);
                 osc.type = 'triangle';
-                gain.gain.setValueAtTime(0.1, this.audioContext.currentTime);
+                
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(1000, this.audioContext.currentTime);
+                
+                gain.gain.setValueAtTime(0.15, this.audioContext.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.4);
                 
                 osc.start();
                 osc.stop(this.audioContext.currentTime + 0.4);
             }
+
+            toggleMute() {
+                this.isMuted = !this.isMuted;
+                
+                if (this.isMuted) {
+                    this.masterGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.1);
+                } else {
+                    this.masterGain.gain.exponentialRampToValueAtTime(0.4, this.audioContext.currentTime + 0.1);
+                }
+                
+                return this.isMuted;
+            }
         }
 
-        // Initialize premium audio system
-        const audioSystem = new PremiumAudioSystem();
-
-        // FLOATING PARTICLES SYSTEM
-        function createFloatingParticles() {
-            const particleSystem = document.getElementById('particleSystem');
-            
-            setInterval(() => {
-                const particle = document.createElement('div');
-                particle.className = 'floating-particle';
-                particle.style.left = Math.random() * 100 + 'vw';
-                particle.style.animationDelay = Math.random() * 2 + 's';
-                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
-                
-                particleSystem.appendChild(particle);
-                
-                setTimeout(() => {
-                    particle.remove();
-                }, 25000);
-            }, 800);
-        }
+        // Initialize sound effects system
+        const audioSystem = new PremiumSoundEffectsSystem();
 
         // SLOT MACHINE LOGIC
         const symbols = [
@@ -848,7 +951,7 @@
         let spinning = false;
         let hasSpun = false;
 
-        // OPTIMIZED IMAGE PRELOADING
+        // Fast image preloading
         function preloadImages() {
             symbols.forEach(symbol => {
                 const img = new Image();
@@ -856,12 +959,12 @@
             });
         }
 
-        // Initialize reels with optimized loading
+        // Initialize reels
         function initializeReels() {
             for (let i = 1; i <= 3; i++) {
                 const strip = document.getElementById(`reel${i}`);
                 
-                for (let j = 0; j < 8; j++) {
+                for (let j = 0; j < 6; j++) {
                     symbols.forEach(symbol => {
                         const symbolDiv = document.createElement('div');
                         symbolDiv.className = 'symbol';
@@ -870,9 +973,9 @@
                         const img = document.createElement('img');
                         img.src = symbol.image;
                         img.alt = symbol.name;
-                        img.loading = 'eager'; // Prioritize loading
+                        img.loading = 'eager';
                         img.onerror = function() {
-                            symbolDiv.innerHTML = `<div style="font-size: 28px; color: #ffd700; text-shadow: 0 0 10px #ffd700;">${symbol.name === '7' ? '7️⃣' : symbol.name === 'Star' ? '⭐' : '🍇'}</div>`;
+                            symbolDiv.innerHTML = `<div style="font-size: 24px; color: #ffd700; filter: drop-shadow(0 0 10px #ffd700);">${symbol.name === '7' ? '7️⃣' : symbol.name === 'Star' ? '⭐' : '🍇'}</div>`;
                         };
                         
                         symbolDiv.appendChild(img);
@@ -882,38 +985,40 @@
             }
         }
 
-        // Enhanced golden card display
+        // Show golden card
         function showGoldenCard(prizeName, prizeDescription) {
             const card = document.getElementById('goldenCard');
-            const prizeNameElement = document.getElementById('prizeName');
+            const titleElement = document.getElementById('prizeTitle');
+            const descElement = document.getElementById('prizeDescription');
             
-            prizeNameElement.innerHTML = `<strong>${prizeName}</strong><br><br>${prizeDescription}`;
+            titleElement.textContent = prizeName;
+            descElement.textContent = prizeDescription;
+            
             card.classList.add('show');
-            
-            createWinParticles(60);
-            audioSystem.playWinSound();
+            createUltraWinParticles(40);
+            audioSystem.playVictorySound();
         }
 
         function closeGoldenCard() {
             document.getElementById('goldenCard').classList.remove('show');
         }
 
-        // Enhanced particle system
-        function createWinParticles(count) {
+        // Enhanced win particles
+        function createUltraWinParticles(count) {
             for (let i = 0; i < count; i++) {
                 setTimeout(() => {
                     const particle = document.createElement('div');
                     particle.className = 'particle';
                     particle.style.width = (Math.random() * 12 + 6) + 'px';
                     particle.style.height = particle.style.width;
-                    particle.style.background = `linear-gradient(45deg, #ffd700, #ffed4e, #ff8f00)`;
+                    particle.style.background = `radial-gradient(circle, #ffd700, #ffb300, #ff8f00)`;
                     particle.style.boxShadow = '0 0 20px rgba(255,215,0,1)';
                     particle.style.left = (Math.random() * window.innerWidth) + 'px';
-                    particle.style.top = (window.innerHeight - 100) + 'px';
+                    particle.style.top = (window.innerHeight - 50) + 'px';
                     
                     document.body.appendChild(particle);
                     setTimeout(() => particle.remove(), 3000);
-                }, i * 50);
+                }, i * 25);
             }
         }
 
@@ -928,12 +1033,12 @@
             document.getElementById('spinsLeft').textContent = spinsLeft;
             document.getElementById('spinBtn').disabled = true;
             
-            audioSystem.playSpinSound();
+            audioSystem.playUltraPremiumSpinSound();
             
             const results = [];
-            const spinDurations = [2500, 3200, 3900];
+            const spinDurations = [2000, 2500, 3000];
             
-            // Start spinning with enhanced animation
+            // Start spinning
             for (let i = 1; i <= 3; i++) {
                 document.getElementById(`reel${i}`).classList.add('spinning');
             }
@@ -948,14 +1053,14 @@
                     
                     const symbolIndex = symbols.findIndex(s => s.name === randomSymbol.name);
                     const isMobile = window.innerWidth <= 768;
-                    const translateDistance = isMobile ? symbolIndex * 68 : symbolIndex * 75;
+                    const translateDistance = isMobile ? symbolIndex * 70 : symbolIndex * 75;
                     
                     strip.style.transform = `translateY(-${translateDistance}px)`;
                     
                     audioSystem.playStopSound();
                     
                     if (results.length === 3) {
-                        setTimeout(() => checkWin(results), 800);
+                        setTimeout(() => checkWin(results), 500);
                     }
                 }, duration);
             });
@@ -983,24 +1088,33 @@
             
             setTimeout(() => {
                 showGoldenCard(prize.name, prize.description);
-            }, 1000);
+            }, 800);
             
             spinning = false;
+        }
+
+        // Audio control
+        function toggleAudio() {
+            const button = document.getElementById('audioControl');
+            const isMuted = audioSystem.toggleMute();
+            
+            button.textContent = isMuted ? '🔇' : '🔊';
+            button.classList.toggle('muted', isMuted);
         }
 
         // Event listeners
         document.getElementById('spinBtn').addEventListener('click', spinReels);
         document.getElementById('closeCard').addEventListener('click', closeGoldenCard);
+        document.getElementById('audioControl').addEventListener('click', toggleAudio);
         
         document.getElementById('detailsBtn').addEventListener('click', () => {
             const details = document.createElement('div');
             details.innerHTML = `
-                <div style="position: fixed; top: 20px; left: 20px; right: 20px; background: linear-gradient(145deg, rgba(255,255,255,0.95), rgba(240,240,240,0.9)); padding: 25px; border-radius: 20px; border: 3px solid #ffd700; z-index: 999; text-align: center; color: #333; font-weight: 600; box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 80px rgba(255,215,0,0.6);">
-                    <h3 style="color: #e65100; margin-bottom: 15px; font-size: 18px; text-shadow: 0 0 10px rgba(255,181,0,0.8);">🎰 PB DAYS Premium Slot Machine 🎰</h3>
-                    <p style="margin-bottom: 10px;">Experience the most luxurious slot machine with guaranteed wins!</p>
-                    <p style="margin-bottom: 10px; font-size: 14px; color: #ff8f00;">🎯 Every spin guarantees amazing dental equipment prizes!</p>
-                    <p style="font-size: 12px; color: #666;">🎵 Premium audio experience with ambient background music</p>
-                    <button onclick="this.parentElement.parentElement.remove()" style="margin-top: 20px; background: linear-gradient(145deg, #ffd700, #ffb300); border: none; padding: 10px 20px; border-radius: 12px; cursor: pointer; font-weight: bold; color: #333; box-shadow: 0 6px 15px rgba(0,0,0,0.3); transition: all 0.3s ease;">Got it!</button>
+                <div style="position: fixed; top: 20px; left: 20px; right: 20px; background: rgba(255,255,255,0.95); padding: 20px; border-radius: 15px; border: 3px solid #ffd700; z-index: 999; text-align: center; color: #333; font-weight: 600; box-shadow: 0 20px 60px rgba(0,0,0,0.4);">
+                    <h3 style="color: #e65100; margin-bottom: 10px; font-family: 'Press Start 2P', monospace; font-size: 12px;">🎰 PB DAYS ULTRA PREMIUM 🎰</h3>
+                    <p style="font-family: 'Orbitron', monospace;">The most addictive slot machine experience!</p>
+                    <p style="margin-top: 10px; font-size: 14px;">🎯 Every spin guarantees amazing prizes!</p>
+                    <button onclick="this.parentElement.parentElement.remove()" style="margin-top: 15px; background: linear-gradient(145deg, #ffd700, #ffb300); border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: bold; color: #333; font-family: 'Press Start 2P', monospace; font-size: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">GOT IT!</button>
                 </div>
             `;
             document.body.appendChild(details);
@@ -1012,20 +1126,18 @@
                 e.preventDefault();
                 spinReels();
             }
+            if (e.code === 'KeyM') {
+                toggleAudio();
+            }
         });
 
-        // Initialize everything
+        // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             preloadImages();
             initializeReels();
-            createFloatingParticles();
-            
-            setTimeout(() => {
-                document.querySelector('.slot-machine-container').style.filter += ' drop-shadow(0 0 80px rgba(255,181,0,0.4))';
-            }, 1000);
         });
 
-        // Enable audio on user interaction
+        // Enable audio on first interaction
         document.body.addEventListener('click', () => {
             if (audioSystem.audioContext && audioSystem.audioContext.state === 'suspended') {
                 audioSystem.audioContext.resume();
