@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PB DAYS - Auto-Play Heavenly Slot Machine</title>
+    <title>PB DAYS - Real Background Music Slot Machine</title>
     <link rel="preload" as="image" href="https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/Slot-machine.png">
     <link rel="preload" as="image" href="https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/7.png">
     <link rel="preload" as="image" href="https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/Star.png">
@@ -34,6 +34,11 @@
         @keyframes backgroundShift {
             0%, 100% { filter: brightness(1) hue-rotate(0deg); }
             50% { filter: brightness(1.1) hue-rotate(15deg); }
+        }
+
+        /* HIDDEN BACKGROUND MUSIC */
+        #backgroundMusic {
+            display: none;
         }
 
         .arcade-background {
@@ -77,7 +82,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
-        /* ENHANCED AUDIO CONTROL WITH AUTO-PLAY INDICATOR */
+        /* ENHANCED AUDIO CONTROL */
         .audio-control {
             position: fixed;
             top: 20px;
@@ -98,20 +103,15 @@
                 0 0 30px rgba(255,215,0,0.6);
             transition: all 0.3s ease;
             animation: audioButtonGlow 2s ease-in-out infinite alternate;
-            will-change: transform, box-shadow;
         }
 
         @keyframes audioButtonGlow {
             0% { 
-                box-shadow: 
-                    0 8px 20px rgba(255,181,0,0.4),
-                    0 0 30px rgba(255,215,0,0.6);
+                box-shadow: 0 8px 20px rgba(255,181,0,0.4), 0 0 30px rgba(255,215,0,0.6);
                 transform: scale(1);
             }
             100% { 
-                box-shadow: 
-                    0 12px 30px rgba(255,181,0,0.7),
-                    0 0 50px rgba(255,215,0,0.9);
+                box-shadow: 0 12px 30px rgba(255,181,0,0.7), 0 0 50px rgba(255,215,0,0.9);
                 transform: scale(1.05);
             }
         }
@@ -195,7 +195,7 @@
         /* PERFECT REEL ALIGNMENT */
         .reels-overlay {
             position: absolute;
-            top: 310px; /* OPTIMALLY POSITIONED */
+            top: 310px;
             left: 50%;
             transform: translateX(-50%);
             width: 220px;
@@ -542,6 +542,13 @@
 <body>
     <div class="arcade-background"></div>
 
+    <!-- REAL BACKGROUND MUSIC - AUTO PLAYS -->
+    <audio id="backgroundMusic" autoplay loop muted>
+        <source src="data:audio/mpeg;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAACAHQW1hemluZyBHcmFjZQBUUE9TAAAADQAAADAE" type="audio/mpeg">
+        <!-- Fallback: Try to load from a reliable source -->
+        <source src="https://incompetech.com/music/royalty-free/mp3-royaltyfree/Inspired.mp3" type="audio/mpeg">
+    </audio>
+
     <div class="email-container">
         <input type="email" id="customerEmail" placeholder="Enter your email for prize delivery" required>
     </div>
@@ -595,15 +602,13 @@
     </div>
 
     <script>
-        // AUTO-PLAY HEAVENLY AUDIO SYSTEM WITH METALLIC COIN SOUNDS
-        class AutoPlayHeavenlyAudio {
+        // METALLIC SOUND SYSTEM WITH REAL BACKGROUND MUSIC
+        class MetallicAudioSystem {
             constructor() {
                 this.audioContext = null;
-                this.backgroundGain = null;
                 this.masterGain = null;
-                this.isPlaying = false;
                 this.isMuted = false;
-                this.backgroundOscillators = [];
+                this.backgroundMusic = document.getElementById('backgroundMusic');
                 this.init();
             }
 
@@ -612,221 +617,126 @@
                     this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
                     this.masterGain = this.audioContext.createGain();
                     this.masterGain.connect(this.audioContext.destination);
-                    this.masterGain.gain.setValueAtTime(0.25, this.audioContext.currentTime);
+                    this.masterGain.gain.setValueAtTime(0.4, this.audioContext.currentTime);
                     
-                    this.backgroundGain = this.audioContext.createGain();
-                    this.backgroundGain.connect(this.masterGain);
-                    this.backgroundGain.gain.setValueAtTime(0.06, this.audioContext.currentTime);
-                    
-                    // AUTO-START BACKGROUND MUSIC IMMEDIATELY
-                    this.startHeavenlyMusic();
+                    // Try to play background music immediately
+                    this.startBackgroundMusic();
                 } catch (error) {
                     console.log('Audio not supported');
                 }
             }
 
-            // HEAVENLY BACKGROUND MUSIC - AUTO-PLAYING
-            startHeavenlyMusic() {
-                if (!this.audioContext || this.isPlaying || this.isMuted) return;
-                this.isPlaying = true;
+            // START REAL BACKGROUND MUSIC
+            startBackgroundMusic() {
+                console.log('🎵 Starting real background music...');
                 
-                console.log('🎵 Starting heavenly background music...');
+                // Unmute and play the HTML audio element
+                this.backgroundMusic.muted = false;
+                this.backgroundMusic.volume = 0.3;
                 
-                // Create continuous heavenly ambient pad
-                const createHeavenlyPad = () => {
-                    // Beautiful harmonic progression - Am7 to Fmaj7 to Cmaj7 to Gmaj7
-                    const chordProgression = [
-                        [220, 264, 330, 392],  // Am7
-                        [174, 220, 262, 330],  // Fmaj7
-                        [130, 165, 196, 247],  // Cmaj7
-                        [196, 247, 294, 370]   // Gmaj7
-                    ];
-                    
-                    let chordIndex = 0;
-                    
-                    const playChord = () => {
-                        if (this.isMuted) return;
-                        
-                        const currentChord = chordProgression[chordIndex % chordProgression.length];
-                        
-                        currentChord.forEach((freq, noteIndex) => {
-                            const osc = this.audioContext.createOscillator();
-                            const gain = this.audioContext.createGain();
-                            const filter = this.audioContext.createBiquadFilter();
-                            
-                            // Create ethereal reverb effect
-                            const delay = this.audioContext.createDelay();
-                            const delayGain = this.audioContext.createGain();
-                            const feedback = this.audioContext.createGain();
-                            
-                            osc.connect(filter);
-                            filter.connect(gain);
-                            gain.connect(this.backgroundGain);
-                            
-                            // Reverb chain
-                            gain.connect(delay);
-                            delay.connect(delayGain);
-                            delayGain.connect(feedback);
-                            feedback.connect(delay);
-                            delayGain.connect(this.backgroundGain);
-                            
-                            osc.frequency.setValueAtTime(freq, this.audioContext.currentTime);
-                            osc.type = 'sine';
-                            
-                            filter.type = 'lowpass';
-                            filter.frequency.setValueAtTime(800 + noteIndex * 200, this.audioContext.currentTime);
-                            filter.Q.setValueAtTime(1.5, this.audioContext.currentTime);
-                            
-                            delay.delayTime.setValueAtTime(0.4, this.audioContext.currentTime);
-                            delayGain.gain.setValueAtTime(0.15, this.audioContext.currentTime);
-                            feedback.gain.gain.setValueAtTime(0.3, this.audioContext.currentTime);
-                            
-                            // Gentle fade in
-                            gain.gain.setValueAtTime(0, this.audioContext.currentTime);
-                            gain.gain.linearRampToValueAtTime(0.02 + noteIndex * 0.003, this.audioContext.currentTime + 1);
-                            gain.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + 7);
-                            
-                            osc.start();
-                            osc.stop(this.audioContext.currentTime + 8);
-                            
-                            this.backgroundOscillators.push(osc);
-                        });
-                        
-                        chordIndex++;
-                        
-                        // Continue the heavenly progression
-                        if (!this.isMuted) {
-                            setTimeout(playChord, 6000); // New chord every 6 seconds
-                        }
-                    };
-                    
-                    playChord();
-                    
-                    // Add occasional ethereal bells
-                    const addEtherealBells = () => {
-                        if (this.isMuted) return;
-                        
-                        const bellFreqs = [1046, 1318, 1568, 2093]; // High C major
-                        const randomBell = bellFreqs[Math.floor(Math.random() * bellFreqs.length)];
-                        
-                        const bell = this.audioContext.createOscillator();
-                        const bellGain = this.audioContext.createGain();
-                        const bellFilter = this.audioContext.createBiquadFilter();
-                        
-                        bell.connect(bellFilter);
-                        bellFilter.connect(bellGain);
-                        bellGain.connect(this.backgroundGain);
-                        
-                        bell.frequency.setValueAtTime(randomBell, this.audioContext.currentTime);
-                        bell.type = 'sine';
-                        
-                        bellFilter.type = 'lowpass';
-                        bellFilter.frequency.setValueAtTime(randomBell * 2, this.audioContext.currentTime);
-                        bellFilter.Q.setValueAtTime(2, this.audioContext.currentTime);
-                        
-                        bellGain.gain.setValueAtTime(0.008, this.audioContext.currentTime);
-                        bellGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 3);
-                        
-                        bell.start();
-                        bell.stop(this.audioContext.currentTime + 3);
-                        
-                        // Random intervals for ethereal feeling
-                        if (!this.isMuted) {
-                            setTimeout(addEtherealBells, 8000 + Math.random() * 12000);
-                        }
-                    };
-                    
-                    setTimeout(addEtherealBells, 4000);
-                };
+                const playPromise = this.backgroundMusic.play();
                 
-                createHeavenlyPad();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        console.log('✅ Background music started successfully!');
+                    }).catch(error => {
+                        console.log('❌ Autoplay prevented, will start after user interaction');
+                        this.backgroundMusic.muted = true;
+                    });
+                }
             }
 
-            // REALISTIC METALLIC COIN SOUNDS
-            playMetallicCoinSpin() {
+            // REALISTIC METALLIC SPIN WITH TICKING
+            playMetallicSpinSound() {
                 if (!this.audioContext || this.isMuted) return;
                 
-                const currentTime = this.audioContext.currentTime;
+                console.log('🔧 Playing metallic spin with ticks...');
                 
-                // Create realistic coin cascade sound
-                const createCoinCascade = () => {
-                    for (let i = 0; i < 12; i++) {
-                        setTimeout(() => {
-                            // Individual coin clink
-                            const coinOsc = this.audioContext.createOscillator();
-                            const coinGain = this.audioContext.createGain();
-                            const coinFilter = this.audioContext.createBiquadFilter();
-                            const noiseGain = this.audioContext.createGain();
-                            
-                            coinOsc.connect(coinFilter);
-                            coinFilter.connect(coinGain);
-                            coinGain.connect(this.masterGain);
-                            
-                            // Metallic frequency with slight randomness
-                            const baseFreq = 800 + Math.random() * 400;
-                            coinOsc.frequency.setValueAtTime(baseFreq, this.audioContext.currentTime);
-                            coinOsc.frequency.exponentialRampToValueAtTime(baseFreq * 0.7, this.audioContext.currentTime + 0.1);
-                            coinOsc.type = 'triangle';
-                            
-                            coinFilter.type = 'bandpass';
-                            coinFilter.frequency.setValueAtTime(baseFreq, this.audioContext.currentTime);
-                            coinFilter.Q.setValueAtTime(8, this.audioContext.currentTime);
-                            
-                            coinGain.gain.setValueAtTime(0.15, this.audioContext.currentTime);
-                            coinGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.2);
-                            
-                            coinOsc.start();
-                            coinOsc.stop(this.audioContext.currentTime + 0.2);
-                            
-                            // Add metallic ping
-                            const ping = this.audioContext.createOscillator();
-                            const pingGain = this.audioContext.createGain();
-                            ping.connect(pingGain);
-                            pingGain.connect(this.masterGain);
-                            
-                            ping.frequency.setValueAtTime(2000 + Math.random() * 1000, this.audioContext.currentTime);
-                            ping.type = 'sine';
-                            pingGain.gain.setValueAtTime(0.08, this.audioContext.currentTime);
-                            pingGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.1);
-                            
-                            ping.start();
-                            ping.stop(this.audioContext.currentTime + 0.1);
-                            
-                        }, i * 60 + Math.random() * 30); // Slight randomness in timing
-                    }
-                };
+                // Create continuous metallic ticking during spin
+                const tickCount = 25; // Number of ticks during spin
+                const spinDuration = 2500; // Total spin duration in ms
+                const tickInterval = spinDuration / tickCount;
                 
-                createCoinCascade();
+                for (let i = 0; i < tickCount; i++) {
+                    setTimeout(() => {
+                        this.playMetallicTick(i);
+                    }, i * tickInterval);
+                }
                 
-                // Add deeper mechanical reel sound
-                const reelOsc = this.audioContext.createOscillator();
-                const reelGain = this.audioContext.createGain();
-                const reelFilter = this.audioContext.createBiquadFilter();
+                // Add underlying mechanical whir
+                const whirOsc = this.audioContext.createOscillator();
+                const whirGain = this.audioContext.createGain();
+                const whirFilter = this.audioContext.createBiquadFilter();
                 
-                reelOsc.connect(reelFilter);
-                reelFilter.connect(reelGain);
-                reelGain.connect(this.masterGain);
+                whirOsc.connect(whirFilter);
+                whirFilter.connect(whirGain);
+                whirGain.connect(this.masterGain);
                 
-                reelOsc.frequency.setValueAtTime(80, currentTime);
-                reelOsc.frequency.exponentialRampToValueAtTime(40, currentTime + 1.5);
-                reelOsc.type = 'sawtooth';
+                whirOsc.frequency.setValueAtTime(60, this.audioContext.currentTime);
+                whirOsc.frequency.exponentialRampToValueAtTime(30, this.audioContext.currentTime + 2.5);
+                whirOsc.type = 'sawtooth';
                 
-                reelFilter.type = 'lowpass';
-                reelFilter.frequency.setValueAtTime(200, currentTime);
-                reelFilter.frequency.exponentialRampToValueAtTime(80, currentTime + 1.5);
+                whirFilter.type = 'lowpass';
+                whirFilter.frequency.setValueAtTime(300, this.audioContext.currentTime);
+                whirFilter.Q.setValueAtTime(2, this.audioContext.currentTime);
                 
-                reelGain.gain.setValueAtTime(0.1, currentTime);
-                reelGain.gain.exponentialRampToValueAtTime(0.001, currentTime + 1.5);
+                whirGain.gain.setValueAtTime(0.15, this.audioContext.currentTime);
+                whirGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 2.5);
                 
-                reelOsc.start(currentTime);
-                reelOsc.stop(currentTime + 1.5);
+                whirOsc.start();
+                whirOsc.stop(this.audioContext.currentTime + 2.5);
+            }
+
+            // INDIVIDUAL METALLIC TICK SOUND
+            playMetallicTick(tickIndex) {
+                if (!this.audioContext || this.isMuted) return;
+                
+                // Create realistic metallic tick
+                const tick = this.audioContext.createOscillator();
+                const tickGain = this.audioContext.createGain();
+                const tickFilter = this.audioContext.createBiquadFilter();
+                
+                tick.connect(tickFilter);
+                tickFilter.connect(tickGain);
+                tickGain.connect(this.masterGain);
+                
+                // Metallic frequency with slight variation
+                const baseFreq = 1200 + (tickIndex * 20) + (Math.random() * 300);
+                tick.frequency.setValueAtTime(baseFreq, this.audioContext.currentTime);
+                tick.frequency.exponentialRampToValueAtTime(baseFreq * 0.5, this.audioContext.currentTime + 0.1);
+                tick.type = 'square';
+                
+                tickFilter.type = 'bandpass';
+                tickFilter.frequency.setValueAtTime(baseFreq, this.audioContext.currentTime);
+                tickFilter.Q.setValueAtTime(12, this.audioContext.currentTime); // Sharp metallic sound
+                
+                tickGain.gain.setValueAtTime(0.2, this.audioContext.currentTime);
+                tickGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.1);
+                
+                tick.start();
+                tick.stop(this.audioContext.currentTime + 0.1);
+                
+                // Add metallic ping overtone
+                const ping = this.audioContext.createOscillator();
+                const pingGain = this.audioContext.createGain();
+                
+                ping.connect(pingGain);
+                pingGain.connect(this.masterGain);
+                
+                ping.frequency.setValueAtTime(baseFreq * 2, this.audioContext.currentTime);
+                ping.type = 'sine';
+                pingGain.gain.setValueAtTime(0.08, this.audioContext.currentTime);
+                pingGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.05);
+                
+                ping.start();
+                ping.stop(this.audioContext.currentTime + 0.05);
             }
 
             playWinSound() {
                 if (!this.audioContext || this.isMuted) return;
                 
-                // Coin jackpot sound
-                for (let i = 0; i < 20; i++) {
+                // Metallic coin cascade
+                for (let i = 0; i < 15; i++) {
                     setTimeout(() => {
                         const coin = this.audioContext.createOscillator();
                         const coinGain = this.audioContext.createGain();
@@ -836,48 +746,49 @@
                         coinFilter.connect(coinGain);
                         coinGain.connect(this.masterGain);
                         
-                        const freq = 600 + i * 50 + Math.random() * 200;
+                        const freq = 800 + i * 100 + Math.random() * 400;
                         coin.frequency.setValueAtTime(freq, this.audioContext.currentTime);
-                        coin.type = 'triangle';
+                        coin.frequency.exponentialRampToValueAtTime(freq * 0.6, this.audioContext.currentTime + 0.3);
+                        coin.type = 'square';
                         
                         coinFilter.type = 'bandpass';
                         coinFilter.frequency.setValueAtTime(freq, this.audioContext.currentTime);
-                        coinFilter.Q.setValueAtTime(6, this.audioContext.currentTime);
+                        coinFilter.Q.setValueAtTime(8, this.audioContext.currentTime);
                         
-                        coinGain.gain.setValueAtTime(0.1, this.audioContext.currentTime);
+                        coinGain.gain.setValueAtTime(0.15, this.audioContext.currentTime);
                         coinGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.3);
                         
                         coin.start();
                         coin.stop(this.audioContext.currentTime + 0.3);
-                    }, i * 40);
+                    }, i * 60);
                 }
             }
 
             playStopSound() {
                 if (!this.audioContext || this.isMuted) return;
                 
-                // Single coin drop
-                const coin = this.audioContext.createOscillator();
-                const coinGain = this.audioContext.createGain();
-                const coinFilter = this.audioContext.createBiquadFilter();
+                // Single metallic clank when reel stops
+                const clank = this.audioContext.createOscillator();
+                const clankGain = this.audioContext.createGain();
+                const clankFilter = this.audioContext.createBiquadFilter();
                 
-                coin.connect(coinFilter);
-                coinFilter.connect(coinGain);
-                coinGain.connect(this.masterGain);
+                clank.connect(clankFilter);
+                clankFilter.connect(clankGain);
+                clankGain.connect(this.masterGain);
                 
-                coin.frequency.setValueAtTime(400, this.audioContext.currentTime);
-                coin.frequency.exponentialRampToValueAtTime(200, this.audioContext.currentTime + 0.2);
-                coin.type = 'triangle';
+                clank.frequency.setValueAtTime(600, this.audioContext.currentTime);
+                clank.frequency.exponentialRampToValueAtTime(200, this.audioContext.currentTime + 0.2);
+                clank.type = 'square';
                 
-                coinFilter.type = 'bandpass';
-                coinFilter.frequency.setValueAtTime(400, this.audioContext.currentTime);
-                coinFilter.Q.setValueAtTime(5, this.audioContext.currentTime);
+                clankFilter.type = 'bandpass';
+                clankFilter.frequency.setValueAtTime(600, this.audioContext.currentTime);
+                clankFilter.Q.setValueAtTime(10, this.audioContext.currentTime);
                 
-                coinGain.gain.setValueAtTime(0.12, this.audioContext.currentTime);
-                coinGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.2);
+                clankGain.gain.setValueAtTime(0.2, this.audioContext.currentTime);
+                clankGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.2);
                 
-                coin.start();
-                coin.stop(this.audioContext.currentTime + 0.2);
+                clank.start();
+                clank.stop(this.audioContext.currentTime + 0.2);
             }
 
             toggleMute() {
@@ -885,31 +796,19 @@
                 
                 if (this.isMuted) {
                     this.masterGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.2);
-                    this.stopBackgroundMusic();
+                    this.backgroundMusic.muted = true;
                 } else {
-                    this.masterGain.gain.exponentialRampToValueAtTime(0.25, this.audioContext.currentTime + 0.2);
-                    this.isPlaying = false;
-                    setTimeout(() => this.startHeavenlyMusic(), 300);
+                    this.masterGain.gain.exponentialRampToValueAtTime(0.4, this.audioContext.currentTime + 0.2);
+                    this.backgroundMusic.muted = false;
+                    this.backgroundMusic.play();
                 }
                 
                 return this.isMuted;
             }
-
-            stopBackgroundMusic() {
-                this.backgroundOscillators.forEach(osc => {
-                    try {
-                        osc.stop();
-                    } catch (e) {
-                        // Already stopped
-                    }
-                });
-                this.backgroundOscillators = [];
-                this.isPlaying = false;
-            }
         }
 
-        // Initialize auto-play audio system
-        const audioSystem = new AutoPlayHeavenlyAudio();
+        // Initialize metallic audio system
+        const audioSystem = new MetallicAudioSystem();
 
         // GOOGLE SHEETS INTEGRATION
         const GOOGLE_SHEETS_WEBHOOK = 'https://slotmachine-cms.netlify.app/.netlify/functions/allocate-prize';
@@ -1066,8 +965,8 @@
             
             document.getElementById('spinsLeft').textContent = '0';
             
-            // PLAY METALLIC COIN SPIN SOUND
-            audioSystem.playMetallicCoinSpin();
+            // PLAY METALLIC SPIN WITH TICKING
+            audioSystem.playMetallicSpinSound();
             
             const results = [];
             const spinDurations = [1800, 2200, 2600];
@@ -1137,9 +1036,9 @@
             const details = document.createElement('div');
             details.innerHTML = `
                 <div style="position: fixed; top: 20px; left: 20px; right: 20px; background: rgba(255,255,255,0.95); padding: 20px; border-radius: 15px; border: 3px solid #ffd700; z-index: 999; text-align: center; color: #333; font-weight: 600; box-shadow: 0 20px 60px rgba(0,0,0,0.4);">
-                    <h3 style="color: #e65100; margin-bottom: 10px; font-family: 'Press Start 2P', monospace; font-size: 12px;">🎰 PB DAYS AUTO-PLAY SLOT 🎰</h3>
-                    <p style="font-family: 'Orbitron', monospace;">Heavenly music plays automatically with realistic coin sounds!</p>
-                    <p style="margin-top: 10px; font-size: 14px;">🎯 Every spin has authentic metallic coin effects!</p>
+                    <h3 style="color: #e65100; margin-bottom: 10px; font-family: 'Press Start 2P', monospace; font-size: 12px;">🎰 PB DAYS METALLIC SLOT 🎰</h3>
+                    <p style="font-family: 'Orbitron', monospace;">Real background music with metallic spin sounds!</p>
+                    <p style="margin-top: 10px; font-size: 14px;">🔧 Every tick is a realistic metallic sound!</p>
                     <button onclick="this.parentElement.parentElement.remove()" style="margin-top: 15px; background: linear-gradient(145deg, #ffd700, #ffb300); border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: bold; color: #333; font-family: 'Press Start 2P', monospace; font-size: 8px;">GOT IT!</button>
                 </div>
             `;
@@ -1150,15 +1049,20 @@
         document.addEventListener('DOMContentLoaded', () => {
             initializeReels();
             document.getElementById('customerEmail').focus();
-            
-            // Force auto-start music after DOM loaded
-            setTimeout(() => {
-                if (audioSystem.audioContext && !audioSystem.isPlaying && !audioSystem.isMuted) {
-                    console.log('🎵 Force starting heavenly music on DOM load...');
-                    audioSystem.startHeavenlyMusic();
-                }
-            }, 500);
         });
+
+        // Enable audio on first interaction (for browsers that block autoplay)
+        document.body.addEventListener('click', () => {
+            if (audioSystem.audioContext && audioSystem.audioContext.state === 'suspended') {
+                audioSystem.audioContext.resume();
+            }
+            
+            // Try to unmute and play background music
+            if (audioSystem.backgroundMusic.paused) {
+                audioSystem.backgroundMusic.muted = false;
+                audioSystem.backgroundMusic.play().catch(e => console.log('Background music blocked'));
+            }
+        }, { once: true });
 
         // Keyboard support
         document.addEventListener('keydown', (e) => {
