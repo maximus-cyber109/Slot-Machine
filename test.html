@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PB DAYS - Premium Slot Machine (Fixed Mobile)</title>
+    <title>PB DAYS - Auto-Play Heavenly Slot Machine</title>
     <link rel="preload" as="image" href="https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/Slot-machine.png">
     <link rel="preload" as="image" href="https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/7.png">
     <link rel="preload" as="image" href="https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/Star.png">
@@ -48,9 +48,15 @@
                 radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.05) 0%, transparent 70%),
                 linear-gradient(135deg, #000428 0%, #004e92 100%);
             z-index: -1;
+            animation: backgroundGlow 8s ease-in-out infinite alternate;
         }
 
-        /* EMAIL INPUT FIELD */
+        @keyframes backgroundGlow {
+            0% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+
+        /* EMAIL INPUT */
         .email-container {
             position: fixed;
             top: 20px;
@@ -71,6 +77,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
+        /* ENHANCED AUDIO CONTROL WITH AUTO-PLAY INDICATOR */
         .audio-control {
             position: fixed;
             top: 20px;
@@ -86,13 +93,37 @@
             align-items: center;
             justify-content: center;
             font-size: 20px;
-            box-shadow: 0 8px 20px rgba(255,181,0,0.4);
-            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            will-change: transform;
+            box-shadow: 
+                0 8px 20px rgba(255,181,0,0.4),
+                0 0 30px rgba(255,215,0,0.6);
+            transition: all 0.3s ease;
+            animation: audioButtonGlow 2s ease-in-out infinite alternate;
+            will-change: transform, box-shadow;
+        }
+
+        @keyframes audioButtonGlow {
+            0% { 
+                box-shadow: 
+                    0 8px 20px rgba(255,181,0,0.4),
+                    0 0 30px rgba(255,215,0,0.6);
+                transform: scale(1);
+            }
+            100% { 
+                box-shadow: 
+                    0 12px 30px rgba(255,181,0,0.7),
+                    0 0 50px rgba(255,215,0,0.9);
+                transform: scale(1.05);
+            }
         }
 
         .audio-control:hover {
-            transform: scale(1.1);
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        .audio-control.muted {
+            background: linear-gradient(145deg, #666 0%, #444 100%);
+            color: #888;
+            animation: none;
         }
 
         .slot-machine-container {
@@ -139,7 +170,6 @@
             width: 300px;
             font-family: 'Orbitron', monospace;
             animation: headerGlow 3s ease-in-out infinite alternate;
-            will-change: box-shadow;
         }
 
         @keyframes headerGlow {
@@ -162,9 +192,10 @@
             font-family: 'Exo 2', sans-serif;
         }
 
+        /* PERFECT REEL ALIGNMENT */
         .reels-overlay {
             position: absolute;
-            top: 315px;
+            top: 310px; /* OPTIMALLY POSITIONED */
             left: 50%;
             transform: translateX(-50%);
             width: 220px;
@@ -182,6 +213,13 @@
             overflow: hidden;
             border-radius: 8px;
             background: transparent;
+            box-shadow: 0 0 20px rgba(255,215,0,0.3);
+            animation: reelGlow 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes reelGlow {
+            0% { box-shadow: 0 0 20px rgba(255,215,0,0.3); }
+            100% { box-shadow: 0 0 35px rgba(255,215,0,0.6); }
         }
 
         .reel-window:first-child {
@@ -200,7 +238,7 @@
         }
 
         .reel-strip.spinning {
-            animation: reelSpin 0.06s linear infinite;
+            animation: reelSpin 0.05s linear infinite;
         }
 
         @keyframes reelSpin {
@@ -227,11 +265,10 @@
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             will-change: transform, filter;
             backface-visibility: hidden;
-            -webkit-font-smoothing: antialiased;
         }
 
         .symbol.winning img {
-            filter: brightness(1.6) contrast(1.7) drop-shadow(0 0 20px #ffd700);
+            filter: brightness(1.6) contrast(1.7) drop-shadow(0 0 25px #ffd700);
             transform: scale(1.2);
             animation: symbolWin 0.3s ease-in-out infinite alternate;
         }
@@ -241,7 +278,7 @@
             100% { transform: scale(1.25); }
         }
 
-        /* FIXED SPIN BUTTON POSITIONING */
+        /* ENHANCED SPIN BUTTON */
         .spin-button-container {
             position: absolute;
             bottom: 150px;
@@ -269,8 +306,24 @@
             border: 3px solid rgba(255,255,255,0.4);
             animation: buttonPulse 2s ease-in-out infinite;
             will-change: transform, box-shadow;
-            backface-visibility: hidden;
-            -webkit-font-smoothing: antialiased;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .spin-button:before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -100%;
+            width: 100%;
+            height: calc(100% + 4px);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+            animation: shimmer 3s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
         }
 
         @keyframes buttonPulse {
@@ -289,16 +342,11 @@
             box-shadow: 0 20px 50px rgba(255,181,0,0.8), 0 0 100px rgba(255,215,0,1);
         }
 
-        .spin-button:active {
-            transform: translateY(-1px) scale(1.02);
-        }
-
         .spin-button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
             background: linear-gradient(145deg, #888 0%, #666 100%);
             animation: none;
-            transform: none;
         }
 
         .status-overlay {
@@ -339,14 +387,9 @@
             box-shadow: 0 6px 18px rgba(0,0,0,0.4);
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 10;
-            will-change: transform;
         }
 
-        .details-button:hover {
-            transform: translateX(-50%) translateY(-2px) scale(1.05);
-        }
-
-        /* OPTIMIZED GOLDEN CARD - NO LAG */
+        /* GOLDEN CARD */
         .golden-card {
             position: absolute;
             top: 50%;
@@ -367,8 +410,6 @@
             opacity: 0;
             transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             will-change: transform, opacity;
-            backface-visibility: hidden;
-            -webkit-font-smoothing: antialiased;
         }
 
         .golden-card.show {
@@ -389,7 +430,6 @@
             margin-bottom: 15px;
             text-shadow: 0 0 30px rgba(255,215,0,1);
             animation: headerShimmer 2s ease-in-out infinite alternate;
-            will-change: text-shadow;
         }
 
         @keyframes headerShimmer {
@@ -404,7 +444,6 @@
             padding: 20px;
             margin-bottom: 20px;
             width: 320px;
-            box-shadow: inset 0 4px 12px rgba(0,0,0,0.4);
         }
 
         .golden-text {
@@ -415,7 +454,6 @@
             text-shadow: 0 0 15px rgba(255,215,0,1);
             margin-bottom: 10px;
             animation: textGlow 2s ease-in-out infinite alternate;
-            will-change: text-shadow;
         }
 
         @keyframes textGlow {
@@ -445,34 +483,9 @@
             text-transform: uppercase;
             text-shadow: 0 0 12px rgba(255,215,0,0.9);
             border: 3px solid #a0522d;
-            will-change: transform;
         }
 
-        .golden-card-close:hover {
-            transform: translateY(-3px) scale(1.1);
-        }
-
-        /* PARTICLE ANIMATIONS - OPTIMIZED */
-        .particle {
-            position: absolute;
-            pointer-events: none;
-            border-radius: 50%;
-            animation: particleExplode 1.5s ease-out forwards;
-            will-change: transform, opacity;
-        }
-
-        @keyframes particleExplode {
-            0% {
-                opacity: 1;
-                transform: translateY(0) scale(1) rotate(0deg);
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(-200px) scale(0.3) rotate(180deg);
-            }
-        }
-
-        /* MOBILE RESPONSIVE - FIXED POSITIONING */
+        /* MOBILE RESPONSIVE */
         @media (max-width: 768px) {
             .slot-machine-container {
                 width: 350px;
@@ -483,31 +496,11 @@
             #customerEmail {
                 width: 220px;
                 font-size: 11px;
-                padding: 6px 10px;
-            }
-            
-            .audio-control {
-                width: 45px;
-                height: 45px;
-                font-size: 18px;
-            }
-            
-            .header-text {
-                width: 280px;
-                padding: 10px 16px;
-            }
-            
-            .header-text h3 {
-                font-size: 10px;
-            }
-            
-            .header-text p {
-                font-size: 9px;
             }
             
             .reels-overlay {
                 width: 200px;
-                top: 280px;
+                top: 275px;
             }
             
             .reel-window {
@@ -529,99 +522,19 @@
                 height: 46px;
             }
             
-            /* FIXED MOBILE SPIN BUTTON POSITIONING */
             .spin-button-container {
-                position: absolute !important;
-                bottom: 120px !important;
-                left: 50% !important;
-                transform: translateX(-50%) !important;
-                z-index: 10 !important;
+                bottom: 120px;
             }
             
             .spin-button {
-                width: 140px !important;
-                height: 38px !important;
-                font-size: 7px !important;
-                letter-spacing: 0.5px;
-                padding: 0;
-                margin: 0;
-                position: relative;
-                top: 0;
-            }
-            
-            .status-overlay {
-                bottom: 70px;
-            }
-            
-            .spins-left {
+                width: 140px;
+                height: 38px;
                 font-size: 7px;
-                padding: 6px 12px;
             }
             
-            .details-button {
-                font-size: 7px;
-                padding: 6px 15px;
-                bottom: 30px;
-            }
-            
-            /* OPTIMIZED MOBILE GOLDEN CARD */
             .golden-card {
-                width: 320px !important;
-                height: 280px !important;
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-                animation-duration: 1.5s !important;
-            }
-            
-            .prize-textbox {
-                width: 280px;
-                padding: 16px;
-            }
-            
-            .eureka-header {
-                font-size: 18px;
-                margin-bottom: 12px;
-            }
-            
-            .golden-text {
-                font-size: 11px;
-            }
-            
-            .golden-subtitle {
-                font-size: 9px;
-            }
-            
-            .golden-card-close {
-                font-size: 9px;
-                padding: 10px 25px;
-            }
-        }
-
-        /* EXTRA SMALL SCREENS */
-        @media (max-width: 480px) {
-            .slot-machine-container {
                 width: 320px;
-                height: 480px;
-                transform: scale(0.9);
-            }
-            
-            .spin-button-container {
-                bottom: 100px !important;
-            }
-            
-            .spin-button {
-                width: 120px !important;
-                height: 35px !important;
-                font-size: 6px !important;
-            }
-            
-            .golden-card {
-                width: 290px !important;
-                height: 250px !important;
-            }
-            
-            .prize-textbox {
-                width: 250px;
-                padding: 14px;
+                height: 280px;
             }
         }
     </style>
@@ -629,12 +542,10 @@
 <body>
     <div class="arcade-background"></div>
 
-    <!-- EMAIL INPUT -->
     <div class="email-container">
         <input type="email" id="customerEmail" placeholder="Enter your email for prize delivery" required>
     </div>
 
-    <!-- AUDIO CONTROL -->
     <button class="audio-control" id="audioControl">🔊</button>
 
     <div class="slot-machine-container">
@@ -673,7 +584,6 @@
             ⓘ details
         </button>
 
-        <!-- OPTIMIZED GOLDEN PRIZE CARD -->
         <div class="golden-card" id="goldenCard">
             <div class="eureka-header">🎉 EUREKA! 🎉</div>
             <div class="prize-textbox">
@@ -685,14 +595,327 @@
     </div>
 
     <script>
+        // AUTO-PLAY HEAVENLY AUDIO SYSTEM WITH METALLIC COIN SOUNDS
+        class AutoPlayHeavenlyAudio {
+            constructor() {
+                this.audioContext = null;
+                this.backgroundGain = null;
+                this.masterGain = null;
+                this.isPlaying = false;
+                this.isMuted = false;
+                this.backgroundOscillators = [];
+                this.init();
+            }
+
+            async init() {
+                try {
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    this.masterGain = this.audioContext.createGain();
+                    this.masterGain.connect(this.audioContext.destination);
+                    this.masterGain.gain.setValueAtTime(0.25, this.audioContext.currentTime);
+                    
+                    this.backgroundGain = this.audioContext.createGain();
+                    this.backgroundGain.connect(this.masterGain);
+                    this.backgroundGain.gain.setValueAtTime(0.06, this.audioContext.currentTime);
+                    
+                    // AUTO-START BACKGROUND MUSIC IMMEDIATELY
+                    this.startHeavenlyMusic();
+                } catch (error) {
+                    console.log('Audio not supported');
+                }
+            }
+
+            // HEAVENLY BACKGROUND MUSIC - AUTO-PLAYING
+            startHeavenlyMusic() {
+                if (!this.audioContext || this.isPlaying || this.isMuted) return;
+                this.isPlaying = true;
+                
+                console.log('🎵 Starting heavenly background music...');
+                
+                // Create continuous heavenly ambient pad
+                const createHeavenlyPad = () => {
+                    // Beautiful harmonic progression - Am7 to Fmaj7 to Cmaj7 to Gmaj7
+                    const chordProgression = [
+                        [220, 264, 330, 392],  // Am7
+                        [174, 220, 262, 330],  // Fmaj7
+                        [130, 165, 196, 247],  // Cmaj7
+                        [196, 247, 294, 370]   // Gmaj7
+                    ];
+                    
+                    let chordIndex = 0;
+                    
+                    const playChord = () => {
+                        if (this.isMuted) return;
+                        
+                        const currentChord = chordProgression[chordIndex % chordProgression.length];
+                        
+                        currentChord.forEach((freq, noteIndex) => {
+                            const osc = this.audioContext.createOscillator();
+                            const gain = this.audioContext.createGain();
+                            const filter = this.audioContext.createBiquadFilter();
+                            
+                            // Create ethereal reverb effect
+                            const delay = this.audioContext.createDelay();
+                            const delayGain = this.audioContext.createGain();
+                            const feedback = this.audioContext.createGain();
+                            
+                            osc.connect(filter);
+                            filter.connect(gain);
+                            gain.connect(this.backgroundGain);
+                            
+                            // Reverb chain
+                            gain.connect(delay);
+                            delay.connect(delayGain);
+                            delayGain.connect(feedback);
+                            feedback.connect(delay);
+                            delayGain.connect(this.backgroundGain);
+                            
+                            osc.frequency.setValueAtTime(freq, this.audioContext.currentTime);
+                            osc.type = 'sine';
+                            
+                            filter.type = 'lowpass';
+                            filter.frequency.setValueAtTime(800 + noteIndex * 200, this.audioContext.currentTime);
+                            filter.Q.setValueAtTime(1.5, this.audioContext.currentTime);
+                            
+                            delay.delayTime.setValueAtTime(0.4, this.audioContext.currentTime);
+                            delayGain.gain.setValueAtTime(0.15, this.audioContext.currentTime);
+                            feedback.gain.gain.setValueAtTime(0.3, this.audioContext.currentTime);
+                            
+                            // Gentle fade in
+                            gain.gain.setValueAtTime(0, this.audioContext.currentTime);
+                            gain.gain.linearRampToValueAtTime(0.02 + noteIndex * 0.003, this.audioContext.currentTime + 1);
+                            gain.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + 7);
+                            
+                            osc.start();
+                            osc.stop(this.audioContext.currentTime + 8);
+                            
+                            this.backgroundOscillators.push(osc);
+                        });
+                        
+                        chordIndex++;
+                        
+                        // Continue the heavenly progression
+                        if (!this.isMuted) {
+                            setTimeout(playChord, 6000); // New chord every 6 seconds
+                        }
+                    };
+                    
+                    playChord();
+                    
+                    // Add occasional ethereal bells
+                    const addEtherealBells = () => {
+                        if (this.isMuted) return;
+                        
+                        const bellFreqs = [1046, 1318, 1568, 2093]; // High C major
+                        const randomBell = bellFreqs[Math.floor(Math.random() * bellFreqs.length)];
+                        
+                        const bell = this.audioContext.createOscillator();
+                        const bellGain = this.audioContext.createGain();
+                        const bellFilter = this.audioContext.createBiquadFilter();
+                        
+                        bell.connect(bellFilter);
+                        bellFilter.connect(bellGain);
+                        bellGain.connect(this.backgroundGain);
+                        
+                        bell.frequency.setValueAtTime(randomBell, this.audioContext.currentTime);
+                        bell.type = 'sine';
+                        
+                        bellFilter.type = 'lowpass';
+                        bellFilter.frequency.setValueAtTime(randomBell * 2, this.audioContext.currentTime);
+                        bellFilter.Q.setValueAtTime(2, this.audioContext.currentTime);
+                        
+                        bellGain.gain.setValueAtTime(0.008, this.audioContext.currentTime);
+                        bellGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 3);
+                        
+                        bell.start();
+                        bell.stop(this.audioContext.currentTime + 3);
+                        
+                        // Random intervals for ethereal feeling
+                        if (!this.isMuted) {
+                            setTimeout(addEtherealBells, 8000 + Math.random() * 12000);
+                        }
+                    };
+                    
+                    setTimeout(addEtherealBells, 4000);
+                };
+                
+                createHeavenlyPad();
+            }
+
+            // REALISTIC METALLIC COIN SOUNDS
+            playMetallicCoinSpin() {
+                if (!this.audioContext || this.isMuted) return;
+                
+                const currentTime = this.audioContext.currentTime;
+                
+                // Create realistic coin cascade sound
+                const createCoinCascade = () => {
+                    for (let i = 0; i < 12; i++) {
+                        setTimeout(() => {
+                            // Individual coin clink
+                            const coinOsc = this.audioContext.createOscillator();
+                            const coinGain = this.audioContext.createGain();
+                            const coinFilter = this.audioContext.createBiquadFilter();
+                            const noiseGain = this.audioContext.createGain();
+                            
+                            coinOsc.connect(coinFilter);
+                            coinFilter.connect(coinGain);
+                            coinGain.connect(this.masterGain);
+                            
+                            // Metallic frequency with slight randomness
+                            const baseFreq = 800 + Math.random() * 400;
+                            coinOsc.frequency.setValueAtTime(baseFreq, this.audioContext.currentTime);
+                            coinOsc.frequency.exponentialRampToValueAtTime(baseFreq * 0.7, this.audioContext.currentTime + 0.1);
+                            coinOsc.type = 'triangle';
+                            
+                            coinFilter.type = 'bandpass';
+                            coinFilter.frequency.setValueAtTime(baseFreq, this.audioContext.currentTime);
+                            coinFilter.Q.setValueAtTime(8, this.audioContext.currentTime);
+                            
+                            coinGain.gain.setValueAtTime(0.15, this.audioContext.currentTime);
+                            coinGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.2);
+                            
+                            coinOsc.start();
+                            coinOsc.stop(this.audioContext.currentTime + 0.2);
+                            
+                            // Add metallic ping
+                            const ping = this.audioContext.createOscillator();
+                            const pingGain = this.audioContext.createGain();
+                            ping.connect(pingGain);
+                            pingGain.connect(this.masterGain);
+                            
+                            ping.frequency.setValueAtTime(2000 + Math.random() * 1000, this.audioContext.currentTime);
+                            ping.type = 'sine';
+                            pingGain.gain.setValueAtTime(0.08, this.audioContext.currentTime);
+                            pingGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.1);
+                            
+                            ping.start();
+                            ping.stop(this.audioContext.currentTime + 0.1);
+                            
+                        }, i * 60 + Math.random() * 30); // Slight randomness in timing
+                    }
+                };
+                
+                createCoinCascade();
+                
+                // Add deeper mechanical reel sound
+                const reelOsc = this.audioContext.createOscillator();
+                const reelGain = this.audioContext.createGain();
+                const reelFilter = this.audioContext.createBiquadFilter();
+                
+                reelOsc.connect(reelFilter);
+                reelFilter.connect(reelGain);
+                reelGain.connect(this.masterGain);
+                
+                reelOsc.frequency.setValueAtTime(80, currentTime);
+                reelOsc.frequency.exponentialRampToValueAtTime(40, currentTime + 1.5);
+                reelOsc.type = 'sawtooth';
+                
+                reelFilter.type = 'lowpass';
+                reelFilter.frequency.setValueAtTime(200, currentTime);
+                reelFilter.frequency.exponentialRampToValueAtTime(80, currentTime + 1.5);
+                
+                reelGain.gain.setValueAtTime(0.1, currentTime);
+                reelGain.gain.exponentialRampToValueAtTime(0.001, currentTime + 1.5);
+                
+                reelOsc.start(currentTime);
+                reelOsc.stop(currentTime + 1.5);
+            }
+
+            playWinSound() {
+                if (!this.audioContext || this.isMuted) return;
+                
+                // Coin jackpot sound
+                for (let i = 0; i < 20; i++) {
+                    setTimeout(() => {
+                        const coin = this.audioContext.createOscillator();
+                        const coinGain = this.audioContext.createGain();
+                        const coinFilter = this.audioContext.createBiquadFilter();
+                        
+                        coin.connect(coinFilter);
+                        coinFilter.connect(coinGain);
+                        coinGain.connect(this.masterGain);
+                        
+                        const freq = 600 + i * 50 + Math.random() * 200;
+                        coin.frequency.setValueAtTime(freq, this.audioContext.currentTime);
+                        coin.type = 'triangle';
+                        
+                        coinFilter.type = 'bandpass';
+                        coinFilter.frequency.setValueAtTime(freq, this.audioContext.currentTime);
+                        coinFilter.Q.setValueAtTime(6, this.audioContext.currentTime);
+                        
+                        coinGain.gain.setValueAtTime(0.1, this.audioContext.currentTime);
+                        coinGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.3);
+                        
+                        coin.start();
+                        coin.stop(this.audioContext.currentTime + 0.3);
+                    }, i * 40);
+                }
+            }
+
+            playStopSound() {
+                if (!this.audioContext || this.isMuted) return;
+                
+                // Single coin drop
+                const coin = this.audioContext.createOscillator();
+                const coinGain = this.audioContext.createGain();
+                const coinFilter = this.audioContext.createBiquadFilter();
+                
+                coin.connect(coinFilter);
+                coinFilter.connect(coinGain);
+                coinGain.connect(this.masterGain);
+                
+                coin.frequency.setValueAtTime(400, this.audioContext.currentTime);
+                coin.frequency.exponentialRampToValueAtTime(200, this.audioContext.currentTime + 0.2);
+                coin.type = 'triangle';
+                
+                coinFilter.type = 'bandpass';
+                coinFilter.frequency.setValueAtTime(400, this.audioContext.currentTime);
+                coinFilter.Q.setValueAtTime(5, this.audioContext.currentTime);
+                
+                coinGain.gain.setValueAtTime(0.12, this.audioContext.currentTime);
+                coinGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.2);
+                
+                coin.start();
+                coin.stop(this.audioContext.currentTime + 0.2);
+            }
+
+            toggleMute() {
+                this.isMuted = !this.isMuted;
+                
+                if (this.isMuted) {
+                    this.masterGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.2);
+                    this.stopBackgroundMusic();
+                } else {
+                    this.masterGain.gain.exponentialRampToValueAtTime(0.25, this.audioContext.currentTime + 0.2);
+                    this.isPlaying = false;
+                    setTimeout(() => this.startHeavenlyMusic(), 300);
+                }
+                
+                return this.isMuted;
+            }
+
+            stopBackgroundMusic() {
+                this.backgroundOscillators.forEach(osc => {
+                    try {
+                        osc.stop();
+                    } catch (e) {
+                        // Already stopped
+                    }
+                });
+                this.backgroundOscillators = [];
+                this.isPlaying = false;
+            }
+        }
+
+        // Initialize auto-play audio system
+        const audioSystem = new AutoPlayHeavenlyAudio();
+
         // GOOGLE SHEETS INTEGRATION
         const GOOGLE_SHEETS_WEBHOOK = 'https://slotmachine-cms.netlify.app/.netlify/functions/allocate-prize';
 
-        // Prize allocation function
         async function allocatePrize(customerEmail, orderValue) {
             try {
-                console.log('🎯 Allocating prize for:', customerEmail, 'Order Value:', orderValue);
-                
                 const postData = {
                     customerEmail: customerEmail || 'anonymous@example.com',
                     orderValue: orderValue || 4999,
@@ -707,14 +930,11 @@
                     body: JSON.stringify(postData)
                 });
 
-                console.log('📡 Response status:', response.status);
-                
                 if (!response.ok) {
                     throw new Error(`Server error: ${response.status} ${response.statusText}`);
                 }
 
                 const data = await response.json();
-                console.log('📦 Prize data received:', data);
                 
                 if (data.success) {
                     return { 
@@ -730,7 +950,6 @@
                     throw new Error(data.message || 'Unknown allocation error');
                 }
             } catch (err) {
-                console.error('❌ Prize allocation failed:', err);
                 return { 
                     success: false, 
                     message: err.message,
@@ -763,7 +982,6 @@
         let spinning = false;
         let hasSpun = false;
 
-        // Initialize reels
         function initializeReels() {
             for (let i = 1; i <= 3; i++) {
                 const strip = document.getElementById(`reel${i}`);
@@ -789,7 +1007,6 @@
             }
         }
 
-        // Show golden card with prize - OPTIMIZED
         function showGoldenCard(prize) {
             requestAnimationFrame(() => {
                 const card = document.getElementById('goldenCard');
@@ -805,21 +1022,22 @@
         }
 
         function closeGoldenCard() {
-            const card = document.getElementById('goldenCard');
-            card.classList.remove('show');
+            document.getElementById('goldenCard').classList.remove('show');
         }
 
-        // OPTIMIZED particle system - reduced count for performance
         function createWinParticles(count) {
             for (let i = 0; i < count; i++) {
                 setTimeout(() => {
                     const particle = document.createElement('div');
-                    particle.className = 'particle';
+                    particle.style.position = 'absolute';
                     particle.style.width = (Math.random() * 6 + 3) + 'px';
                     particle.style.height = particle.style.width;
                     particle.style.background = `radial-gradient(circle, #ffd700, #ffb300)`;
+                    particle.style.borderRadius = '50%';
                     particle.style.left = (Math.random() * window.innerWidth) + 'px';
                     particle.style.top = (window.innerHeight - 100) + 'px';
+                    particle.style.pointerEvents = 'none';
+                    particle.style.animation = 'particleExplode 1.5s ease-out forwards';
                     
                     document.body.appendChild(particle);
                     setTimeout(() => particle.remove(), 1500);
@@ -827,11 +1045,9 @@
             }
         }
 
-        // OPTIMIZED spin function
         async function spinReels() {
             if (spinning || hasSpun) return;
             
-            // Validate email
             const emailInput = document.getElementById('customerEmail');
             const customerEmail = emailInput.value.trim();
             
@@ -850,16 +1066,17 @@
             
             document.getElementById('spinsLeft').textContent = '0';
             
-            // OPTIMIZED reel animation
-            const results = [];
-            const spinDurations = [1800, 2200, 2600]; // Reduced for mobile performance
+            // PLAY METALLIC COIN SPIN SOUND
+            audioSystem.playMetallicCoinSpin();
             
-            // Start all reels spinning
+            const results = [];
+            const spinDurations = [1800, 2200, 2600];
+            
+            // Start spinning animation
             for (let i = 1; i <= 3; i++) {
                 document.getElementById(`reel${i}`).classList.add('spinning');
             }
             
-            // Stop reels one by one
             spinDurations.forEach((duration, index) => {
                 setTimeout(() => {
                     const strip = document.getElementById(`reel${index + 1}`);
@@ -874,7 +1091,8 @@
                     
                     strip.style.transform = `translateY(-${translateDistance}px)`;
                     
-                    // When all reels stopped, allocate prize
+                    audioSystem.playStopSound();
+                    
                     if (results.length === 3) {
                         setTimeout(() => processPrize(customerEmail), 600);
                     }
@@ -882,50 +1100,64 @@
             });
         }
 
-        // Process prize allocation
         async function processPrize(customerEmail) {
-            console.log('🎲 Processing prize for:', customerEmail);
-            
             const spinBtn = document.getElementById('spinBtn');
             spinBtn.textContent = 'PROCESSING...';
             
-            // Allocate prize from Google Sheets
             const orderValue = 4999;
             const allocationResult = await allocatePrize(customerEmail, orderValue);
             
             if (allocationResult.success) {
-                console.log('✅ Prize allocated successfully:', allocationResult.prize);
                 showGoldenCard(allocationResult.prize);
+                audioSystem.playWinSound();
             } else {
-                console.log('⚠️ Using fallback prize:', allocationResult.fallback);
                 showGoldenCard(allocationResult.fallback);
+                audioSystem.playWinSound();
             }
             
             spinBtn.textContent = 'COMPLETED';
             spinning = false;
         }
 
+        // Audio control
+        function toggleAudio() {
+            const button = document.getElementById('audioControl');
+            const isMuted = audioSystem.toggleMute();
+            
+            button.textContent = isMuted ? '🔇' : '🔊';
+            button.classList.toggle('muted', isMuted);
+        }
+
         // Event listeners
         document.getElementById('spinBtn').addEventListener('click', spinReels);
         document.getElementById('closeCard').addEventListener('click', closeGoldenCard);
+        document.getElementById('audioControl').addEventListener('click', toggleAudio);
         
         document.getElementById('detailsBtn').addEventListener('click', () => {
             const details = document.createElement('div');
             details.innerHTML = `
                 <div style="position: fixed; top: 20px; left: 20px; right: 20px; background: rgba(255,255,255,0.95); padding: 20px; border-radius: 15px; border: 3px solid #ffd700; z-index: 999; text-align: center; color: #333; font-weight: 600; box-shadow: 0 20px 60px rgba(0,0,0,0.4);">
-                    <h3 style="color: #e65100; margin-bottom: 10px; font-family: 'Press Start 2P', monospace; font-size: 12px;">🎰 PB DAYS PREMIUM 🎰</h3>
-                    <p style="font-family: 'Orbitron', monospace;">Enter your email and spin to win real prizes!</p>
-                    <p style="margin-top: 10px; font-size: 14px;">🎯 Every spin guarantees a prize from our inventory!</p>
+                    <h3 style="color: #e65100; margin-bottom: 10px; font-family: 'Press Start 2P', monospace; font-size: 12px;">🎰 PB DAYS AUTO-PLAY SLOT 🎰</h3>
+                    <p style="font-family: 'Orbitron', monospace;">Heavenly music plays automatically with realistic coin sounds!</p>
+                    <p style="margin-top: 10px; font-size: 14px;">🎯 Every spin has authentic metallic coin effects!</p>
                     <button onclick="this.parentElement.parentElement.remove()" style="margin-top: 15px; background: linear-gradient(145deg, #ffd700, #ffb300); border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: bold; color: #333; font-family: 'Press Start 2P', monospace; font-size: 8px;">GOT IT!</button>
                 </div>
             `;
             document.body.appendChild(details);
         });
 
-        // Initialize on page load
+        // Initialize everything
         document.addEventListener('DOMContentLoaded', () => {
             initializeReels();
             document.getElementById('customerEmail').focus();
+            
+            // Force auto-start music after DOM loaded
+            setTimeout(() => {
+                if (audioSystem.audioContext && !audioSystem.isPlaying && !audioSystem.isMuted) {
+                    console.log('🎵 Force starting heavenly music on DOM load...');
+                    audioSystem.startHeavenlyMusic();
+                }
+            }, 500);
         });
 
         // Keyboard support
@@ -933,6 +1165,9 @@
             if (e.code === 'Space' && !spinning && !hasSpun) {
                 e.preventDefault();
                 spinReels();
+            }
+            if (e.code === 'KeyM') {
+                toggleAudio();
             }
         });
     </script>
