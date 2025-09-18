@@ -31,7 +31,7 @@
             50% { filter: brightness(1.1) hue-rotate(15deg); }
         }
         
-        /* ✅ FIXED: Email popup with Orbitron font and updated text */
+        /* FIXED: Email popup with Orbitron font and updated text */
         .email-popup {
             position: fixed;
             top: 0;
@@ -60,7 +60,7 @@
             width: 90%;
             color: #8b4513;
             box-shadow: 0 20px 60px rgba(255, 215, 0, 0.8);
-            font-family: 'Orbitron', monospace !important; /* ✅ ADDED: Orbitron font */
+            font-family: 'Orbitron', monospace !important;
         }
         
         .email-popup-content h2 {
@@ -105,7 +105,7 @@
             border: none;
             border-radius: 10px;
             cursor: pointer;
-            font-family: 'Orbitron', monospace !important; /* ✅ ADDED: Orbitron font */
+            font-family: 'Orbitron', monospace !important;
             font-size: 10px;
             font-weight: 600;
         }
@@ -135,6 +135,28 @@
             font-family: 'Orbitron', monospace !important;
             font-size: 10px;
             line-height: 1.6;
+        }
+        
+        /* ✅ ADDED: Order Again button styling */
+        .order-again-btn {
+            background: linear-gradient(145deg, #ff4b5c 0%, #ff0000 100%) !important;
+            color: white !important;
+            border: none !important;
+            padding: 12px 24px !important;
+            border-radius: 12px !important;
+            font-size: 10px !important;
+            font-family: 'Orbitron', monospace !important;
+            font-weight: 600 !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+            text-transform: uppercase !important;
+            margin: 10px !important;
+            box-shadow: 0 4px 15px rgba(255, 75, 92, 0.4) !important;
+        }
+        
+        .order-again-btn:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 6px 20px rgba(255, 75, 92, 0.6) !important;
         }
         
         /* Audio Control */
@@ -598,7 +620,7 @@
 </head>
 
 <body>
-    <!-- ✅ FIXED: Email popup with updated text and Orbitron font -->
+    <!-- FIXED: Email popup with updated text and Orbitron font -->
     <div class="email-popup" id="emailPopup">
         <div class="email-popup-content">
             <h2>🎰 Welcome to PB DAYS ARCADE! 🎉</h2>
@@ -615,6 +637,10 @@
         <div class="modal-content">
             <div id="modalMessage">Message here</div>
             <button class="modal-close" onclick="closeCustomModal()">OK</button>
+            <!-- ✅ ADDED: Order Again button container -->
+            <div id="orderAgainContainer" style="margin-top: 15px; display: none;">
+                <button class="order-again-btn" onclick="orderAgain()">ORDER AGAIN</button>
+            </div>
         </div>
     </div>
     
@@ -958,16 +984,17 @@
             }
         }
 
-        // ✅ FIXED: Using correct action name from your Google Sheets script
-        async function checkOrderIdUsage(email, orderNumber) {
+        // ✅ FIXED: Removed process.env and using correct action name from your Google Sheets script
+        async function checkOrderUsage(email, orderNumber) {
             try {
                 console.log('🔍 Checking order usage for:', orderNumber, 'by email:', email);
                 
-                const response = await fetch(process.env.GOOGLE_SHEETS_WEBHOOK || '/.netlify/functions/check-order-usage', {
+                // ✅ FIXED: Using direct webhook URL instead of process.env
+                const response = await fetch('/.netlify/functions/check-order-usage', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
-                        action: 'checkOrderIdUsage', // ✅ FIXED: Using correct action name
+                        action: 'checkOrderIdUsage', // ✅ FIXED: Using correct action name from your Google Sheets script
                         email: email,
                         orderNumber: orderNumber
                     })
@@ -995,7 +1022,7 @@
             }
         }
 
-        // FIXED: Spin function with order usage check to prevent duplicate spins
+        // ✅ FIXED: Spin function with order usage check and proper "Order Again" messaging
         async function spin() {
             if (spinning) {
                 console.log('⚠️ Spin already in progress');
@@ -1037,12 +1064,11 @@
                     }
 
                     // ✅ CRITICAL FIX: Check if order has already been used
-                    const orderUsageCheck = await checkOrderIdUsage(email, orderNumber);
+                    const orderUsageCheck = await checkOrderUsage(email, orderNumber);
                     if (orderUsageCheck && !orderUsageCheck.canSpin) {
-                        showCustomModal('This order has already been used for spinning.');
-                        spinBtn.textContent = 'ORDER USED';
-                        spinBtn.disabled = true;
-                        spinBtn.style.opacity = '0.5';
+                        // ✅ UPDATED: Show "Order Again" message and button
+                        showOrderAlreadyUsedModal();
+                        spinBtn.style.display = 'none'; // Hide spin button
                         spinning = false;
                         return;
                     }
@@ -1102,6 +1128,22 @@
             } finally {
                 spinning = false;
             }
+        }
+
+        // ✅ ADDED: Function to show "Order Again" modal
+        function showOrderAlreadyUsedModal() {
+            const modal = document.getElementById('customModal');
+            const messageDiv = document.getElementById('modalMessage');
+            const orderAgainContainer = document.getElementById('orderAgainContainer');
+            
+            messageDiv.textContent = 'You have already spun with this order. Please place a new order to spin again!';
+            orderAgainContainer.style.display = 'block';
+            modal.style.display = 'flex';
+        }
+
+        // ✅ ADDED: Order Again function
+        function orderAgain() {
+            window.location.href = 'https://pinkblue.in';
         }
 
         async function processPrize(email, customerData) {
@@ -1204,6 +1246,7 @@
             spinBtn.disabled = false;
             spinBtn.textContent = 'SPIN';
             spinBtn.style.opacity = '1';
+            spinBtn.style.display = 'block'; // ✅ ADDED: Show button again
             spinBtn.style.background = 'linear-gradient(145deg, #ffd700 0%, #ffed4e 30%, #b8860b 100%)';
             spinBtn.classList.remove('spinning-state', 'prize-won');
         }
@@ -1214,11 +1257,13 @@
 
         function showCustomModal(message) {
             document.getElementById('modalMessage').textContent = message;
+            document.getElementById('orderAgainContainer').style.display = 'none'; // ✅ ADDED: Hide order again button for regular modals
             document.getElementById('customModal').style.display = 'flex';
         }
 
         function closeCustomModal() {
             document.getElementById('customModal').style.display = 'none';
+            document.getElementById('orderAgainContainer').style.display = 'none'; // ✅ ADDED: Hide order again button when closing
         }
 
         function returnToHome() {
@@ -1233,7 +1278,7 @@
 
         // Initialize everything
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('🎰 FINAL PB DAYS ARCADE - Fixed order usage check with correct action!');
+            console.log('🎰 FINAL PB DAYS ARCADE - Fixed process.env error and added Order Again functionality!');
             
             initializeReels();
             
