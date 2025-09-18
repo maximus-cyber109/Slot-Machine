@@ -110,7 +110,70 @@
             font-weight: 600;
         }
         
-        /* ✅ FIXED: Custom Modal with bigger text and no OK button for order used */
+        /* ✅ FIXED: Order Again popup right in email popup */
+        .order-again-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10001;
+            backdrop-filter: blur(10px);
+        }
+        
+        .order-again-content {
+            background: linear-gradient(145deg, #ff4b5c 0%, #ff0000 100%);
+            padding: 50px;
+            border-radius: 20px;
+            border: 6px solid #fff;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            color: white;
+            box-shadow: 0 20px 60px rgba(255, 75, 92, 0.8);
+            font-family: 'Orbitron', monospace !important;
+        }
+        
+        .order-again-content h2 {
+            font-family: 'Orbitron', monospace !important;
+            font-weight: 700;
+            font-size: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .order-again-content p {
+            font-family: 'Orbitron', monospace !important;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        
+        .order-again-btn {
+            background: white !important;
+            color: #ff0000 !important;
+            border: none !important;
+            padding: 15px 30px !important;
+            border-radius: 12px !important;
+            font-size: 14px !important;
+            font-family: 'Orbitron', monospace !important;
+            font-weight: 700 !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+            text-transform: uppercase !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+        }
+        
+        .order-again-btn:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4) !important;
+        }
+        
+        /* Custom Modal */
         .custom-modal {
             position: fixed;
             top: 0;
@@ -126,16 +189,16 @@
         
         .modal-content {
             background: linear-gradient(145deg, #ffd700 0%, #ffed4e 100%);
-            padding: 40px; /* ✅ Increased padding */
+            padding: 40px;
             border-radius: 15px;
             border: 4px solid #8b4513;
             text-align: center;
-            max-width: 500px; /* ✅ Increased max-width */
+            max-width: 500px;
             width: 90%;
             color: #8b4513;
             font-family: 'Orbitron', monospace !important;
-            font-size: 14px !important; /* ✅ BIGGER TEXT */
-            line-height: 1.8; /* ✅ Better line height */
+            font-size: 14px !important;
+            line-height: 1.8;
             box-shadow: 0 20px 60px rgba(255, 215, 0, 0.8);
         }
         
@@ -143,35 +206,13 @@
             background: #8b4513;
             color: #ffd700;
             border: none;
-            padding: 15px 30px; /* ✅ Bigger button */
+            padding: 15px 30px;
             border-radius: 10px;
-            font-size: 12px !important; /* ✅ Bigger button text */
+            font-size: 12px !important;
             font-family: 'Orbitron', monospace !important;
             font-weight: 600;
             cursor: pointer;
             margin-top: 20px;
-        }
-        
-        /* ✅ UPDATED: Order Again button styling */
-        .order-again-btn {
-            background: linear-gradient(145deg, #ff4b5c 0%, #ff0000 100%) !important;
-            color: white !important;
-            border: none !important;
-            padding: 15px 30px !important; /* ✅ Bigger button */
-            border-radius: 12px !important;
-            font-size: 12px !important; /* ✅ Bigger button text */
-            font-family: 'Orbitron', monospace !important;
-            font-weight: 600 !important;
-            cursor: pointer !important;
-            transition: all 0.2s ease !important;
-            text-transform: uppercase !important;
-            margin: 15px !important; /* ✅ More margin */
-            box-shadow: 0 4px 15px rgba(255, 75, 92, 0.4) !important;
-        }
-        
-        .order-again-btn:hover {
-            transform: translateY(-2px) !important;
-            box-shadow: 0 6px 20px rgba(255, 75, 92, 0.6) !important;
         }
         
         /* Audio Control */
@@ -428,15 +469,15 @@
             backdrop-filter: blur(15px);
         }
         
-        /* ✅ FIXED: Winner Card with proper mobile sizing */
+        /* Winner Card */
         .golden-card {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) scale(0);
             width: 380px;
-            height: auto; /* ✅ CHANGED: Auto height instead of fixed */
-            max-height: 90vh; /* ✅ ADDED: Max height constraint for mobile */
+            height: auto;
+            max-height: 90vh;
             background: #000000 !important;
             border-radius: 25px;
             border: 8px solid #FFD700;
@@ -449,8 +490,8 @@
             text-align: center;
             opacity: 0;
             transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            padding: 20px 15px 20px 15px; /* ✅ ADJUSTED: Better padding */
-            overflow-y: auto; /* ✅ ADDED: Allow scrolling if content is too tall */
+            padding: 20px 15px 20px 15px;
+            overflow-y: auto;
         }
         
         .golden-card.show {
@@ -465,14 +506,14 @@
         }
         
         .eureka-header {
-            font-size: 22px !important; /* ✅ ADJUSTED: Slightly smaller for mobile */
+            font-size: 22px !important;
             font-family: 'Orbitron', monospace !important;
             font-weight: 700;
             color: #FFFFFF !important;
-            margin-bottom: 15px; /* ✅ INCREASED: More margin */
+            margin-bottom: 15px;
             text-shadow: 0 0 6px rgba(255, 255, 255, 0.4), 0 0 10px rgba(255, 255, 255, 0.2) !important;
             animation: headerShimmer 2s ease-in-out infinite alternate;
-            line-height: 1.2; /* ✅ ADJUSTED: Better line height */
+            line-height: 1.2;
             white-space: nowrap;
             max-width: 100%;
             overflow: visible;
@@ -486,11 +527,11 @@
         }
         
         .prize-image {
-            max-width: 90% !important; /* ✅ REDUCED: Slightly smaller for mobile */
-            max-height: 140px !important; /* ✅ REDUCED: Smaller height for mobile */
+            max-width: 90% !important;
+            max-height: 140px !important;
             width: auto !important;
             height: auto !important;
-            margin: 15px auto; /* ✅ INCREASED: More margin */
+            margin: 15px auto;
             border-radius: 15px;
             border: none !important;
             object-fit: contain;
@@ -516,38 +557,37 @@
             background: transparent !important;
             border: none !important;
             border-radius: 15px;
-            padding: 5px 10px; /* ✅ ADJUSTED: Better padding for mobile */
-            margin: 8px 0; /* ✅ INCREASED: More margin between text elements */
+            padding: 5px 10px;
+            margin: 8px 0;
             color: #FFFFFF !important;
             font-family: 'Orbitron', monospace !important;
             font-weight: 600 !important;
-            font-size: 14px !important; /* ✅ ADJUSTED: Good size for mobile */
+            font-size: 14px !important;
             text-shadow: 0 0 6px rgba(255, 255, 255, 0.4) !important;
             max-width: 100%;
-            line-height: 1.4; /* ✅ IMPROVED: Better line height */
+            line-height: 1.4;
             word-wrap: break-word;
             text-align: center;
         }
         
         #prizeTitle {
-            font-size: 16px !important; /* ✅ ADJUSTED: Good size for mobile */
+            font-size: 16px !important;
             font-weight: 600 !important;
-            margin: 12px 0 !important; /* ✅ INCREASED: More margin */
+            margin: 12px 0 !important;
         }
         
         #prizeWorth {
-            font-size: 18px !important; /* ✅ ADJUSTED: Good size for mobile */
+            font-size: 18px !important;
             font-weight: 700 !important;
-            margin: 15px 0 !important; /* ✅ INCREASED: More margin */
+            margin: 15px 0 !important;
         }
         
-        /* ✅ FIXED: Winner buttons with proper mobile sizing */
         .winner-buttons {
             display: flex;
-            gap: 10px; /* ✅ INCREASED: More gap between buttons */
+            gap: 10px;
             flex-wrap: wrap;
             justify-content: center;
-            margin-top: 20px; /* ✅ INCREASED: More margin from content */
+            margin-top: 20px;
             width: 100%;
         }
         
@@ -555,15 +595,15 @@
             background: linear-gradient(145deg, #654321 0%, #5d4037 100%);
             color: #ffd700;
             border: none;
-            padding: 12px 20px; /* ✅ INCREASED: Bigger buttons for mobile */
+            padding: 12px 20px;
             border-radius: 12px;
-            font-size: 10px !important; /* ✅ INCREASED: Bigger text */
+            font-size: 10px !important;
             font-family: 'Orbitron', monospace !important;
             cursor: pointer;
             transition: all 0.2s ease;
             text-transform: uppercase;
             border: 3px solid #a0522d;
-            min-width: 120px; /* ✅ ADDED: Minimum width for buttons */
+            min-width: 120px;
         }
         
         .return-home-winner {
@@ -572,7 +612,7 @@
             border: 3px solid rgba(255,255,255,0.3);
         }
         
-        /* ✅ IMPROVED: Mobile Responsive with better sizing */
+        /* Mobile Responsive */
         @media (max-width: 768px) {
             .slot-machine-container {
                 width: 350px;
@@ -581,41 +621,41 @@
             }
             
             .golden-card {
-                width: 95vw !important; /* ✅ CHANGED: Use viewport width */
-                max-width: 350px !important; /* ✅ ADDED: Max width constraint */
+                width: 95vw !important;
+                max-width: 350px !important;
                 height: auto !important;
-                max-height: 85vh !important; /* ✅ ADJUSTED: Better max height for mobile */
-                padding: 15px 10px 15px 10px !important; /* ✅ ADJUSTED: Better padding */
+                max-height: 85vh !important;
+                padding: 15px 10px 15px 10px !important;
                 top: 50% !important;
                 left: 50% !important;
                 transform: translate(-50%, -50%) !important;
             }
             
             .eureka-header {
-                font-size: 18px !important; /* ✅ ADJUSTED: Better mobile size */
+                font-size: 18px !important;
                 margin-bottom: 12px !important;
                 line-height: 1.2 !important;
             }
             
             .prize-image {
-                max-height: 120px !important; /* ✅ ADJUSTED: Smaller for mobile */
+                max-height: 120px !important;
                 margin: 12px auto !important;
             }
             
             .prize-textbox {
-                font-size: 12px !important; /* ✅ ADJUSTED: Good readable size */
+                font-size: 12px !important;
                 padding: 4px 8px !important;
                 margin: 6px 0 !important;
                 line-height: 1.3 !important;
             }
             
             #prizeTitle {
-                font-size: 14px !important; /* ✅ ADJUSTED: Good mobile size */
+                font-size: 14px !important;
                 margin: 10px 0 !important;
             }
             
             #prizeWorth {
-                font-size: 16px !important; /* ✅ ADJUSTED: Good mobile size */
+                font-size: 16px !important;
                 margin: 12px 0 !important;
             }
             
@@ -625,7 +665,7 @@
             }
             
             .golden-card-close, .return-home-winner {
-                padding: 10px 16px !important; /* ✅ ADJUSTED: Good mobile button size */
+                padding: 10px 16px !important;
                 font-size: 9px !important;
                 min-width: 100px !important;
             }
@@ -655,21 +695,25 @@
                 width: 100%;
             }
             
-            /* ✅ ADDED: Better modal sizing for mobile */
             .modal-content {
                 width: 95% !important;
                 max-width: 400px !important;
                 padding: 30px 20px !important;
-                font-size: 16px !important; /* ✅ Even bigger text for mobile */
+                font-size: 16px !important;
+            }
+            
+            .order-again-content {
+                width: 95% !important;
+                max-width: 400px !important;
+                padding: 40px 25px !important;
             }
             
             .order-again-btn {
                 padding: 12px 25px !important;
-                font-size: 14px !important; /* ✅ Bigger button text for mobile */
+                font-size: 14px !important;
             }
         }
         
-        /* ✅ ADDED: Extra small screen adjustments */
         @media (max-width: 480px) {
             .golden-card {
                 max-height: 90vh !important;
@@ -708,14 +752,20 @@
         </div>
     </div>
     
-    <!-- ✅ FIXED: Custom Modal without OK button for order used case -->
+    <!-- ✅ FIXED: Dedicated Order Again popup -->
+    <div class="order-again-popup" id="orderAgainPopup">
+        <div class="order-again-content">
+            <h2>🚫 ORDER ALREADY USED!</h2>
+            <p>You have already spun with this order. Please place a new order to spin again and win more amazing prizes!</p>
+            <button class="order-again-btn" onclick="goToOrderPage()">🛒 ORDER AGAIN</button>
+        </div>
+    </div>
+    
+    <!-- Custom Modal -->
     <div class="custom-modal" id="customModal">
         <div class="modal-content">
             <div id="modalMessage">Message here</div>
-            <button class="modal-close" id="modalCloseBtn" onclick="closeCustomModal()">OK</button>
-            <div id="orderAgainContainer" style="margin-top: 15px; display: none;">
-                <button class="order-again-btn" onclick="orderAgain()">ORDER AGAIN</button>
-            </div>
+            <button class="modal-close" onclick="closeCustomModal()">OK</button>
         </div>
     </div>
     
@@ -953,11 +1003,10 @@
 
         const audioSystem = new AudioSystem();
 
-        // Global variables with race condition protection
+        // Global variables
         let userSession = null;
         let spinning = false;
         let userEmail = '';
-        let usedOrders = new Set(); // Client-side tracking to prevent race conditions
         
         const symbols = [
             { name: '7', image: 'https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/7.png' },
@@ -988,7 +1037,7 @@
             }
         }
 
-        // ✅ FIXED: Email validation with proper error handling
+        // ✅ CRITICAL FIX: Check order usage DURING email validation
         async function submitEmailAndStart() {
             const emailInput = document.getElementById('popupEmailInput');
             const email = emailInput.value.trim();
@@ -1008,28 +1057,63 @@
                 startButton.textContent = 'CHECKING...';
                 startButton.disabled = true;
                 
+                // ✅ STEP 1: Check if user has valid order
                 const customerData = await fetchCustomerData(email);
                 
-                startButton.textContent = originalText;
-                startButton.disabled = false;
-                
-                if (customerData && customerData.orderData) {
-                    document.getElementById('emailPopup').classList.add('hidden');
-                    initializeGameForUser(email, customerData);
-                } else {
-                    // ✅ FIXED: Show proper error message for invalid orders
+                if (!customerData || !customerData.orderData) {
                     showCustomModal('No eligible orders found from the last 2 days. Please place a new order and try again!');
-                    // ✅ FIXED: Don't hide email popup if validation fails
                     startButton.textContent = originalText;
                     startButton.disabled = false;
+                    return;
                 }
+                
+                // ✅ STEP 2: Check if order has already been used (FOR NON-TEST USERS)
+                const isOverrideUser = checkIfOverrideUser(email);
+                if (!isOverrideUser) {
+                    const orderNumber = customerData.orderData?.increment_id;
+                    
+                    if (orderNumber) {
+                        console.log('🔍 Checking if order is already used during email validation...');
+                        const orderUsageCheck = await checkOrderUsage(email, orderNumber);
+                        
+                        if (orderUsageCheck && !orderUsageCheck.canSpin) {
+                            console.log('❌ Order already used, showing Order Again popup');
+                            startButton.textContent = originalText;
+                            startButton.disabled = false;
+                            // ✅ FIXED: Show Order Again popup directly in email validation
+                            showOrderAgainPopup();
+                            return;
+                        }
+                    }
+                }
+                
+                // ✅ STEP 3: All checks passed, proceed to game
+                startButton.textContent = originalText;
+                startButton.disabled = false;
+                document.getElementById('emailPopup').classList.add('hidden');
+                initializeGameForUser(email, customerData);
+                
             } catch (error) {
                 console.error('Email submission error:', error);
-                // ✅ FIXED: Show proper error message and reset button
                 showCustomModal('Unable to check orders. Please check your internet connection and try again.');
                 startButton.textContent = originalText;
                 startButton.disabled = false;
             }
+        }
+
+        // ✅ FIXED: Show Order Again popup (no redirect to homepage)
+        function showOrderAgainPopup() {
+            console.log('🚫 Showing Order Again popup');
+            document.getElementById('orderAgainPopup').style.display = 'flex';
+            // Prevent any default behavior that might cause redirect
+            event?.preventDefault?.();
+            return false;
+        }
+
+        // ✅ FIXED: Go to order page function
+        function goToOrderPage() {
+            console.log('🛒 Redirecting to order page');
+            window.location.href = 'https://pinkblue.in';
         }
 
         function checkIfOverrideUser(email) {
@@ -1067,23 +1151,9 @@
             }
         }
 
-        // Order usage check with race condition protection
         async function checkOrderUsage(email, orderNumber) {
             try {
                 console.log('🔍 Checking order usage for:', orderNumber, 'by email:', email);
-                
-                const normalizedOrderNumber = orderNumber.replace(/^0+/, '') || '0';
-                
-                // Race condition fix: Check client-side first
-                if (usedOrders.has(normalizedOrderNumber)) {
-                    console.log('❌ Order blocked by client-side tracking:', normalizedOrderNumber);
-                    return { 
-                        success: true, 
-                        canSpin: false, 
-                        reason: 'Order already used (client-side check)',
-                        clientSideBlocked: true
-                    };
-                }
                 
                 const response = await fetch('/.netlify/functions/check-order-usage', {
                     method: 'POST',
@@ -1117,7 +1187,7 @@
             }
         }
 
-        // Spin function with proper race condition prevention
+        // ✅ SIMPLIFIED: Spin function (most order usage checks happen during email validation now)
         async function spin() {
             if (spinning) {
                 console.log('⚠️ Spin already in progress');
@@ -1149,31 +1219,6 @@
                         resetSpinButton();
                         return;
                     }
-
-                    const orderNumber = customerData.orderData?.increment_id;
-
-                    if (!orderNumber) {
-                        showCustomModal('No valid order number found.');
-                        resetSpinButton();
-                        return;
-                    }
-
-                    console.log('🔍 Checking order usage before spin...');
-                    const orderUsageCheck = await checkOrderUsage(email, orderNumber);
-                    
-                    if (orderUsageCheck && !orderUsageCheck.canSpin) {
-                        console.log('❌ Order usage check blocked spin');
-                        showOrderAlreadyUsedModal();
-                        spinBtn.style.display = 'none';
-                        spinning = false;
-                        return;
-                    }
-
-                    // Race condition fix: Mark order as used immediately (client-side)
-                    const normalizedOrderNumber = orderNumber.replace(/^0+/, '') || '0';
-                    usedOrders.add(normalizedOrderNumber);
-                    console.log('✅ Order marked as used client-side:', normalizedOrderNumber);
-
                 } else {
                     customerData = {
                         orderData: { 
@@ -1229,23 +1274,6 @@
             } finally {
                 spinning = false;
             }
-        }
-
-        // ✅ FIXED: Show order already used modal without OK button
-        function showOrderAlreadyUsedModal() {
-            const modal = document.getElementById('customModal');
-            const messageDiv = document.getElementById('modalMessage');
-            const orderAgainContainer = document.getElementById('orderAgainContainer');
-            const modalCloseBtn = document.getElementById('modalCloseBtn');
-            
-            messageDiv.textContent = 'You have already spun with this order. Please place a new order to spin again!';
-            orderAgainContainer.style.display = 'block';
-            modalCloseBtn.style.display = 'none'; // ✅ HIDE OK BUTTON
-            modal.style.display = 'flex';
-        }
-
-        function orderAgain() {
-            window.location.href = 'https://pinkblue.in';
         }
 
         async function processPrize(email, customerData) {
@@ -1357,17 +1385,13 @@
             document.getElementById('goldenCard').classList.remove('show');
         }
 
-        // ✅ FIXED: Show custom modal with proper OK button visibility
         function showCustomModal(message) {
             document.getElementById('modalMessage').textContent = message;
-            document.getElementById('orderAgainContainer').style.display = 'none';
-            document.getElementById('modalCloseBtn').style.display = 'block'; // ✅ SHOW OK BUTTON for regular modals
             document.getElementById('customModal').style.display = 'flex';
         }
 
         function closeCustomModal() {
             document.getElementById('customModal').style.display = 'none';
-            document.getElementById('orderAgainContainer').style.display = 'none';
         }
 
         function returnToHome() {
@@ -1382,7 +1406,7 @@
 
         // Initialize everything
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('🎰 FINAL PB DAYS ARCADE - All issues fixed!');
+            console.log('🎰 PB DAYS ARCADE - Order usage fixed at email validation!');
             
             initializeReels();
             
