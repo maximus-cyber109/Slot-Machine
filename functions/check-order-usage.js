@@ -1,4 +1,5 @@
 // netlify/functions/check-order-usage.js
+// ✅ Check if order ID has already been used in AllocationLog
 exports.handler = async (event, context) => {
     const headers = {
         'Access-Control-Allow-Origin': '*',
@@ -13,18 +14,32 @@ exports.handler = async (event, context) => {
     try {
         const { email, orderNumber } = JSON.parse(event.body || '{}');
         
-        // ✅ Use environment variable in Netlify function (server-side)
+        console.log('🔍 Checking order usage for:', orderNumber, 'by email:', email);
+        
+        if (!email || !orderNumber) {
+            return {
+                statusCode: 400,
+                headers,
+                body: JSON.stringify({ 
+                    success: false, 
+                    error: 'Email and order number required' 
+                })
+            };
+        }
+
+        // ✅ Check with Google Sheets if order has been used
         const response = await fetch(process.env.GOOGLE_SHEETS_WEBHOOK, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
-                action: 'checkOrderIdUsage',
+                action: 'checkOrderUsage',
                 email: email,
                 orderNumber: orderNumber
             })
         });
 
         const result = await response.json();
+        console.log('📋 Order usage check result:', result);
         
         return {
             statusCode: 200,
@@ -33,6 +48,7 @@ exports.handler = async (event, context) => {
         };
         
     } catch (error) {
+        console.error('❌ Order usage check error:', error);
         return {
             statusCode: 500,
             headers,
