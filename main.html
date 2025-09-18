@@ -31,7 +31,7 @@
             50% { filter: brightness(1.1) hue-rotate(15deg); }
         }
         
-        /* FIXED: Email popup with Orbitron font and updated text */
+        /* Email popup with Orbitron font */
         .email-popup {
             position: fixed;
             top: 0;
@@ -978,19 +978,17 @@
             }
         }
 
-        // 🔥 CRITICAL FIX: Using the EXACT action name your Google Apps Script expects
-        async function checkOrderIdUsage(email, orderNumber) {
+        // 🔥 CORS FIX: Using existing Netlify function instead of direct Google Apps Script call
+        async function checkOrderUsage(email, orderNumber) {
             try {
                 console.log('🔍 Checking order usage for:', orderNumber, 'by email:', email);
                 
-                // 🔥 FIXED: Call your Google Sheets webhook directly with the EXACT action name
-                const response = await fetch('https://script.google.com/macros/s/AKfycbwFrAVCjrKyPNLLu9sZ_Z-bsvZ3II6YoZQqKhK8qO_9u5cPbVGnKBHHOa7KVR0nR1bS/exec', {
+                // ✅ FIXED: Call through existing Netlify function to avoid CORS issues
+                const response = await fetch('/.netlify/functions/check-order-usage', {
                     method: 'POST',
-                    headers: { 
-                        'Content-Type': 'text/plain;charset=utf-8',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
-                        action: 'checkOrderIdUsage', // 🔥 EXACT action name from your doPost function
+                        action: 'checkOrderIdUsage',
                         email: email,
                         orderNumber: orderNumber
                     })
@@ -1058,8 +1056,8 @@
                         return;
                     }
 
-                    // 🔥 CRITICAL FIX: Check if order has already been used
-                    const orderUsageCheck = await checkOrderIdUsage(email, orderNumber);
+                    // ✅ FIXED: Check if order has already been used (now through Netlify function)
+                    const orderUsageCheck = await checkOrderUsage(email, orderNumber);
                     if (orderUsageCheck && !orderUsageCheck.canSpin) {
                         showOrderAlreadyUsedModal();
                         spinBtn.style.display = 'none';
@@ -1270,7 +1268,7 @@
 
         // Initialize everything
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('🎰 FINAL PB DAYS ARCADE - EXACT action name fixed!');
+            console.log('🎰 FINAL PB DAYS ARCADE - CORS issue fixed using Netlify function!');
             
             initializeReels();
             
