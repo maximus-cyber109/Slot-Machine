@@ -362,7 +362,7 @@
             backdrop-filter: blur(15px);
         }
         
-        /* ✅ Winner Card - BLACK background, Orbitron font, contained product image */
+        /* ✅ Winner Card - FIXED text sizes and EUREKA positioning */
         .golden-card {
             position: absolute;
             top: 50%;
@@ -378,12 +378,12 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             text-align: center;
             opacity: 0;
             transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            padding: 20px; /* Added padding to contain content */
-            overflow: hidden; /* Prevent content overflow */
+            padding: 25px 20px 15px 20px; /* ✅ FIXED: Proper padding to prevent overflow */
+            overflow: hidden;
         }
         
         .golden-card.show {
@@ -397,15 +397,19 @@
             100% { box-shadow: 0 0 120px rgba(255,215,0,1); }
         }
         
-        /* ✅ CHANGED: Orbitron font for header */
+        /* ✅ FIXED: EUREKA header - proper size and positioning */
         .eureka-header {
-            font-size: 24px;
-            font-family: 'Orbitron', monospace !important; /* Changed to Orbitron */
+            font-size: 20px !important; /* ✅ FIXED: Reduced from 24px to fit properly */
+            font-family: 'Orbitron', monospace !important;
             font-weight: 700;
             color: #FFFFFF !important;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             text-shadow: 0 0 10px #FFFFFF, 0 0 20px #FFFFFF, 0 0 30px #FFFFFF !important;
             animation: headerShimmer 2s ease-in-out infinite alternate;
+            line-height: 1.1; /* ✅ FIXED: Tighter line height */
+            white-space: nowrap; /* ✅ FIXED: Prevent text wrapping */
+            max-width: 100%; /* ✅ FIXED: Constrain to card width */
+            overflow: visible; /* ✅ FIXED: Allow text to show fully */
         }
         
         @keyframes headerShimmer {
@@ -415,18 +419,18 @@
         
         /* ✅ FIXED: Prize image contained inside card */
         .prize-image {
-            max-width: 90% !important; /* Constrain to card width */
-            max-height: 150px !important; /* Constrain to reasonable height */
+            max-width: 90% !important;
+            max-height: 130px !important; /* ✅ FIXED: Slightly smaller to make room for bigger text */
             width: auto !important;
             height: auto !important;
-            margin: 15px auto;
+            margin: 10px auto;
             border-radius: 15px;
             border: none !important;
             object-fit: contain;
             background: none !important;
             filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.8)) !important;
             animation: prizeGlow 2s ease-in-out infinite alternate;
-            display: block; /* Ensure proper block display */
+            display: block;
         }
         
         @keyframes prizeGlow {
@@ -438,38 +442,52 @@
             }
         }
         
-        /* ✅ CHANGED: Orbitron font for text boxes */
+        /* ✅ FIXED: Bigger text in winner card */
         .prize-textbox {
             background: transparent !important;
             border: none !important;
             border-radius: 15px;
-            padding: 15px 10px; /* Reduced padding */
-            margin: 8px 0;
+            padding: 8px 5px; /* ✅ FIXED: Reduced padding to save space */
+            margin: 6px 0; /* ✅ FIXED: Reduced margin */
             color: #FFFFFF !important;
-            font-family: 'Orbitron', monospace !important; /* Changed to Orbitron */
+            font-family: 'Orbitron', monospace !important;
             font-weight: 400;
-            font-size: 12px;
+            font-size: 14px !important; /* ✅ FIXED: Increased from 12px to 14px */
             text-shadow: 0 0 10px #FFFFFF, 0 0 20px #FFFFFF !important;
-            max-width: 100%; /* Ensure text stays inside */
-            line-height: 1.3; /* Tighter line height */
+            max-width: 100%;
+            line-height: 1.3;
+            word-wrap: break-word; /* ✅ FIXED: Allow text to break if needed */
+        }
+        
+        /* ✅ FIXED: Special sizing for different text elements */
+        #prizeTitle {
+            font-size: 16px !important; /* ✅ FIXED: Main title bigger */
+            font-weight: 600 !important;
+            margin: 10px 0 !important;
+        }
+        
+        #prizeWorth {
+            font-size: 18px !important; /* ✅ FIXED: Prize worth biggest */
+            font-weight: 700 !important;
+            margin: 12px 0 !important;
         }
         
         .winner-buttons {
             display: flex;
-            gap: 10px;
+            gap: 8px; /* ✅ FIXED: Smaller gap */
             flex-wrap: wrap;
             justify-content: center;
-            margin-top: 15px; /* Reduced margin */
+            margin-top: 10px; /* ✅ FIXED: Reduced margin */
         }
         
         .golden-card-close, .return-home-winner {
             background: linear-gradient(145deg, #654321 0%, #5d4037 100%);
             color: #ffd700;
             border: none;
-            padding: 10px 20px; /* Slightly smaller buttons */
+            padding: 8px 16px; /* ✅ FIXED: Smaller buttons to save space */
             border-radius: 12px;
-            font-size: 9px; /* Smaller font */
-            font-family: 'Orbitron', monospace !important; /* Changed to Orbitron */
+            font-size: 8px; /* ✅ FIXED: Smaller font for buttons */
+            font-family: 'Orbitron', monospace !important;
             cursor: pointer;
             transition: all 0.2s ease;
             text-transform: uppercase;
@@ -493,20 +511,28 @@
             .golden-card {
                 width: 320px;
                 height: 440px;
-                padding: 15px; /* Smaller padding on mobile */
-            }
-            
-            .prize-image {
-                max-height: 120px !important; /* Smaller on mobile */
-            }
-            
-            .prize-textbox {
-                font-size: 10px !important; /* Smaller text on mobile */
-                padding: 10px 8px !important;
+                padding: 20px 15px 10px 15px; /* ✅ FIXED: Adjusted for mobile */
             }
             
             .eureka-header {
-                font-size: 20px !important; /* Smaller header on mobile */
+                font-size: 16px !important; /* ✅ FIXED: Smaller on mobile */
+            }
+            
+            .prize-image {
+                max-height: 100px !important; /* ✅ FIXED: Smaller on mobile */
+            }
+            
+            .prize-textbox {
+                font-size: 12px !important; /* ✅ FIXED: Adjusted for mobile */
+                padding: 6px 4px !important;
+            }
+            
+            #prizeTitle {
+                font-size: 13px !important; /* ✅ FIXED: Mobile title size */
+            }
+            
+            #prizeWorth {
+                font-size: 15px !important; /* ✅ FIXED: Mobile worth size */
             }
             
             .reels-overlay {
@@ -592,7 +618,7 @@
         </div>
     </div>
     
-    <!-- Winner card with proper image containment and Orbitron font -->
+    <!-- Winner card with bigger text and fixed EUREKA -->
     <div class="golden-card" id="goldenCard">
         <div class="eureka-header">🏆 EUREKA! 🏆</div>
         
@@ -620,19 +646,22 @@
         </div>
     </div>
 
-    <!-- Background music -->
-    <audio id="backgroundMusic" autoplay loop>
+    <!-- ✅ FIXED: Background music with proper autoplay and controls -->
+    <audio id="backgroundMusic" loop preload="auto">
+        <source src="https://cdn.freesound.org/previews/316/316847_5123451-lq.mp3" type="audio/mpeg">
+        <source src="https://www.soundjay.com/misc/sounds/arcade-music-loop.mp3" type="audio/mpeg">
         <source src="data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjI5LjEwMAAAAAAAAAAAAAAA//OEAAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAAEAAABIADAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV6urq6urq6urq6urq6urq6urq6urq6urq6v////////////////////////////////8AAAAATGF2YzU4LjU0AAAAAAAAAAAAAAAAJAAAAAAAAAAAASDs90hvAAAAAAAAAAAAAAAAAAAA//OEZAAADwAABHiAAARYiABP+2Q8AAAaQAAAAgAAA0gAAAAAHVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU=" type="audio/mpeg">
     </audio>
 
     <script>
-        // Working Audio system with metal sounds
+        // ✅ ENHANCED Audio system with arcade background music
         class AudioSystem {
             constructor() {
                 this.audioContext = null;
                 this.masterGain = null;
                 this.isMuted = false;
                 this.backgroundMusic = document.getElementById('backgroundMusic');
+                this.musicStarted = false;
                 this.init();
             }
 
@@ -643,14 +672,39 @@
                     this.masterGain.connect(this.audioContext.destination);
                     this.masterGain.gain.setValueAtTime(0.3, this.audioContext.currentTime);
                     
+                    // ✅ FIXED: Proper background music setup
                     if (this.backgroundMusic) {
-                        this.backgroundMusic.volume = 0.1;
-                        this.backgroundMusic.play().catch(e => console.log('Background music autoplay blocked'));
+                        this.backgroundMusic.volume = 0.15; // Nice volume level
+                        this.backgroundMusic.loop = true;
+                        
+                        // Try to start music immediately
+                        this.startBackgroundMusic();
                     }
                     
-                    console.log('🎵 Audio system initialized with metal sounds');
+                    console.log('🎵 Audio system initialized with arcade background music');
                 } catch (error) {
                     console.log('Audio not supported:', error);
+                }
+            }
+
+            // ✅ FIXED: Start background music
+            startBackgroundMusic() {
+                if (this.backgroundMusic && !this.musicStarted && !this.isMuted) {
+                    this.backgroundMusic.play().then(() => {
+                        this.musicStarted = true;
+                        console.log('🎵 Arcade background music started');
+                    }).catch(e => {
+                        console.log('Background music autoplay blocked, will start on user interaction');
+                        // Set up to start on first user interaction
+                        document.addEventListener('click', () => {
+                            if (!this.musicStarted && !this.isMuted) {
+                                this.backgroundMusic.play().then(() => {
+                                    this.musicStarted = true;
+                                    console.log('🎵 Background music started after user interaction');
+                                });
+                            }
+                        }, { once: true });
+                    });
                 }
             }
 
@@ -757,7 +811,11 @@
                     this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : 0.3, this.audioContext.currentTime);
                 }
                 if (this.backgroundMusic) {
-                    this.backgroundMusic.volume = this.isMuted ? 0 : 0.1;
+                    if (this.isMuted) {
+                        this.backgroundMusic.pause();
+                    } else {
+                        this.backgroundMusic.play();
+                    }
                 }
                 return this.isMuted;
             }
@@ -1100,9 +1158,9 @@
             button.textContent = isMuted ? '🔇' : '🔊';
         }
 
-        // Initialize everything
+        // ✅ FIXED: Initialize everything with proper audio handling
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('🎰 Final Arcade System - Orbitron font, contained image, all functions intact!');
+            console.log('🎰 Final PB DAYS ARCADE - Bigger text, fixed EUREKA, working background music!');
             
             initializeReels();
             
@@ -1114,15 +1172,14 @@
                 document.getElementById('popupEmailInput').focus();
             }
 
-            // Enable audio context on first user interaction
+            // ✅ FIXED: Enable audio context and background music on user interaction
             document.body.addEventListener('click', () => {
                 if (audioSystem.audioContext && audioSystem.audioContext.state === 'suspended') {
                     audioSystem.audioContext.resume();
                 }
-                if (audioSystem.backgroundMusic && audioSystem.backgroundMusic.paused) {
-                    audioSystem.backgroundMusic.play().catch(e => console.log('Music play failed'));
-                }
-            }, { once: true });
+                // Start background music if not already started
+                audioSystem.startBackgroundMusic();
+            }, { once: false }); // Allow multiple tries
         });
     </script>
 </body>
