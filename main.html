@@ -873,10 +873,11 @@
 
         const audioSystem = new AudioSystem();
 
-        // Global variables
+        // ✅ CRITICAL FIX: Global variables with race condition protection
         let userSession = null;
         let spinning = false;
         let userEmail = '';
+        let usedOrders = new Set(); // ✅ ADDED: Client-side tracking to prevent race conditions
         
         const symbols = [
             { name: '7', image: 'https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/7.png' },
@@ -978,12 +979,25 @@
             }
         }
 
-        // 🔥 CORS FIX: Using existing Netlify function instead of direct Google Apps Script call
+        // ✅ FIXED: Order usage check with race condition protection
         async function checkOrderUsage(email, orderNumber) {
             try {
                 console.log('🔍 Checking order usage for:', orderNumber, 'by email:', email);
                 
-                // ✅ FIXED: Call through existing Netlify function to avoid CORS issues
+                // ✅ CRITICAL FIX: Normalize order number on frontend too
+                const normalizedOrderNumber = orderNumber.replace(/^0+/, '') || '0';
+                
+                // ✅ RACE CONDITION FIX: Check client-side first
+                if (usedOrders.has(normalizedOrderNumber)) {
+                    console.log('❌ Order blocked by client-side tracking:', normalizedOrderNumber);
+                    return { 
+                        success: true, 
+                        canSpin: false, 
+                        reason: 'Order already used (client-side check)',
+                        clientSideBlocked: true
+                    };
+                }
+                
                 const response = await fetch('/.netlify/functions/check-order-usage', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1016,6 +1030,7 @@
             }
         }
 
+        // ✅ CRITICAL FIX: Spin function with proper race condition prevention
         async function spin() {
             if (spinning) {
                 console.log('⚠️ Spin already in progress');
@@ -1056,14 +1071,22 @@
                         return;
                     }
 
-                    // ✅ FIXED: Check if order has already been used (now through Netlify function)
+                    // ✅ CRITICAL FIX: Check order usage with race condition protection
+                    console.log('🔍 Checking order usage before spin...');
                     const orderUsageCheck = await checkOrderUsage(email, orderNumber);
+                    
                     if (orderUsageCheck && !orderUsageCheck.canSpin) {
+                        console.log('❌ Order usage check blocked spin');
                         showOrderAlreadyUsedModal();
                         spinBtn.style.display = 'none';
                         spinning = false;
                         return;
                     }
+
+                    // ✅ RACE CONDITION FIX: Mark order as used immediately (client-side)
+                    const normalizedOrderNumber = orderNumber.replace(/^0+/, '') || '0';
+                    usedOrders.add(normalizedOrderNumber);
+                    console.log('✅ Order marked as used client-side:', normalizedOrderNumber);
 
                 } else {
                     customerData = {
@@ -1268,7 +1291,7 @@
 
         // Initialize everything
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('🎰 FINAL PB DAYS ARCADE - CORS issue fixed using Netlify function!');
+            console.log('🎰 FINAL PB DAYS ARCADE - Fixed race condition and order usage!');
             
             initializeReels();
             
