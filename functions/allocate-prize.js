@@ -1,5 +1,5 @@
 // netlify/functions/allocate-prize.js
-// ✅ SIMPLIFIED VERSION - Only Essential WebEngage Fields
+// ✅ INCLUDES ORDER ID in WebEngage payload
 exports.handler = async (event, context) => {
     console.log('🎁 Prize allocation started with Google Sheets integration');
     
@@ -93,9 +93,9 @@ exports.handler = async (event, context) => {
         if (result.success) {
             console.log('✅ Prize allocated via Google Sheets:', result.prize.name);
             
-            // ✅ Send simplified event to WebEngage
+            // ✅ Send event to WebEngage with ORDER ID included
             try {
-                console.log('📧 Sending simplified WebEngage event');
+                console.log('📧 Sending WebEngage event with order ID');
                 
                 await sendSimpleWebEngageEvent(
                     cleanEmailForNotification, 
@@ -103,7 +103,7 @@ exports.handler = async (event, context) => {
                     isTestUser,
                     data
                 );
-                console.log('✅ Simplified WebEngage event sent');
+                console.log('✅ WebEngage event sent with order ID');
                 
             } catch (emailError) {
                 console.error('⚠️ WebEngage event failed (non-critical):', emailError.message);
@@ -135,17 +135,17 @@ exports.handler = async (event, context) => {
     }
 };
 
-// ✅ SIMPLIFIED: WebEngage with only essential fields
+// ✅ WebEngage with ORDER ID included
 async function sendSimpleWebEngageEvent(cleanEmail, prize, isTestUser, originalOrderData) {
     try {
-        console.log('📧 Sending simplified WebEngage event...');
+        console.log('📧 Sending WebEngage event with order ID...');
         
         if (isTestUser) {
-            console.log('🧪 Test user - logging simple event details');
+            console.log('🧪 Test user - logging event details with order ID');
             console.log('📧 Would send prize_won event to:', cleanEmail);
             console.log('🎁 Prize:', cleanProductName(prize.name));
             console.log('💰 Value: ₹' + (prize.value || 0));
-            console.log('🖼️ Image:', prize.image || 'No image');
+            console.log('📦 Order ID:', originalOrderData?.orderNumber);
             console.log('👤 Customer:', getCustomerName(originalOrderData));
             return true;
         }
@@ -161,7 +161,7 @@ async function sendSimpleWebEngageEvent(cleanEmail, prize, isTestUser, originalO
         
         console.log('📧 Sending to:', cleanEmail);
         
-        // ✅ SIMPLE payload - only essential fields
+        // ✅ Payload with ORDER ID included
         const simplePayload = {
             "userId": cleanEmail,
             "eventName": "prize_won",
@@ -169,14 +169,14 @@ async function sendSimpleWebEngageEvent(cleanEmail, prize, isTestUser, originalO
                 "prize_name": cleanProductName(prize.name),
                 "prize_value": parseInt(prize.value) || 0,
                 "prize_image_url": prize.image || '',
-                "customer_name": getCustomerName(originalOrderData)
+                "customer_name": getCustomerName(originalOrderData),
+                "order_id": originalOrderData?.orderNumber || 'N/A' // ✅ ORDER ID ADDED
             }
         };
         
-        console.log('📤 Simple WebEngage payload:', JSON.stringify(simplePayload, null, 2));
+        console.log('📤 WebEngage payload with order ID:', JSON.stringify(simplePayload, null, 2));
         
         const webEngageEndpoint = `https://api.webengage.com/v1/accounts/${WEBENGAGE_LICENSE_CODE}/events`;
-        console.log('🎯 WebEngage endpoint:', webEngageEndpoint);
         
         // ✅ Try Method 1: Simple payload without eventTime
         const response1 = await fetch(webEngageEndpoint, {
@@ -192,16 +192,15 @@ async function sendSimpleWebEngageEvent(cleanEmail, prize, isTestUser, originalO
         
         if (response1.ok) {
             const result1 = await response1.json();
-            console.log('✅ Simple WebEngage event sent successfully');
-            console.log('📋 Response:', JSON.stringify(result1));
+            console.log('✅ WebEngage event sent successfully with order ID');
             return true;
         }
         
         // ✅ Try Method 2: Add simple eventTime
-        console.log('🔄 Method 2: Adding simple eventTime...');
+        console.log('🔄 Method 2: Adding eventTime...');
         const payloadWithTime = {
             ...simplePayload,
-            "eventTime": Math.floor(Date.now() / 1000) // Unix timestamp
+            "eventTime": Math.floor(Date.now() / 1000)
         };
         
         const response2 = await fetch(webEngageEndpoint, {
@@ -213,33 +212,8 @@ async function sendSimpleWebEngageEvent(cleanEmail, prize, isTestUser, originalO
             body: JSON.stringify(payloadWithTime)
         });
         
-        console.log('📥 Method 2 response status:', response2.status);
-        
         if (response2.ok) {
-            console.log('✅ WebEngage event with Unix timestamp worked');
-            return true;
-        }
-        
-        // ✅ Try Method 3: Even more minimal
-        console.log('🔄 Method 3: Ultra minimal...');
-        const minimalPayload = {
-            "userId": cleanEmail,
-            "eventName": "prize_won"
-        };
-        
-        const response3 = await fetch(webEngageEndpoint, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${WEBENGAGE_API_KEY}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(minimalPayload)
-        });
-        
-        console.log('📥 Method 3 response status:', response3.status);
-        
-        if (response3.ok) {
-            console.log('✅ Ultra minimal WebEngage event worked');
+            console.log('✅ WebEngage event with timestamp worked');
             return true;
         }
         
@@ -247,36 +221,26 @@ async function sendSimpleWebEngageEvent(cleanEmail, prize, isTestUser, originalO
         return false;
         
     } catch (error) {
-        console.error('❌ WebEngage simple event error:', error.message);
-        
-        // ✅ Simple fallback logging
-        console.log('📨 SIMPLE EVENT FALLBACK:');
-        console.log('Email:', cleanEmail);
-        console.log('Prize:', cleanProductName(prize.name));
-        console.log('Value: ₹' + (prize.value || 0));
-        console.log('Image:', prize.image || 'No image');
-        console.log('Customer:', getCustomerName(originalOrderData));
-        
+        console.error('❌ WebEngage event error:', error.message);
         return false;
     }
 }
 
-// ✅ Helper function - Get customer name
+// ✅ Helper functions
 function getCustomerName(originalOrderData) {
     const firstName = originalOrderData?.orderData?.customer_firstname || '';
     const lastName = originalOrderData?.orderData?.customer_lastname || '';
     return (firstName + ' ' + lastName).trim() || 'Valued Customer';
 }
 
-// ✅ Helper function - Clean product name
 function cleanProductName(prizeName) {
     if (!prizeName) return 'Mystery Prize';
     
     let cleanName = prizeName
-        .replace(/^[A-Z0-9_]+\s*[-_]\s*/i, '') // Remove codes like "PB01_001_02 - "
-        .replace(/^[A-Z]{2,}\s+/i, '') // Remove prefix codes
-        .replace(/\s*[-_]\s*[A-Z0-9_]+$/i, '') // Remove suffix codes
-        .replace(/\([^)]*\)$/g, '') // Remove parentheses content
+        .replace(/^[A-Z0-9_]+\s*[-_]\s*/i, '')
+        .replace(/^[A-Z]{2,}\s+/i, '')
+        .replace(/\s*[-_]\s*[A-Z0-9_]+$/i, '')
+        .replace(/\([^)]*\)$/g, '')
         .trim();
     
     if (!cleanName || cleanName.length < 3) {
