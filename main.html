@@ -31,7 +31,7 @@
             50% { filter: brightness(1.1) hue-rotate(15deg); }
         }
         
-        /* Email popup */
+        /* ✅ FIXED: Email popup with Orbitron font and updated text */
         .email-popup {
             position: fixed;
             top: 0;
@@ -60,6 +60,34 @@
             width: 90%;
             color: #8b4513;
             box-shadow: 0 20px 60px rgba(255, 215, 0, 0.8);
+            font-family: 'Orbitron', monospace !important; /* ✅ ADDED: Orbitron font */
+        }
+        
+        .email-popup-content h2 {
+            font-family: 'Orbitron', monospace !important;
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .email-popup-content p {
+            font-family: 'Orbitron', monospace !important;
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 1.4;
+            margin-bottom: 20px;
+        }
+        
+        .email-popup-content input {
+            font-family: 'Orbitron', monospace !important;
+            font-size: 12px;
+            padding: 15px;
+            width: 100%;
+            border: 3px solid #8b4513;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            background: rgba(255,255,255,0.9);
+            color: #8b4513;
         }
         
         .popup-buttons {
@@ -77,8 +105,9 @@
             border: none;
             border-radius: 10px;
             cursor: pointer;
-            font-family: 'Press Start 2P', monospace;
+            font-family: 'Orbitron', monospace !important; /* ✅ ADDED: Orbitron font */
             font-size: 10px;
+            font-weight: 600;
         }
         
         /* Custom Modal */
@@ -103,7 +132,7 @@
             text-align: center;
             max-width: 400px;
             color: #8b4513;
-            font-family: 'Press Start 2P', monospace;
+            font-family: 'Orbitron', monospace !important;
             font-size: 10px;
             line-height: 1.6;
         }
@@ -362,7 +391,7 @@
             backdrop-filter: blur(15px);
         }
         
-        /* ✅ FINAL: Winner Card - Lighter glow, bigger text and image */
+        /* FINAL: Winner Card - Lighter glow, bigger text and image */
         .golden-card {
             position: absolute;
             top: 50%;
@@ -397,20 +426,20 @@
             100% { box-shadow: 0 0 120px rgba(255,215,0,1); }
         }
         
-        /* ✅ FINAL: EUREKA header - lighter glow, proper size, no cutting */
+        /* FINAL: EUREKA header - lighter glow, proper size, no cutting */
         .eureka-header {
-            font-size: 24px !important; /* ✅ Perfect size for visibility */
+            font-size: 24px !important;
             font-family: 'Orbitron', monospace !important;
             font-weight: 700;
             color: #FFFFFF !important;
             margin-bottom: 12px;
-            text-shadow: 0 0 6px rgba(255, 255, 255, 0.4), 0 0 10px rgba(255, 255, 255, 0.2) !important; /* ✅ Lighter glow */
+            text-shadow: 0 0 6px rgba(255, 255, 255, 0.4), 0 0 10px rgba(255, 255, 255, 0.2) !important;
             animation: headerShimmer 2s ease-in-out infinite alternate;
             line-height: 1;
             white-space: nowrap;
             max-width: 100%;
             overflow: visible;
-            padding: 0 10px; /* ✅ Prevent text cutting */
+            padding: 0 10px;
             box-sizing: border-box;
         }
         
@@ -419,18 +448,18 @@
             100% { text-shadow: 0 0 8px rgba(255, 255, 255, 0.5), 0 0 14px rgba(255, 255, 255, 0.3); }
         }
         
-        /* ✅ FINAL: Prize image - even bigger with lighter glow */
+        /* FINAL: Prize image - even bigger with lighter glow */
         .prize-image {
-            max-width: 96% !important; /* ✅ Bigger image */
-            max-height: 168px !important; /* ✅ Increased height */
+            max-width: 96% !important;
+            max-height: 168px !important;
             width: auto !important;
             height: auto !important;
-            margin: 12px auto; /* ✅ Better spacing */
+            margin: 12px auto;
             border-radius: 15px;
             border: none !important;
             object-fit: contain;
             background: none !important;
-            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.4)) !important; /* ✅ Lighter, more pleasant glow */
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.4)) !important;
             animation: prizeGlow 2.5s ease-in-out infinite;
             display: block;
         }
@@ -447,7 +476,7 @@
             }
         }
         
-        /* ✅ FINAL: Bigger text with lighter glow */
+        /* FINAL: Bigger text with lighter glow */
         .prize-textbox {
             background: transparent !important;
             border: none !important;
@@ -456,23 +485,23 @@
             margin: 6px 0;
             color: #FFFFFF !important;
             font-family: 'Orbitron', monospace !important;
-            font-weight: 600 !important; /* ✅ Slightly heavier weight */
-            font-size: 16px !important; /* ✅ Increased from 15px */
-            text-shadow: 0 0 6px rgba(255, 255, 255, 0.4) !important; /* ✅ Lighter glow */
+            font-weight: 600 !important;
+            font-size: 16px !important;
+            text-shadow: 0 0 6px rgba(255, 255, 255, 0.4) !important;
             max-width: 100%;
             line-height: 1.3;
             word-wrap: break-word;
         }
         
-        /* ✅ FINAL: Special sizing for different text elements */
+        /* FINAL: Special sizing for different text elements */
         #prizeTitle {
-            font-size: 18px !important; /* ✅ Increased from 17px */
+            font-size: 18px !important;
             font-weight: 600 !important;
             margin: 10px 0 !important;
         }
         
         #prizeWorth {
-            font-size: 22px !important; /* ✅ Increased from 20px */
+            font-size: 22px !important;
             font-weight: 700 !important;
             margin: 12px 0 !important;
         }
@@ -520,24 +549,24 @@
             }
             
             .eureka-header {
-                font-size: 20px !important; /* ✅ Adjusted for mobile */
+                font-size: 20px !important;
             }
             
             .prize-image {
-                max-height: 140px !important; /* ✅ Adjusted for mobile */
+                max-height: 140px !important;
             }
             
             .prize-textbox {
-                font-size: 14px !important; /* ✅ Adjusted for mobile */
+                font-size: 14px !important;
                 padding: 6px 4px !important;
             }
             
             #prizeTitle {
-                font-size: 15px !important; /* ✅ Mobile title size */
+                font-size: 15px !important;
             }
             
             #prizeWorth {
-                font-size: 18px !important; /* ✅ Mobile worth size */
+                font-size: 18px !important;
             }
             
             .reels-overlay {
@@ -569,7 +598,7 @@
 </head>
 
 <body>
-    <!-- Email popup -->
+    <!-- ✅ FIXED: Email popup with updated text and Orbitron font -->
     <div class="email-popup" id="emailPopup">
         <div class="email-popup-content">
             <h2>🎰 Welcome to PB DAYS ARCADE! 🎉</h2>
@@ -652,7 +681,7 @@
     </div>
 
     <script>
-        // ✅ FINAL: Enhanced Audio system with working background music and softer spin sound
+        // FINAL: Enhanced Audio system with working background music and softer spin sound
         class AudioSystem {
             constructor() {
                 this.audioContext = null;
@@ -669,7 +698,6 @@
                     this.masterGain.connect(this.audioContext.destination);
                     this.masterGain.gain.setValueAtTime(0.3, this.audioContext.currentTime);
                     
-                    // Create synthetic arcade background music
                     this.createBackgroundMusic();
                     
                     console.log('🎵 Audio system initialized with working background music');
@@ -678,14 +706,12 @@
                 }
             }
 
-            // ✅ FIXED: Create synthetic arcade-style background music that actually works
             createBackgroundMusic() {
                 if (!this.audioContext || this.isMuted) return;
 
                 const playArcadeLoop = () => {
                     if (this.isMuted || !this.audioContext) return;
 
-                    // Arcade-style chord progression
                     const chords = [
                         [261.63, 329.63, 392.00], // C Major
                         [293.66, 369.99, 440.00], // D Major  
@@ -718,13 +744,11 @@
                         }, index * 1000);
                     });
 
-                    // Loop the music
                     setTimeout(() => {
                         if (!this.isMuted) playArcadeLoop();
                     }, 4000);
                 };
 
-                // Start background music on first user interaction
                 document.addEventListener('click', () => {
                     if (!this.musicStarted && !this.isMuted) {
                         playArcadeLoop();
@@ -734,34 +758,29 @@
                 }, { once: true });
             }
 
-            // ✅ FINAL: Even softer, more pleasant spin sound
             playSpinSound() {
                 if (!this.audioContext || this.isMuted) return;
                 
                 try {
                     const now = this.audioContext.currentTime;
                     
-                    // ✅ FINAL: Triangle wave for the softest, most pleasant sound
                     const osc = this.audioContext.createOscillator();
                     const gain = this.audioContext.createGain();
                     
                     osc.connect(gain);
                     gain.connect(this.masterGain);
                     
-                    // Even smoother frequency sweep with musical intervals
-                    osc.frequency.setValueAtTime(440, now); // A4
-                    osc.frequency.exponentialRampToValueAtTime(880, now + 0.4); // A5
-                    osc.frequency.exponentialRampToValueAtTime(220, now + 0.8); // A3
-                    osc.type = 'triangle'; // Smoothest waveform
+                    osc.frequency.setValueAtTime(440, now);
+                    osc.frequency.exponentialRampToValueAtTime(880, now + 0.4);
+                    osc.frequency.exponentialRampToValueAtTime(220, now + 0.8);
+                    osc.type = 'triangle';
                     
-                    // Ultra-smooth volume envelope
                     gain.gain.setValueAtTime(0.08, now);
                     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
                     
                     osc.start(now);
                     osc.stop(now + 0.9);
                     
-                    // Add very gentle bell-like harmonics
                     for (let i = 0; i < 5; i++) {
                         setTimeout(() => this.createSoftBell(), i * 180);
                     }
@@ -770,7 +789,6 @@
                 }
             }
 
-            // ✅ FINAL: Softest possible bell sound
             createSoftBell() {
                 if (!this.audioContext || this.isMuted) return;
                 
@@ -781,14 +799,13 @@
                 bellOsc.connect(bellGain);
                 bellGain.connect(this.masterGain);
                 
-                // Very pleasant bell frequencies (pentatonic scale)
-                const bellFreqs = [523.25, 587.33, 659.25, 783.99, 880.00]; // C, D, E, G, A
+                const bellFreqs = [523.25, 587.33, 659.25, 783.99, 880.00];
                 const freq = bellFreqs[Math.floor(Math.random() * bellFreqs.length)];
                 
                 bellOsc.frequency.setValueAtTime(freq, now);
-                bellOsc.type = 'sine'; // Pure sine for bell-like tone
+                bellOsc.type = 'sine';
                 
-                bellGain.gain.setValueAtTime(0.015, now); // Very quiet
+                bellGain.gain.setValueAtTime(0.015, now);
                 bellGain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
                 
                 bellOsc.start(now);
@@ -847,7 +864,6 @@
             { name: 'Grape', image: 'https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/Grape.png' }
         ];
 
-        // Initialize reels
         function initializeReels() {
             for (let i = 1; i <= 3; i++) {
                 const strip = document.getElementById(`reel${i}`);
@@ -942,15 +958,16 @@
             }
         }
 
-        // ✅ ADDED: Function to check if order has already been used
+        // ✅ FIXED: Using correct action name from your Google Sheets script
         async function checkOrderUsage(email, orderNumber) {
             try {
                 console.log('🔍 Checking order usage for:', orderNumber, 'by email:', email);
                 
-                const response = await fetch('/.netlify/functions/check-order-usage', {
+                const response = await fetch(process.env.GOOGLE_SHEETS_WEBHOOK || '/.netlify/functions/check-order-usage', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
+                        action: 'checkOrderIdUsage', // ✅ FIXED: Using correct action name
                         email: email,
                         orderNumber: orderNumber
                     })
@@ -978,7 +995,7 @@
             }
         }
 
-        // ✅ FIXED: Spin function with order usage check to prevent duplicate spins
+        // FIXED: Spin function with order usage check to prevent duplicate spins
         async function spin() {
             if (spinning) {
                 console.log('⚠️ Spin already in progress');
@@ -1021,8 +1038,8 @@
 
                     // ✅ CRITICAL FIX: Check if order has already been used
                     const orderUsageCheck = await checkOrderUsage(email, orderNumber);
-                    if (orderUsageCheck && orderUsageCheck.success === false) {
-                        showCustomModal(orderUsageCheck.message || 'This order has already been used for spinning.');
+                    if (orderUsageCheck && !orderUsageCheck.canSpin) {
+                        showCustomModal('This order has already been used for spinning.');
                         spinBtn.textContent = 'ORDER USED';
                         spinBtn.disabled = true;
                         spinBtn.style.opacity = '0.5';
@@ -1031,7 +1048,6 @@
                     }
 
                 } else {
-                    // Override user logic remains the same
                     customerData = {
                         orderData: { 
                             increment_id: 'OVERRIDE_ORDER_' + Date.now(),
@@ -1047,7 +1063,6 @@
                 userSession = customerData;
                 spinBtn.textContent = 'SPINNING...';
                 
-                // Play softer spin sound
                 audioSystem.playSpinSound();
 
                 const spinDurations = [1800, 2200, 2600];
@@ -1218,7 +1233,7 @@
 
         // Initialize everything
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('🎰 FINAL PB DAYS ARCADE - Order usage check implemented!');
+            console.log('🎰 FINAL PB DAYS ARCADE - Fixed order usage check with correct action!');
             
             initializeReels();
             
@@ -1230,7 +1245,6 @@
                 document.getElementById('popupEmailInput').focus();
             }
 
-            // Enable audio context on user interaction
             document.body.addEventListener('click', () => {
                 if (audioSystem.audioContext && audioSystem.audioContext.state === 'suspended') {
                     audioSystem.audioContext.resume();
