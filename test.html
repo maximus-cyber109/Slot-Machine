@@ -12,14 +12,14 @@
     <link rel="preload" as="image" href="https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/Grape.png">
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700;900&family=Exo+2:wght@400;600;700;800&family=Bungee&display=swap');
-        
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700;900&family=Exo+2:wght@400;600;700;800&display=swap');
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Press Start 2P', monospace;
             min-height: 100vh;
@@ -31,33 +31,32 @@
             background: radial-gradient(ellipse at center, #1a0033 0%, #000000 70%), linear-gradient(45deg, rgba(25, 25, 112, 0.3) 0%, rgba(75, 0, 130, 0.2) 100%);
             animation: backgroundShift 10s ease-in-out infinite;
         }
-        
+
         @keyframes backgroundShift {
             0%, 100% { filter: brightness(1) hue-rotate(0deg); }
             50% { filter: brightness(1.1) hue-rotate(15deg); }
         }
-        
+
         .arcade-background {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(138, 43, 226, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255, 20, 147, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.05) 0%, transparent 70%),
-                linear-gradient(135deg, #000428 0%, #004e92 100%);
+            background: radial-gradient(circle at 20% 80%, rgba(138, 43, 226, 0.15) 0%, transparent 50%),
+                       radial-gradient(circle at 80% 20%, rgba(255, 20, 147, 0.15) 0%, transparent 50%),
+                       radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.05) 0%, transparent 70%),
+                       linear-gradient(135deg, #000428 0%, #004e92 100%);
             z-index: -1;
             animation: backgroundGlow 8s ease-in-out infinite alternate;
         }
-        
+
         @keyframes backgroundGlow {
             0% { opacity: 0.8; }
             100% { opacity: 1; }
         }
-        
-        /* Email popup */
+
+        /* ✅ FIXED EMAIL POPUP with proper retry functionality */
         .email-popup {
             position: fixed;
             top: 0;
@@ -71,11 +70,11 @@
             z-index: 10000;
             backdrop-filter: blur(10px);
         }
-        
+
         .email-popup.hidden {
             display: none;
         }
-        
+
         .email-popup-content {
             background: linear-gradient(145deg, #ffd700 0%, #ffed4e 100%);
             padding: 40px;
@@ -86,9 +85,91 @@
             width: 90%;
             color: #8b4513;
             box-shadow: 0 20px 60px rgba(255, 215, 0, 0.8);
+            animation: popupFloat 1s ease-out;
         }
-        
-        /* Custom Modal */
+
+        @keyframes popupFloat {
+            0% { transform: scale(0.5) translateY(100px); opacity: 0; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .email-popup h2 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #8b4513;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 1);
+        }
+
+        .email-popup p {
+            font-size: 10px;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            color: #666;
+            font-family: 'Exo 2', sans-serif;
+        }
+
+        .email-popup input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 3px solid #8b4513;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: 'Exo 2', sans-serif;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+        }
+
+        .popup-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .email-popup button {
+            background: linear-gradient(145deg, #8b4513 0%, #5d4037 100%);
+            color: #ffd700;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid #a0522d;
+            flex: 1;
+            min-width: 140px;
+        }
+
+        .retry-button {
+            background: linear-gradient(145deg, #ff6b35 0%, #f7931e 100%) !important;
+            color: white !important;
+        }
+
+        .email-popup button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 69, 19, 0.6);
+        }
+
+        .email-popup button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .retry-info {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            font-size: 9px;
+            line-height: 1.4;
+            font-family: 'Exo 2', sans-serif;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        /* Custom Modal for messages */
         .custom-modal {
             position: fixed;
             top: 0;
@@ -101,7 +182,7 @@
             align-items: center;
             z-index: 9999;
         }
-        
+
         .modal-content {
             background: linear-gradient(145deg, #ffd700 0%, #ffed4e 100%);
             padding: 30px;
@@ -114,7 +195,19 @@
             font-size: 10px;
             line-height: 1.6;
         }
-        
+
+        .modal-close {
+            background: #8b4513;
+            color: #ffd700;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            margin-top: 20px;
+            cursor: pointer;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+        }
+
         /* Audio Control */
         .audio-control {
             position: fixed;
@@ -135,7 +228,7 @@
             transition: all 0.3s ease;
             animation: audioButtonGlow 2s ease-in-out infinite alternate;
         }
-        
+
         @keyframes audioButtonGlow {
             0% { 
                 box-shadow: 0 8px 20px rgba(255,181,0,0.4), 0 0 30px rgba(255,215,0,0.6);
@@ -146,7 +239,7 @@
                 transform: scale(1.05);
             }
         }
-        
+
         /* Return to home button */
         .return-home {
             position: fixed;
@@ -164,7 +257,12 @@
             transition: all 0.3s ease;
             border: 2px solid rgba(255,255,255,0.3);
         }
-        
+
+        .return-home:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 107, 53, 0.6);
+        }
+
         /* Slot Machine */
         .slot-machine-container {
             position: relative;
@@ -174,12 +272,12 @@
             filter: drop-shadow(0 30px 60px rgba(0,0,0,0.8));
             animation: machineFloat 6s ease-in-out infinite;
         }
-        
+
         @keyframes machineFloat {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-5px); }
         }
-        
+
         .slot-machine-bg {
             width: 100%;
             height: 100%;
@@ -189,7 +287,7 @@
             background-position: center;
             position: relative;
         }
-        
+
         .header-text {
             position: absolute;
             top: 15px;
@@ -206,8 +304,29 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.4), 0 0 40px rgba(255,181,0,0.6);
             width: 300px;
             font-family: 'Orbitron', monospace;
+            animation: headerGlow 3s ease-in-out infinite alternate;
         }
-        
+
+        @keyframes headerGlow {
+            0% { box-shadow: 0 10px 30px rgba(0,0,0,0.4), 0 0 40px rgba(255,181,0,0.6); }
+            100% { box-shadow: 0 15px 40px rgba(0,0,0,0.5), 0 0 70px rgba(255,181,0,0.9); }
+        }
+
+        .header-text h3 {
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: #e65100;
+            text-transform: uppercase;
+        }
+
+        .header-text p {
+            font-size: 10px;
+            font-weight: 600;
+            color: #ff8f00;
+            font-family: 'Exo 2', sans-serif;
+        }
+
         /* Reels positioning */
         .reels-overlay {
             position: absolute;
@@ -221,7 +340,7 @@
             align-items: center;
             z-index: 5;
         }
-        
+
         .reel-window {
             width: 58px;
             height: 75px;
@@ -230,8 +349,14 @@
             border-radius: 8px;
             background: transparent;
             box-shadow: 0 0 20px rgba(255,215,0,0.3);
+            animation: reelGlow 4s ease-in-out infinite alternate;
         }
-        
+
+        @keyframes reelGlow {
+            0% { box-shadow: 0 0 20px rgba(255,215,0,0.3); }
+            100% { box-shadow: 0 0 35px rgba(255,215,0,0.6); }
+        }
+
         .reel-strip {
             position: absolute;
             top: 0;
@@ -241,16 +366,16 @@
             flex-direction: column;
             transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
+
         .reel-strip.spinning {
             animation: reelSpin 0.05s linear infinite;
         }
-        
+
         @keyframes reelSpin {
             0% { transform: translateY(0); }
             100% { transform: translateY(-75px); }
         }
-        
+
         .symbol {
             width: 58px;
             height: 75px;
@@ -261,14 +386,26 @@
             border-radius: 6px;
             margin-bottom: 1px;
         }
-        
+
         .symbol img {
             width: 50px;
             height: 50px;
             object-fit: contain;
             filter: brightness(1.2) contrast(1.3) drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
+
+        .symbol.winning img {
+            filter: brightness(1.6) contrast(1.7) drop-shadow(0 0 25px #ffd700);
+            transform: scale(1.2);
+            animation: symbolWin 0.3s ease-in-out infinite alternate;
+        }
+
+        @keyframes symbolWin {
+            0% { transform: scale(1.2); }
+            100% { transform: scale(1.25); }
+        }
+
         /* Spin button positioning */
         .spin-button-container {
             position: absolute;
@@ -277,7 +414,7 @@
             transform: translateX(-50%);
             z-index: 10;
         }
-        
+
         .spin-button {
             width: 160px;
             height: 42px;
@@ -294,8 +431,10 @@
             letter-spacing: 1px;
             border: 3px solid rgba(255,255,255,0.4);
             animation: buttonPulse 2s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
         }
-        
+
         @keyframes buttonPulse {
             0%, 100% { 
                 box-shadow: 0 10px 25px rgba(255,181,0,0.6), 0 0 50px rgba(255,215,0,0.4);
@@ -306,14 +445,46 @@
                 transform: scale(1.02);
             }
         }
-        
+
+        .spin-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 20px 50px rgba(255,181,0,0.8), 0 0 100px rgba(255,215,0,1);
+        }
+
+        .spin-button.spinning-state {
+            background: linear-gradient(145deg, #ff6b6b 0%, #ee5a52 100%) !important;
+            color: white !important;
+            cursor: not-allowed !important;
+            opacity: 0.8 !important;
+            transform: none !important;
+            animation: spinningPulse 1s ease-in-out infinite alternate !important;
+        }
+
+        @keyframes spinningPulse {
+            0% { opacity: 0.7; }
+            100% { opacity: 0.9; }
+        }
+
         .spin-button:disabled {
+            pointer-events: none !important;
+            user-select: none !important;
             opacity: 0.5;
             cursor: not-allowed;
             background: linear-gradient(145deg, #888 0%, #666 100%);
             animation: none;
         }
-        
+
+        .spin-button.prize-won {
+            background: linear-gradient(145deg, #4caf50 0%, #45a049 100%) !important;
+            color: white !important;
+            animation: successGlow 0.5s ease-in-out infinite alternate !important;
+        }
+
+        @keyframes successGlow {
+            0% { box-shadow: 0 10px 25px rgba(76, 175, 80, 0.6), 0 0 50px rgba(76, 175, 80, 0.4); }
+            100% { box-shadow: 0 15px 35px rgba(76, 175, 80, 0.8), 0 0 80px rgba(76, 175, 80, 0.7); }
+        }
+
         /* Status Display */
         .status-overlay {
             position: absolute;
@@ -322,188 +493,172 @@
             transform: translateX(-50%);
             z-index: 10;
         }
-        
+
         .spins-left {
             background: rgba(255,255,255,0.95);
             color: #333;
             padding: 8px 15px;
             border-radius: 15px;
             border: 3px solid rgba(255,181,0,0.9);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.4);
             font-size: 8px;
             font-family: 'Press Start 2P', monospace;
+            backdrop-filter: blur(15px);
         }
-        
-        /* ✅ ENHANCED Winner Card with BLACK background, white glowing text, and Bungee font */
+
+        /* ✅ ENHANCED Winner Card with visible text */
         .golden-card {
-            position: fixed;
+            position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) scale(0);
-            width: 450px;
-            height: 600px;
-            background: #000000; /* Black background */
+            width: 380px;
+            height: 500px;
+            background: linear-gradient(145deg, #ffd700 0%, #ffed4e 20%, #b8860b 100%);
             border-radius: 25px;
-            border: 8px solid #FFD700; /* Gold border */
-            box-shadow: 
-                0 0 40px 5px rgba(255, 215, 0, 0.7),
-                inset 0 0 30px 10px rgba(255, 215, 0, 0.3);
+            border: 8px solid #8b4513;
+            box-shadow: 0 0 80px rgba(255,215,0,1);
             z-index: 1000;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: center;
             text-align: center;
             opacity: 0;
             transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            padding: 40px 30px;
-            overflow-y: auto;
-            position: relative;
         }
-        
-        /* Glowing gold particles inside winner card */
-        .golden-card::before {
-            content: '';
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            right: 15px;
-            bottom: 15px;
-            border-radius: 20px;
-            background: 
-                radial-gradient(circle, rgba(255,215,0,0.1) 0%, rgba(255,215,0,0) 80%),
-                radial-gradient(circle at 40% 40%, rgba(255,215,0,0.2) 0%, rgba(255,215,0,0) 70%),
-                radial-gradient(circle at 60% 60%, rgba(255,215,0,0.3) 0%, rgba(255,215,0,0) 60%),
-                radial-gradient(circle at 80% 20%, rgba(255,215,0,0.15) 0%, rgba(255,215,0,0) 50%),
-                radial-gradient(circle at 20% 80%, rgba(255,215,0,0.25) 0%, rgba(255,215,0,0) 40%);
-            animation: glowParticles 3s ease-in-out infinite;
-            pointer-events: none;
-            z-index: 0;
-        }
-        
-        @keyframes glowParticles {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
-        }
-        
-        .golden-card > * {
-            position: relative;
-            z-index: 1;
-        }
-        
+
         .golden-card.show {
             transform: translate(-50%, -50%) scale(1);
             opacity: 1;
             animation: cardGlow 2s ease-in-out infinite alternate;
         }
-        
+
         @keyframes cardGlow {
+            0% { box-shadow: 0 0 80px rgba(255,215,0,1); }
+            100% { box-shadow: 0 0 120px rgba(255,215,0,1); }
+        }
+
+        .eureka-header {
+            font-size: 24px;
+            font-family: 'Press Start 2P', monospace;
+            color: #8b4513;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            animation: headerShimmer 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes headerShimmer {
+            0% { text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 10px rgba(255,215,0,0.8); }
+            100% { text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 20px rgba(255,255,255,0.9); }
+        }
+
+        .prize-image {
+            width: 120px;
+            height: 120px;
+            margin: 15px 0;
+            border-radius: 15px;
+            border: 4px solid #8b4513;
+            object-fit: contain;
+            background: rgba(255,255,255,0.9);
+            animation: prizeGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes prizeGlow {
             0% { 
-                box-shadow: 0 0 40px 5px rgba(255, 215, 0, 0.7), inset 0 0 30px 10px rgba(255, 215, 0, 0.3);
+                box-shadow: 0 0 20px rgba(255,215,0,0.8);
+                filter: brightness(1.2) drop-shadow(0 0 15px rgba(255,215,0,0.6));
             }
             100% { 
-                box-shadow: 0 0 60px 8px rgba(255, 215, 0, 0.9), inset 0 0 50px 15px rgba(255, 215, 0, 0.5);
+                box-shadow: 0 0 40px rgba(255,215,0,1);
+                filter: brightness(1.4) drop-shadow(0 0 25px rgba(255,215,0,1));
             }
         }
-        
-        .eureka-header {
-            font-family: 'Bungee', cursive;
-            font-size: 28px;
-            color: white;
-            margin-bottom: 20px;
-            text-shadow: 
-                0 0 10px #FFD700,
-                0 0 20px #FFD700,
-                0 0 30px #FFD700;
-            animation: headerGlow 2s ease-in-out infinite alternate;
+
+        .prize-textbox {
+            background: linear-gradient(145deg, #8b4513 0%, #3e2723 100%);
+            border: 4px solid #a0522d;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            width: 320px;
         }
-        
-        @keyframes headerGlow {
-            0% { text-shadow: 0 0 10px #FFD700, 0 0 20px #FFD700, 0 0 30px #FFD700; }
-            100% { text-shadow: 0 0 15px #FFD700, 0 0 30px #FFD700, 0 0 45px #FFD700; }
+
+        .golden-text {
+            color: #ffffff;
+            font-size: 12px;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
+            margin-bottom: 10px;
+            background: linear-gradient(145deg, #ffd700, #ffed4e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        
-        /* ✅ ENHANCED: Prize image - bigger with no background */
-        .prize-image {
-            width: 160px !important;
-            height: 160px !important;
-            margin: 20px auto !important;
-            border: none !important;
-            background: none !important;
-            padding: 0 !important;
-            object-fit: contain;
-            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+
+        .golden-subtitle {
+            color: #ffffff;
+            font-size: 10px;
+            font-family: 'Exo 2', sans-serif;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            line-height: 1.4;
         }
-        
-        /* ✅ ENHANCED: Dialog text boxes with white glowing text and Bungee font */
-        .dialog-textbox {
-            background: transparent !important;
-            color: white !important;
-            font-family: 'Bungee', cursive !important;
-            font-weight: 400 !important;
-            font-size: 16px !important;
-            padding: 10px 15px !important;
-            margin: 8px auto !important;
-            text-shadow: 
-                0 0 8px #FFD700,
-                0 0 15px #FFD700;
-            border: none !important;
-            border-radius: 0 !important;
-            max-width: 90% !important;
-            box-shadow: none !important;
-            backdrop-filter: none !important;
-            line-height: 1.4 !important;
-            text-align: center !important;
+
+        /* ✅ Enhanced worth display */
+        .prize-worth {
+            color: #ffffff;
+            font-size: 14px;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
+            margin-top: 10px;
+            background: linear-gradient(145deg, #00ff00, #32cd32);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: worthGlow 2s ease-in-out infinite alternate;
         }
-        
-        .dialog-textbox.main-title {
-            font-size: 18px !important;
-            text-shadow: 
-                0 0 12px #FFD700,
-                0 0 24px #FFD700,
-                0 0 36px #FFD700;
+
+        @keyframes worthGlow {
+            0% { filter: brightness(1) drop-shadow(0 0 5px rgba(0,255,0,0.8)); }
+            100% { filter: brightness(1.3) drop-shadow(0 0 15px rgba(0,255,0,1)); }
         }
-        
-        .dialog-textbox.prize-info {
-            font-size: 14px !important;
-        }
-        
-        .dialog-textbox.worth-info {
-            font-size: 20px !important;
-            text-shadow: 
-                0 0 15px #FFD700,
-                0 0 30px #FFD700,
-                0 0 45px #FFD700;
-        }
-        
-        .winner-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 20px;
-        }
-        
-        .golden-card-close, .return-home-winner {
-            background: linear-gradient(145deg, #654321 0%, #5d4037 100%);
+
+        .golden-card-close {
+            background: linear-gradient(145deg, #8b4513 0%, #5d4037 100%);
             color: #ffd700;
             border: none;
-            padding: 12px 24px;
-            border-radius: 12px;
+            padding: 12px 30px;
+            border-radius: 15px;
             font-size: 10px;
             font-family: 'Press Start 2P', monospace;
             cursor: pointer;
-            transition: all 0.2s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             text-transform: uppercase;
             border: 3px solid #a0522d;
+            margin: 10px 5px;
         }
-        
+
         .return-home-winner {
             background: linear-gradient(145deg, #ff6b35 0%, #f7931e 100%);
             color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 15px;
+            font-size: 10px;
+            font-family: 'Press Start 2P', monospace;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
             border: 3px solid rgba(255,255,255,0.3);
+            margin: 10px 5px;
         }
-        
-        /* ✅ FIXED: Mobile reel position - moved down */
+
+        /* Mobile Responsive */
         @media (max-width: 768px) {
             .slot-machine-container {
                 width: 350px;
@@ -512,51 +667,52 @@
             }
             
             .golden-card {
-                width: 350px;
-                height: 550px;
-                padding: 20px 15px;
+                width: 320px;
+                height: 440px;
             }
-            
-            /* FIXED: Mobile reel alignment moved down */
+
             .reels-overlay {
-                top: 290px !important; /* moved down from 280px */
-                width: 200px !important;
+                top: 260px;
             }
-            
-            .reel-window {
-                width: 54px;
-                height: 70px;
+
+            .spin-button-container {
+                bottom: 100px;
             }
-            
-            .symbol {
-                width: 54px;
-                height: 70px;
+
+            .status-overlay {
+                bottom: 30px;
             }
-            
-            .symbol img {
-                width: 46px;
-                height: 46px;
+
+            .email-popup-content {
+                padding: 30px 20px;
             }
-            
-            .dialog-textbox {
-                font-size: 14px !important;
-                padding: 12px 16px !important;
-                margin: 10px auto !important;
+
+            .popup-buttons {
+                flex-direction: column;
             }
-            .dialog-textbox.main-title {
-                font-size: 16px !important;
+
+            .popup-buttons button {
+                min-width: auto;
+                width: 100%;
             }
-            .dialog-textbox.worth-info {
-                font-size: 18px !important;
+        }
+
+        @keyframes particleExplode {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-200px) rotate(720deg);
+                opacity: 0;
             }
         }
     </style>
 </head>
-
 <body>
     <div class="arcade-background"></div>
     
-    <!-- Email popup -->
+    <!-- ✅ FIXED EMAIL POPUP with proper retry functionality -->
     <div class="email-popup" id="emailPopup">
         <div class="email-popup-content">
             <h2>🎰 Welcome to PB DAYS ARCADE! 🎉</h2>
@@ -564,11 +720,13 @@
             <input type="email" id="popupEmailInput" placeholder="Enter your email address" required>
             <div class="popup-buttons">
                 <button onclick="submitEmailAndStart()">🎮 START PLAYING</button>
+                <button id="retryButton" class="retry-button" onclick="retryEmail()" style="display: none;">🔄 RETRY EMAIL</button>
             </div>
+            <div class="retry-info" id="retryInfo" style="display: none;"></div>
         </div>
     </div>
     
-    <!-- Custom Modal -->
+    <!-- Custom Modal for messages -->
     <div class="custom-modal" id="customModal">
         <div class="modal-content">
             <div id="modalMessage">Message here</div>
@@ -610,36 +768,178 @@
         </div>
     </div>
     
-    <!-- ✅ ENHANCED: Winner card with BLACK background, white glowing text, and Bungee font -->
+    <!-- ✅ ENHANCED Winner Card with visible text -->
     <div class="golden-card" id="goldenCard">
         <div class="eureka-header">🏆 EUREKA! 🏆</div>
-        
         <img class="prize-image" id="prizeImage" src="" alt="Prize Image">
-        
-        <div class="dialog-textbox main-title" id="prizeTitle">
-            YOU WON THIS AMAZING PRIZE!
+        <div class="prize-textbox">
+            <div class="golden-text" id="prizeTitle">YOU WON THIS AMAZING PRIZE!</div>
+            <div class="golden-subtitle" id="prizeDescription">Your prize will be sent once your order is delivered!</div>
+            <div class="prize-worth" id="prizeWorth">Worth ₹0</div>
         </div>
-        
-        <div class="dialog-textbox prize-info" id="prizeDescription">
-            Your prize will be sent once your order is delivered!
-        </div>
-        
-        <div class="dialog-textbox worth-info" id="prizeWorth">
-            Worth ₹0
-        </div>
-        
-        <div class="dialog-textbox" style="font-style: italic;">
-            🎉 Email notification sent! Check your inbox! 📧
-        </div>
-        
-        <div class="winner-buttons">
+        <div class="golden-subtitle" style="margin: 10px 0; font-style: italic; color: #ffffff; text-shadow: 1px 1px 2px rgba(0,0,0,0.8);">🎉 Email notification sent! Check your inbox! 📧</div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
             <button class="golden-card-close" id="closeCard">AWESOME!</button>
             <button class="return-home-winner" onclick="returnToHome()">← BACK TO PINKBLUE</button>
         </div>
     </div>
 
     <script>
-        // ✅ ENHANCED AUDIO SYSTEM with ABBA Winner Takes It All style joyful music
+        // Global variables
+        let userSession = null;
+        let spinning = false;
+        let availablePrizes = [];
+        let userEmail = '';
+        let retryCount = 0;
+        const MAX_RETRIES = 2;
+
+        // ✅ FIXED: Enhanced email popup with proper retry functionality
+        async function submitEmailAndStart() {
+            const emailInput = document.getElementById('popupEmailInput');
+            const email = emailInput.value.trim();
+
+            if (!email || !email.includes('@')) {
+                showCustomModal('Please enter a valid email address!');
+                emailInput.focus();
+                return;
+            }
+
+            try {
+                userEmail = email;
+                localStorage.setItem('arcadeEmail', email);
+                
+                // ✅ Show loading state
+                const startButton = document.querySelector('.email-popup button:not(.retry-button)');
+                const originalText = startButton.textContent;
+                startButton.textContent = 'CHECKING...';
+                startButton.disabled = true;
+                
+                // Check for valid orders
+                const customerData = await fetchCustomerData(email);
+                
+                // ✅ Reset button state
+                startButton.textContent = originalText;
+                startButton.disabled = false;
+                
+                if (customerData && customerData.orderData) {
+                    // Success - hide popup and start game
+                    document.getElementById('emailPopup').classList.add('hidden');
+                    initializeGameForUser(email);
+                    resetRetryState(); // Reset retry count on success
+                } else {
+                    // ✅ FIXED: Show proper message for no orders found
+                    showRetryOption('No eligible orders found from the last 2 days. Please try again or place a new order.');
+                }
+            } catch (error) {
+                console.error('Email submission error:', error);
+                // ✅ Reset button state on error
+                const startButton = document.querySelector('.email-popup button:not(.retry-button)');
+                startButton.textContent = '🎮 START PLAYING';
+                startButton.disabled = false;
+                showRetryOption('Unable to check orders. Please try again.');
+            }
+        }
+
+        // ✅ FIXED: Proper retry option handling
+        function showRetryOption(message) {
+            if (retryCount < MAX_RETRIES) {
+                document.getElementById('retryButton').style.display = 'block';
+                document.getElementById('retryInfo').style.display = 'block';
+                document.getElementById('retryInfo').innerHTML = `
+                    <div style="color: #ff6b35; font-weight: bold; margin-bottom: 8px;">
+                        ${message}
+                    </div>
+                    <div style="color: #666;">
+                        Retries remaining: ${MAX_RETRIES - retryCount}
+                    </div>
+                `;
+            } else {
+                // ✅ FIXED: Show support message when all retries are exhausted
+                document.getElementById('retryButton').style.display = 'none';
+                document.getElementById('retryInfo').style.display = 'block';
+                document.getElementById('retryInfo').innerHTML = `
+                    <div style="color: #ff6b35; font-weight: bold; margin-bottom: 10px;">
+                        You've used all retries.
+                    </div>
+                    <div style="color: #666; font-size: 9px;">
+                        Please contact <strong>support@pinkblue.in</strong> for assistance or place a new order.
+                    </div>
+                `;
+                
+                // ✅ Also show a modal for better visibility
+                setTimeout(() => {
+                    showCustomModal('You have used all retry attempts. Please contact support@pinkblue.in for assistance or place a new order to participate.');
+                }, 1000);
+            }
+        }
+
+        // ✅ FIXED: Retry email function
+        function retryEmail() {
+            retryCount++;
+            console.log('🔄 Retry attempt:', retryCount);
+            
+            if (retryCount <= MAX_RETRIES) {
+                // Clear input and reset UI
+                document.getElementById('popupEmailInput').value = '';
+                document.getElementById('popupEmailInput').focus();
+                document.getElementById('retryButton').style.display = 'none';
+                document.getElementById('retryInfo').style.display = 'none';
+                
+                // Reset button states
+                const startButton = document.querySelector('.email-popup button:not(.retry-button)');
+                startButton.textContent = '🎮 START PLAYING';
+                startButton.disabled = false;
+                
+                console.log('✅ Retry UI reset, remaining attempts:', MAX_RETRIES - retryCount);
+            } else {
+                // ✅ No more retries available
+                showRetryOption('No more retries available.');
+            }
+        }
+
+        // ✅ NEW: Reset retry state on successful login
+        function resetRetryState() {
+            retryCount = 0;
+            document.getElementById('retryButton').style.display = 'none';
+            document.getElementById('retryInfo').style.display = 'none';
+        }
+
+        // ✅ ENHANCED: Initialize game with better error handling
+        async function initializeGameForUser(email) {
+            try {
+                const isOverrideUser = checkIfOverrideUser(email);
+                
+                if (isOverrideUser) {
+                    document.getElementById('spinsLeft').textContent = '∞';
+                    return;
+                }
+
+                const customerData = await fetchCustomerData(email);
+                if (customerData && customerData.orderData && customerData.orderData.increment_id) {
+                    document.getElementById('spinsLeft').textContent = '1';
+                } else {
+                    document.getElementById('spinsLeft').textContent = '0';
+                }
+            } catch (error) {
+                console.error('Initialization error:', error);
+                document.getElementById('spinsLeft').textContent = '0';
+            }
+        }
+
+        function returnToHome() {
+            window.location.href = 'https://pinkblue.in';
+        }
+
+        function showCustomModal(message) {
+            document.getElementById('modalMessage').textContent = message;
+            document.getElementById('customModal').style.display = 'flex';
+        }
+
+        function closeCustomModal() {
+            document.getElementById('customModal').style.display = 'none';
+        }
+
+        // ✅ ENHANCED AUDIO SYSTEM with ABBA "Winner Takes It All" style joyful music
         class AudioSystem {
             constructor() {
                 this.audioContext = null;
@@ -654,6 +954,7 @@
                     this.masterGain = this.audioContext.createGain();
                     this.masterGain.connect(this.audioContext.destination);
                     this.masterGain.gain.setValueAtTime(0.4, this.audioContext.currentTime);
+                    
                     this.startJoyfulAbbaStyleMusic();
                     console.log('🎵 ABBA-style joyful music initialized');
                 } catch (error) {
@@ -661,7 +962,7 @@
                 }
             }
 
-            // ABBA "Winner Takes It All" style joyful background music
+            // ✅ ABBA "Winner Takes It All" style joyful background music
             startJoyfulAbbaStyleMusic() {
                 if (!this.audioContext || this.isMuted) return;
                 this.createAbbaStyleMelody();
@@ -671,8 +972,8 @@
                 if (!this.audioContext || this.isMuted) return;
 
                 const now = this.audioContext.currentTime;
-
-                // ABBA-style uplifting chord progression: D-A-Bm-G
+                
+                // ✅ ABBA-style uplifting chord progression (D-A-Bm-G)
                 const abbaChords = [
                     [293.66, 369.99, 440.00], // D Major
                     [220.00, 277.18, 329.63], // A Major
@@ -702,7 +1003,7 @@
                     });
                 });
 
-                // Add triumphant melody line like "Winner Takes It All" opening
+                // ✅ Add triumphant melody line (like "Winner Takes It All" opening)
                 const triumphantMelody = [587.33, 659.25, 739.99, 830.61, 880.00, 987.77, 1108.73, 1174.66];
                 
                 triumphantMelody.forEach((freq, index) => {
@@ -764,9 +1065,10 @@
                     metalOsc.start(now);
                     metalOsc.stop(now + 2.5);
                     
-                    // Add metallic clicks
                     for (let i = 0; i < 15; i++) {
-                        setTimeout(() => this.createMetallicClick(), i * 150);
+                        setTimeout(() => {
+                            this.createMetallicClick();
+                        }, i * 150);
                     }
                 } catch (error) {
                     console.log('Spin sound error:', error);
@@ -775,7 +1077,7 @@
 
             createMetallicClick() {
                 if (!this.audioContext || this.isMuted) return;
-                
+
                 const now = this.audioContext.currentTime;
                 const clickOsc = this.audioContext.createOscillator();
                 const clickGain = this.audioContext.createGain();
@@ -793,7 +1095,7 @@
                 clickOsc.stop(now + 0.08);
             }
 
-            // ABBA-style victory fanfare
+            // ✅ ABBA-style victory fanfare
             playWinSound() {
                 if (!this.audioContext || this.isMuted) return;
                 
@@ -820,7 +1122,7 @@
                         }, index * 200);
                     });
                     
-                    console.log('🎵 ABBA-style victory fanfare played');
+                    console.log('🏆 ABBA-style victory fanfare played');
                 } catch (error) {
                     console.log('Win sound error:', error);
                 }
@@ -842,11 +1144,7 @@
 
         const audioSystem = new AudioSystem();
 
-        // Global variables
-        let userSession = null;
-        let spinning = false;
-        let userEmail = '';
-        
+        // Slot machine symbols
         const symbols = [
             { name: '7', image: 'https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/7.png' },
             { name: 'Star', image: 'https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/Star.png' },
@@ -877,95 +1175,77 @@
             }
         }
 
+        // ✅ CORRECTED: Only override codes bypass restrictions
         function checkIfOverrideUser(email) {
             const normalizedEmail = email.toLowerCase().trim();
-            return normalizedEmail.includes('testoverridemaaz') || 
-                   normalizedEmail.includes('testoverridevalli');
+            
+            // ✅ ONLY override codes bypass restrictions (not regular emails)
+            return normalizedEmail.includes('test_override_maaz') || 
+                   normalizedEmail.includes('test_override_valli');
         }
 
+        // Check if user can spin (regular validation for all emails)
+        function canUserSpin(email, orderData) {
+            // ✅ Only override codes get special treatment
+            if (checkIfOverrideUser(email)) {
+                return { canSpin: true, reason: 'Override user' };
+            }
+
+            if (!orderData || !orderData.increment_id) {
+                return { canSpin: false, reason: 'No valid order found for this email' };
+            }
+
+            return { canSpin: true, reason: 'Valid order found' };
+        }
+
+        // ✅ ENHANCED: Better error handling in fetchCustomerData
         async function fetchCustomerData(email) {
             try {
+                console.log('Fetching customer data for:', email);
+                
+                // ✅ FIXED: Use relative URL instead of process.env
                 const response = await fetch('/.netlify/functions/get-customer-order', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: email })
                 });
-                
+
                 if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Response error:', errorText);
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                
+
                 const data = await response.json();
-                
+                console.log('Customer data response:', data);
+
                 if (data.success) {
                     return {
                         orderData: data.orderData,
                         orderValue: parseFloat(data.orderData?.grand_total || 0),
                         email: email
                     };
+                } else {
+                    // ✅ Log the specific error message from the API
+                    console.error('Customer data not successful:', data.error);
+                    return null;
                 }
-                
-                return null;
             } catch (error) {
                 console.error('Error fetching customer data:', error);
                 return null;
             }
         }
 
-        async function submitEmailAndStart() {
-            const emailInput = document.getElementById('popupEmailInput');
-            const email = emailInput.value.trim();
-            
-            if (!email || !email.includes('@')) {
-                showCustomModal('Please enter a valid email address!');
-                emailInput.focus();
-                return;
-            }
-
-            try {
-                userEmail = email;
-                localStorage.setItem('arcadeEmail', email);
-                
-                const startButton = document.querySelector('.email-popup button');
-                const originalText = startButton.textContent;
-                startButton.textContent = 'CHECKING...';
-                startButton.disabled = true;
-                
-                const customerData = await fetchCustomerData(email);
-                
-                startButton.textContent = originalText;
-                startButton.disabled = false;
-                
-                if (customerData && customerData.orderData) {
-                    document.getElementById('emailPopup').classList.add('hidden');
-                    initializeGameForUser(email, customerData);
-                } else {
-                    showCustomModal('No eligible orders found from the last 2 days. Please try again or place a new order.');
-                }
-            } catch (error) {
-                console.error('Email submission error:', error);
-                showCustomModal('Unable to check orders. Please try again.');
-            }
-        }
-
-        function initializeGameForUser(email, customerData) {
-            if (checkIfOverrideUser(email)) {
-                document.getElementById('spinsLeft').textContent = '∞';
-            } else {
-                document.getElementById('spinsLeft').textContent = '1';
-            }
-        }
-
-        // ✅ FIXED: Spin function with proper animation control
+        // ✅ FIXED: Spin function with no process.env error
         async function spin() {
             if (spinning) {
-                console.log('⚠️ Spin already in progress');
+                console.log('⚠️ Spin already in progress, ignoring click');
                 return;
             }
-            
+
             const email = userEmail || localStorage.getItem('arcadeEmail');
             const spinBtn = document.getElementById('spinBtn');
-            
+
             if (!email || !email.includes('@')) {
                 showCustomModal('Please refresh the page and enter a valid email address!');
                 return;
@@ -973,61 +1253,100 @@
 
             spinning = true;
             spinBtn.disabled = true;
+            spinBtn.classList.add('spinning-state');
             spinBtn.textContent = 'CHECKING...';
 
             try {
+                // ✅ Check if this is an override user
                 const isOverrideUser = checkIfOverrideUser(email);
+                
                 let customerData = null;
+                let orderNumber = null;
 
                 if (!isOverrideUser) {
+                    // ✅ Regular user - need valid order data
                     customerData = await fetchCustomerData(email);
                     
                     if (!customerData) {
-                        showCustomModal('No valid order found for this email in the last 2 days.');
+                        showCustomModal('No valid order found for this email in the last 2 days. Please check your email or place a new order to participate.');
                         resetSpinButton();
                         return;
                     }
+
+                    orderNumber = customerData.orderData?.increment_id;
+                    if (!orderNumber) {
+                        showCustomModal('No valid order number found. Please contact support.');
+                        resetSpinButton();
+                        return;
+                    }
+
+                    // ✅ FIXED: Optional order checking using relative URL
+                    try {
+                        const orderCheckResponse = await fetch('/.netlify/functions/check-order-usage', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ 
+                                email: email,
+                                orderNumber: orderNumber
+                            })
+                        });
+
+                        if (orderCheckResponse.ok) {
+                            const orderCheckData = await orderCheckResponse.json();
+                            if (orderCheckData.success && !orderCheckData.canSpin) {
+                                showCustomModal(orderCheckData.reason);
+                                spinBtn.textContent = 'USED';
+                                spinBtn.style.opacity = '0.5';
+                                resetSpinButton();
+                                return;
+                            }
+                        }
+                    } catch (orderCheckError) {
+                        console.log('⚠️ Order check failed (non-critical):', orderCheckError.message);
+                        // Continue with spin even if order check fails
+                    }
                 } else {
-                    // Override user
+                    // ✅ Override user - create mock data
+                    console.log('🧪 Override user detected:', email);
                     customerData = {
                         orderData: { 
                             increment_id: 'OVERRIDE_ORDER_' + Date.now(),
                             grand_total: '15000.00',
                             customer_firstname: 'Override',
-                            customer_lastname: 'User'
+                            customer_lastname: 'User',
+                            created_at: new Date().toISOString()
                         },
                         orderValue: 15000,
                         email: email
                     };
+                    orderNumber = customerData.orderData.increment_id;
                 }
 
                 userSession = customerData;
+                document.getElementById('spinsLeft').textContent = isOverrideUser ? '∞' : '0';
+
                 spinBtn.textContent = 'SPINNING...';
+                spinBtn.style.background = 'linear-gradient(145deg, #ff6b6b 0%, #ee5a52 100%)';
                 
-                // Play spin sound
                 audioSystem.playSpinSound();
 
-                // ✅ FIXED: Reel animation with proper stop control
+                // Reel animation
+                const results = [];
                 const spinDurations = [1800, 2200, 2600];
-                
-                // Start spinning all reels
+
                 for (let i = 1; i <= 3; i++) {
                     const strip = document.getElementById(`reel${i}`);
-                    if (strip) {
-                        strip.classList.add('spinning');
-                    }
+                    if (strip) strip.classList.add('spinning');
                 }
 
-                // Stop reels one by one at different times
                 const reelPromises = spinDurations.map((duration, index) => {
                     return new Promise((resolve) => {
                         setTimeout(() => {
                             const strip = document.getElementById(`reel${index + 1}`);
                             if (strip) {
-                                // ✅ FIXED: Stop spinning animation
                                 strip.classList.remove('spinning');
-                                
                                 const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+                                results.push(randomSymbol);
                                 const symbolIndex = symbols.findIndex(s => s.name === randomSymbol.name);
                                 const translateDistance = symbolIndex * 75;
                                 strip.style.transform = `translateY(-${translateDistance}px)`;
@@ -1038,7 +1357,10 @@
                 });
 
                 await Promise.all(reelPromises);
+
                 spinBtn.textContent = 'PROCESSING...';
+                spinBtn.style.background = 'linear-gradient(145deg, #ffa726 0%, #ff9800 100%)';
+
                 await processPrize(email, customerData);
 
             } catch (error) {
@@ -1050,10 +1372,14 @@
             }
         }
 
+        // ✅ FIXED: Prize processing with relative URL
         async function processPrize(email, customerData) {
             const spinBtn = document.getElementById('spinBtn');
-            
+
             try {
+                console.log('Processing prize for:', email);
+                
+                // ✅ FIXED: Use relative URL instead of process.env
                 const response = await fetch('/.netlify/functions/allocate-prize', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1067,24 +1393,33 @@
                 });
 
                 if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Allocate-prize error:', errorText);
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
                 const data = await response.json();
-
+                console.log('Prize allocation result:', data);
+                
                 if (data.success) {
+                    // SUCCESS - Update button to completed state
                     spinBtn.textContent = 'PRIZE WON!';
                     spinBtn.style.background = 'linear-gradient(145deg, #4caf50 0%, #45a049 100%)';
+                    spinBtn.style.color = 'white';
+                    spinBtn.classList.remove('spinning-state');
+                    spinBtn.classList.add('prize-won');
                     
+                    // Show winner card
                     showWinnerCard(data.prize);
                     audioSystem.playWinSound();
                     
+                    // ✅ Override users can spin again, regular users can't
                     setTimeout(() => {
                         if (checkIfOverrideUser(email)) {
                             resetSpinButton();
                             spinBtn.textContent = 'SPIN AGAIN';
                         } else {
-                            spinBtn.textContent = 'ORDER USED';
+                            spinBtn.textContent = 'USED';
                             spinBtn.disabled = true;
                             spinBtn.style.opacity = '0.5';
                         }
@@ -1101,6 +1436,23 @@
             }
         }
 
+        // Function to reset button to original state
+        function resetSpinButton() {
+            const spinBtn = document.getElementById('spinBtn');
+            
+            spinning = false;
+            spinBtn.disabled = false;
+            spinBtn.textContent = 'SPIN';
+            spinBtn.style.opacity = '1';
+            spinBtn.style.cursor = 'pointer';
+            spinBtn.style.background = 'linear-gradient(145deg, #ffd700 0%, #ffed4e 30%, #b8860b 100%)';
+            spinBtn.style.color = '#333';
+            spinBtn.classList.remove('spinning-state', 'prize-won');
+            
+            console.log('🔓 Spin button reset and unlocked');
+        }
+
+        // ✅ ENHANCED: Show winner card with clean product name and "Worth ₹" display
         function showWinnerCard(prize) {
             const card = document.getElementById('goldenCard');
             const titleElement = document.getElementById('prizeTitle');
@@ -1108,6 +1460,7 @@
             const worthElement = document.getElementById('prizeWorth');
             const imageElement = document.getElementById('prizeImage');
             
+            // ✅ Clean product name (remove codes)
             const cleanPrizeName = cleanProductName(prize.name);
             titleElement.textContent = `YOU WON: ${cleanPrizeName}`;
             
@@ -1124,19 +1477,25 @@
                 }
             }
             
+            // ✅ Enhanced "Worth ₹" display
             worthElement.textContent = `Worth ₹${prize.value || '0'}`;
+            
             card.classList.add('show');
+            createWinParticles(30);
         }
 
+        // ✅ Clean product name function
         function cleanProductName(prizeName) {
             if (!prizeName) return 'Mystery Prize';
             
+            // Remove common product codes and prefixes
             let cleanName = prizeName
-                .replace(/^[A-Z0-9_]+\s*[-_]\s*/i, '')
-                .replace(/^[A-Z]{2,}\s+/i, '')
-                .replace(/\s*[-_]\s*[A-Z0-9_]+$/i, '')
+                .replace(/^[A-Z0-9_]+\s*[-_]\s*/i, '') // Remove codes like "PB01_001_02 - "
+                .replace(/^[A-Z]{2,}\s+/i, '') // Remove prefix codes like "PB "
+                .replace(/\s*[-_]\s*[A-Z0-9_]+$/i, '') // Remove suffix codes
                 .trim();
             
+            // If nothing left, return original
             if (!cleanName || cleanName.length < 3) {
                 return prizeName;
             }
@@ -1144,66 +1503,92 @@
             return cleanName;
         }
 
-        function resetSpinButton() {
-            const spinBtn = document.getElementById('spinBtn');
-            spinning = false;
-            spinBtn.disabled = false;
-            spinBtn.textContent = 'SPIN';
-            spinBtn.style.opacity = '1';
-            spinBtn.style.background = 'linear-gradient(145deg, #ffd700 0%, #ffed4e 30%, #b8860b 100%)';
-        }
-
+        // Close winner card
         function closeWinnerCard() {
             document.getElementById('goldenCard').classList.remove('show');
         }
 
-        function showCustomModal(message) {
-            document.getElementById('modalMessage').textContent = message;
-            document.getElementById('customModal').style.display = 'flex';
+        // Create celebration particles
+        function createWinParticles(count) {
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.style.position = 'absolute';
+                    particle.style.width = (Math.random() * 6 + 3) + 'px';
+                    particle.style.height = particle.style.width;
+                    particle.style.background = 'radial-gradient(circle, #ffd700, #ffb300)';
+                    particle.style.borderRadius = '50%';
+                    particle.style.left = Math.random() * window.innerWidth + 'px';
+                    particle.style.top = (window.innerHeight - 100) + 'px';
+                    particle.style.pointerEvents = 'none';
+                    particle.style.animation = 'particleExplode 1.5s ease-out forwards';
+                    particle.style.zIndex = '999';
+                    
+                    document.body.appendChild(particle);
+                    setTimeout(() => {
+                        if (particle.parentNode) {
+                            particle.parentNode.removeChild(particle);
+                        }
+                    }, 1500);
+                }, i * 20);
+            }
         }
 
-        function closeCustomModal() {
-            document.getElementById('customModal').style.display = 'none';
-        }
-
-        function returnToHome() {
-            window.location.href = 'https://pinkblue.in';
-        }
-
+        // Audio control
         function toggleAudio() {
             const button = document.getElementById('audioControl');
             const isMuted = audioSystem.toggleMute();
             button.textContent = isMuted ? '🔇' : '🔊';
         }
 
-        // Initialize everything
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log('🎰 Enhanced Arcade System initialized with proper alignment');
+        // ✅ ENHANCED: DOMContentLoaded with proper initialization
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('DOM Content Loaded - Initializing Fixed Arcade System...');
             
+            // Initialize components
             initializeReels();
             
+            // Check if user already has email stored
             const storedEmail = localStorage.getItem('arcadeEmail');
             if (storedEmail) {
                 userEmail = storedEmail;
                 document.getElementById('emailPopup').classList.add('hidden');
+                initializeGameForUser(storedEmail);
             } else {
+                // Focus on email input in popup
                 document.getElementById('popupEmailInput').focus();
             }
             
+            // Add event listeners
             const spinBtn = document.getElementById('spinBtn');
             const closeCard = document.getElementById('closeCard');
             const audioControl = document.getElementById('audioControl');
+
+            if (spinBtn) {
+                spinBtn.removeEventListener('click', spin);
+                spinBtn.addEventListener('click', spin);
+            }
             
-            if (spinBtn) spinBtn.addEventListener('click', spin);
             if (closeCard) closeCard.addEventListener('click', closeWinnerCard);
             if (audioControl) audioControl.addEventListener('click', toggleAudio);
 
-            // Enable audio context on first user interaction
-            document.body.addEventListener('click', () => {
-                if (audioSystem.audioContext && audioSystem.audioContext.state === 'suspended') {
-                    audioSystem.audioContext.resume();
-                }
-            }, { once: true });
+            console.log('✅ Fixed Arcade System initialized - no process.env errors');
+        });
+
+        // Enable audio on first interaction
+        document.body.addEventListener('click', () => {
+            if (audioSystem.audioContext && audioSystem.audioContext.state === 'suspended') {
+                audioSystem.audioContext.resume();
+            }
+        }, { once: true });
+
+        // Global error handlers
+        window.addEventListener('error', (event) => {
+            console.error('Global error:', event.error);
+        });
+
+        window.addEventListener('unhandledrejection', (event) => {
+            console.error('Unhandled promise rejection:', event.reason);
         });
     </script>
 </body>
