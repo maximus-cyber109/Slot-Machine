@@ -959,7 +959,7 @@
         }
 
         // ✅ FIXED: Using correct action name from your Google Sheets script
-        async function checkOrderUsage(email, orderNumber) {
+        async function checkOrderIdUsage(email, orderNumber) {
             try {
                 console.log('🔍 Checking order usage for:', orderNumber, 'by email:', email);
                 
@@ -1037,7 +1037,7 @@
                     }
 
                     // ✅ CRITICAL FIX: Check if order has already been used
-                    const orderUsageCheck = await checkOrderUsage(email, orderNumber);
+                    const orderUsageCheck = await checkOrderIdUsage(email, orderNumber);
                     if (orderUsageCheck && !orderUsageCheck.canSpin) {
                         showCustomModal('This order has already been used for spinning.');
                         spinBtn.textContent = 'ORDER USED';
