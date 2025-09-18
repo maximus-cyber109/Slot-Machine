@@ -62,6 +62,25 @@
             box-shadow: 0 20px 60px rgba(255, 215, 0, 0.8);
         }
         
+        .popup-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .popup-buttons button {
+            min-width: 150px;
+            padding: 15px 25px;
+            background: #8b4513;
+            color: #ffd700;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+        }
+        
         /* Custom Modal */
         .custom-modal {
             position: fixed;
@@ -122,7 +141,7 @@
             z-index: 1001;
         }
         
-        /* ✅ FIXED: Slot Machine Alignment */
+        /* Slot Machine */
         .slot-machine-container {
             position: relative;
             width: 400px;
@@ -164,7 +183,7 @@
             font-family: 'Orbitron', monospace;
         }
         
-        /* ✅ FIXED: Reels positioned correctly inside slot machine */
+        /* Reels positioning - YOUR EXACT SPECIFICATIONS */
         .reels-overlay {
             position: absolute;
             top: 280px;
@@ -185,6 +204,13 @@
             overflow: hidden;
             border-radius: 8px;
             background: transparent;
+            box-shadow: 0 0 20px rgba(255,215,0,0.3);
+            animation: reelGlow 4s ease-in-out infinite alternate;
+        }
+        
+        @keyframes reelGlow {
+            0% { box-shadow: 0 0 20px rgba(255,215,0,0.3); }
+            100% { box-shadow: 0 0 35px rgba(255,215,0,0.6); }
         }
         
         .reel-strip {
@@ -221,8 +247,22 @@
             width: 50px;
             height: 50px;
             object-fit: contain;
+            filter: brightness(1.2) contrast(1.3) drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
+        .symbol.winning img {
+            filter: brightness(1.6) contrast(1.7) drop-shadow(0 0 25px #ffd700);
+            transform: scale(1.2);
+            animation: symbolWin 0.3s ease-in-out infinite alternate;
+        }
+        
+        @keyframes symbolWin {
+            0% { transform: scale(1.2); }
+            100% { transform: scale(1.25); }
+        }
+        
+        /* Spin button positioning - YOUR EXACT SPECIFICATIONS */
         .spin-button-container {
             position: absolute;
             bottom: 120px;
@@ -247,24 +287,61 @@
             letter-spacing: 1px;
             border: 3px solid rgba(255,255,255,0.4);
             animation: buttonPulse 2s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
         }
         
         @keyframes buttonPulse {
             0%, 100% { 
                 box-shadow: 0 10px 25px rgba(255,181,0,0.6), 0 0 50px rgba(255,215,0,0.4);
+                transform: scale(1);
             }
             50% { 
                 box-shadow: 0 15px 35px rgba(255,181,0,0.8), 0 0 80px rgba(255,215,0,0.7);
+                transform: scale(1.02);
             }
         }
         
+        .spin-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 20px 50px rgba(255,181,0,0.8), 0 0 100px rgba(255,215,0,1);
+        }
+        
+        .spin-button.spinning-state {
+            background: linear-gradient(145deg, #ff6b6b 0%, #ee5a52 100%) !important;
+            color: white !important;
+            cursor: not-allowed !important;
+            opacity: 0.8 !important;
+            transform: none !important;
+            animation: spinningPulse 1s ease-in-out infinite alternate !important;
+        }
+        
+        @keyframes spinningPulse {
+            0% { opacity: 0.7; }
+            100% { opacity: 0.9; }
+        }
+        
         .spin-button:disabled {
+            pointer-events: none !important;
+            user-select: none !important;
             opacity: 0.5;
             cursor: not-allowed;
             background: linear-gradient(145deg, #888 0%, #666 100%);
             animation: none;
         }
         
+        .spin-button.prize-won {
+            background: linear-gradient(145deg, #4caf50 0%, #45a049 100%) !important;
+            color: white !important;
+            animation: successGlow 0.5s ease-in-out infinite alternate !important;
+        }
+        
+        @keyframes successGlow {
+            0% { box-shadow: 0 10px 25px rgba(76, 175, 80, 0.6), 0 0 50px rgba(76, 175, 80, 0.4); }
+            100% { box-shadow: 0 15px 35px rgba(76, 175, 80, 0.8), 0 0 80px rgba(76, 175, 80, 0.7); }
+        }
+        
+        /* Status Display - YOUR EXACT SPECIFICATIONS */
         .status-overlay {
             position: absolute;
             bottom: 50px;
@@ -279,65 +356,32 @@
             padding: 8px 15px;
             border-radius: 15px;
             border: 3px solid rgba(255,181,0,0.9);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.4);
             font-size: 8px;
             font-family: 'Press Start 2P', monospace;
+            backdrop-filter: blur(15px);
         }
         
-        /* ✅ ENHANCED: Winner Card with BLACK background and glowing gold particles */
+        /* Winner Card - YOUR EXACT SPECIFICATIONS */
         .golden-card {
-            position: fixed;
+            position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) scale(0);
-            width: 450px;
-            height: 600px;
-            background: #000000; /* Black background */
+            width: 380px;
+            height: 500px;
+            background: linear-gradient(145deg, #ffd700 0%, #ffed4e 20%, #b8860b 100%);
             border-radius: 25px;
-            border: 8px solid #FFD700; /* Gold border */
-            box-shadow: 
-                0 0 40px 5px rgba(255, 215, 0, 0.7),
-                inset 0 0 30px 10px rgba(255, 215, 0, 0.3);
+            border: 8px solid #8b4513;
+            box-shadow: 0 0 80px rgba(255,215,0,1);
             z-index: 1000;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: center;
             text-align: center;
             opacity: 0;
             transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            padding: 40px 30px;
-            overflow-y: auto;
-            position: relative;
-        }
-        
-        /* Glowing gold particles inside winner card */
-        .golden-card::before {
-            content: '';
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            right: 15px;
-            bottom: 15px;
-            border-radius: 20px;
-            background: 
-                radial-gradient(circle, rgba(255,215,0,0.1) 0%, rgba(255,215,0,0) 80%),
-                radial-gradient(circle at 40% 40%, rgba(255,215,0,0.2) 0%, rgba(255,215,0,0) 70%),
-                radial-gradient(circle at 60% 60%, rgba(255,215,0,0.3) 0%, rgba(255,215,0,0) 60%),
-                radial-gradient(circle at 80% 20%, rgba(255,215,0,0.15) 0%, rgba(255,215,0,0) 50%),
-                radial-gradient(circle at 20% 80%, rgba(255,215,0,0.25) 0%, rgba(255,215,0,0) 40%);
-            animation: glowParticles 3s ease-in-out infinite;
-            pointer-events: none;
-            z-index: 0;
-        }
-        
-        @keyframes glowParticles {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
-        }
-        
-        .golden-card > * {
-            position: relative;
-            z-index: 1;
         }
         
         .golden-card.show {
@@ -347,76 +391,57 @@
         }
         
         @keyframes cardGlow {
-            0% { 
-                box-shadow: 0 0 40px 5px rgba(255, 215, 0, 0.7), inset 0 0 30px 10px rgba(255, 215, 0, 0.3);
-            }
-            100% { 
-                box-shadow: 0 0 60px 8px rgba(255, 215, 0, 0.9), inset 0 0 50px 15px rgba(255, 215, 0, 0.5);
-            }
+            0% { box-shadow: 0 0 80px rgba(255,215,0,1); }
+            100% { box-shadow: 0 0 120px rgba(255,215,0,1); }
         }
         
         .eureka-header {
-            font-family: 'Bungee', cursive;
-            font-size: 28px;
-            color: white;
-            margin-bottom: 20px;
-            text-shadow: 
-                0 0 10px #FFD700,
-                0 0 20px #FFD700,
-                0 0 30px #FFD700;
+            font-size: 24px;
+            font-family: 'Press Start 2P', monospace;
+            color: #8b4513;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            animation: headerShimmer 2s ease-in-out infinite alternate;
         }
         
-        /* ✅ ENHANCED: Prize image - bigger with no background */
+        @keyframes headerShimmer {
+            0% { text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 10px rgba(255,215,0,0.8); }
+            100% { text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 20px rgba(255,255,255,0.9); }
+        }
+        
         .prize-image {
-            width: 160px !important;
-            height: 160px !important;
-            margin: 20px auto !important;
-            border: none !important;
-            background: none !important;
-            padding: 0 !important;
+            width: 120px;
+            height: 120px;
+            margin: 15px 0;
+            border-radius: 15px;
+            border: 4px solid #8b4513;
             object-fit: contain;
-            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+            background: rgba(255,255,255,0.9);
+            animation: prizeGlow 2s ease-in-out infinite alternate;
         }
         
-        /* ✅ ENHANCED: Dialog text boxes with white glowing text and Bungee font */
-        .dialog-textbox {
-            background: transparent !important;
-            color: white !important;
-            font-family: 'Bungee', cursive !important;
-            font-weight: 400 !important;
-            font-size: 16px !important;
-            padding: 10px 15px !important;
-            margin: 8px auto !important;
-            text-shadow: 
-                0 0 8px #FFD700,
-                0 0 15px #FFD700;
-            border: none !important;
-            border-radius: 0 !important;
-            max-width: 90% !important;
-            box-shadow: none !important;
-            backdrop-filter: none !important;
-            line-height: 1.4 !important;
-            text-align: center !important;
+        @keyframes prizeGlow {
+            0% { 
+                box-shadow: 0 0 20px rgba(255,215,0,0.8);
+                filter: brightness(1.2) drop-shadow(0 0 15px rgba(255,215,0,0.6));
+            }
+            100% { 
+                box-shadow: 0 0 40px rgba(255,215,0,1);
+                filter: brightness(1.4) drop-shadow(0 0 25px rgba(255,215,0,1));
+            }
         }
         
-        .dialog-textbox.main-title {
-            font-size: 18px !important;
-            text-shadow: 
-                0 0 12px #FFD700,
-                0 0 24px #FFD700,
-                0 0 36px #FFD700;
-        }
-        
-        .dialog-textbox.prize-info {
-            font-size: 14px !important;
-        }
-        
-        .dialog-textbox.worth-info {
-            font-size: 20px !important;
-            text-shadow: 
-                0 0 15px #FFD700,
-                0 0 30px #FFD700,
-                0 0 45px #FFD700;
+        .prize-textbox {
+            background: linear-gradient(145deg, #8b4513 0%, #3e2723 100%);
+            border: 4px solid #a0522d;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 10px 0;
+            color: #ffd700;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 12px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            max-width: 90%;
         }
         
         .winner-buttons {
@@ -447,7 +472,7 @@
             border: 3px solid rgba(255,255,255,0.3);
         }
         
-        /* ✅ FIXED: Mobile alignment */
+        /* Mobile Responsive - YOUR EXACT SPECIFICATIONS */
         @media (max-width: 768px) {
             .slot-machine-container {
                 width: 350px;
@@ -456,30 +481,33 @@
             }
             
             .golden-card {
-                width: 350px;
-                height: 550px;
-                padding: 20px 15px;
+                width: 320px;
+                height: 440px;
             }
             
-            /* FIXED: Mobile reel alignment moved down */
             .reels-overlay {
-                top: 290px !important;
-                width: 200px !important;
+                top: 260px;
             }
             
-            .reel-window {
-                width: 54px;
-                height: 70px;
+            .spin-button-container {
+                bottom: 100px;
             }
             
-            .symbol {
-                width: 54px;
-                height: 70px;
+            .status-overlay {
+                bottom: 30px;
             }
             
-            .symbol img {
-                width: 46px;
-                height: 46px;
+            .email-popup-content {
+                padding: 30px 20px;
+            }
+            
+            .popup-buttons {
+                flex-direction: column;
+            }
+            
+            .popup-buttons button {
+                min-width: auto;
+                width: 100%;
             }
         }
     </style>
@@ -540,25 +568,25 @@
         </div>
     </div>
     
-    <!-- ✅ ENHANCED: Winner card -->
+    <!-- Winner card -->
     <div class="golden-card" id="goldenCard">
         <div class="eureka-header">🏆 EUREKA! 🏆</div>
         
         <img class="prize-image" id="prizeImage" src="" alt="Prize Image">
         
-        <div class="dialog-textbox main-title" id="prizeTitle">
+        <div class="prize-textbox" id="prizeTitle">
             YOU WON THIS AMAZING PRIZE!
         </div>
         
-        <div class="dialog-textbox prize-info" id="prizeDescription">
+        <div class="prize-textbox" id="prizeDescription">
             Your prize will be sent once your order is delivered!
         </div>
         
-        <div class="dialog-textbox worth-info" id="prizeWorth">
+        <div class="prize-textbox" id="prizeWorth">
             Worth ₹0
         </div>
         
-        <div class="dialog-textbox" style="font-style: italic;">
+        <div class="prize-textbox" style="font-style: italic;">
             🎉 Email notification sent! Check your inbox! 📧
         </div>
         
@@ -568,13 +596,13 @@
         </div>
     </div>
 
-    <!-- ✅ WORKING: Background music -->
+    <!-- Background music -->
     <audio id="backgroundMusic" autoplay loop>
         <source src="data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjI5LjEwMAAAAAAAAAAAAAAA//OEAAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAAEAAABIADAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV6urq6urq6urq6urq6urq6urq6urq6urq6v////////////////////////////////8AAAAATGF2YzU4LjU0AAAAAAAAAAAAAAAAJAAAAAAAAAAAASDs90hvAAAAAAAAAAAAAAAAAAAA//OEZAAADwAABHiAAARYiABP+2Q8AAAaQAAAAgAAA0gAAAAAHVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU=" type="audio/mpeg">
     </audio>
 
     <script>
-        // ✅ WORKING: Audio system with metal sounds
+        // Working Audio system with metal sounds
         class AudioSystem {
             constructor() {
                 this.audioContext = null;
@@ -827,7 +855,7 @@
             }
         }
 
-        // ✅ FIXED: Spin function with proper animation control
+        // FIXED: Spin function with proper animation control
         async function spin() {
             if (spinning) {
                 console.log('⚠️ Spin already in progress');
@@ -844,6 +872,7 @@
 
             spinning = true;
             spinBtn.disabled = true;
+            spinBtn.classList.add('spinning-state');
             spinBtn.textContent = 'CHECKING...';
 
             try {
@@ -877,7 +906,7 @@
                 // Play spin sound
                 audioSystem.playSpinSound();
 
-                // ✅ FIXED: Reel animation with proper stop control
+                // FIXED: Reel animation with proper stop control
                 const spinDurations = [1800, 2200, 2600];
                 
                 // Start spinning all reels
@@ -894,7 +923,7 @@
                         setTimeout(() => {
                             const strip = document.getElementById(`reel${index + 1}`);
                             if (strip) {
-                                // ✅ FIXED: Stop spinning animation properly
+                                // FIXED: Stop spinning animation properly
                                 strip.classList.remove('spinning');
                                 
                                 const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
@@ -944,7 +973,7 @@
 
                 if (data.success) {
                     spinBtn.textContent = 'PRIZE WON!';
-                    spinBtn.style.background = 'linear-gradient(145deg, #4caf50 0%, #45a049 100%)';
+                    spinBtn.classList.add('prize-won');
                     
                     showWinnerCard(data.prize);
                     audioSystem.playWinSound();
@@ -1021,6 +1050,7 @@
             spinBtn.textContent = 'SPIN';
             spinBtn.style.opacity = '1';
             spinBtn.style.background = 'linear-gradient(145deg, #ffd700 0%, #ffed4e 30%, #b8860b 100%)';
+            spinBtn.classList.remove('spinning-state', 'prize-won');
         }
 
         function closeWinnerCard() {
