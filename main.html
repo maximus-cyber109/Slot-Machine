@@ -137,7 +137,7 @@
             line-height: 1.6;
         }
         
-        /* ✅ ADDED: Order Again button styling */
+        /* Order Again button styling */
         .order-again-btn {
             background: linear-gradient(145deg, #ff4b5c 0%, #ff0000 100%) !important;
             color: white !important;
@@ -192,7 +192,7 @@
             z-index: 1001;
         }
         
-        /* Slot Machine - YOUR EXACT POSITIONING */
+        /* Slot Machine */
         .slot-machine-container {
             position: relative;
             width: 400px;
@@ -234,7 +234,7 @@
             font-family: 'Orbitron', monospace;
         }
         
-        /* Reels positioning - YOUR EXACT SPECIFICATIONS */
+        /* Reels positioning */
         .reels-overlay {
             position: absolute;
             top: 280px;
@@ -313,7 +313,7 @@
             100% { transform: scale(1.25); }
         }
         
-        /* Spin button positioning - YOUR EXACT SPECIFICATIONS */
+        /* Spin button positioning */
         .spin-button-container {
             position: absolute;
             bottom: 120px;
@@ -392,7 +392,7 @@
             100% { box-shadow: 0 15px 35px rgba(76, 175, 80, 0.8), 0 0 80px rgba(76, 175, 80, 0.7); }
         }
         
-        /* Status Display - YOUR EXACT SPECIFICATIONS */
+        /* Status Display */
         .status-overlay {
             position: absolute;
             bottom: 50px;
@@ -413,7 +413,7 @@
             backdrop-filter: blur(15px);
         }
         
-        /* FINAL: Winner Card - Lighter glow, bigger text and image */
+        /* Winner Card */
         .golden-card {
             position: absolute;
             top: 50%;
@@ -448,7 +448,6 @@
             100% { box-shadow: 0 0 120px rgba(255,215,0,1); }
         }
         
-        /* FINAL: EUREKA header - lighter glow, proper size, no cutting */
         .eureka-header {
             font-size: 24px !important;
             font-family: 'Orbitron', monospace !important;
@@ -470,7 +469,6 @@
             100% { text-shadow: 0 0 8px rgba(255, 255, 255, 0.5), 0 0 14px rgba(255, 255, 255, 0.3); }
         }
         
-        /* FINAL: Prize image - even bigger with lighter glow */
         .prize-image {
             max-width: 96% !important;
             max-height: 168px !important;
@@ -498,7 +496,6 @@
             }
         }
         
-        /* FINAL: Bigger text with lighter glow */
         .prize-textbox {
             background: transparent !important;
             border: none !important;
@@ -515,7 +512,6 @@
             word-wrap: break-word;
         }
         
-        /* FINAL: Special sizing for different text elements */
         #prizeTitle {
             font-size: 18px !important;
             font-weight: 600 !important;
@@ -620,7 +616,7 @@
 </head>
 
 <body>
-    <!-- FIXED: Email popup with updated text and Orbitron font -->
+    <!-- Email popup -->
     <div class="email-popup" id="emailPopup">
         <div class="email-popup-content">
             <h2>🎰 Welcome to PB DAYS ARCADE! 🎉</h2>
@@ -637,7 +633,6 @@
         <div class="modal-content">
             <div id="modalMessage">Message here</div>
             <button class="modal-close" onclick="closeCustomModal()">OK</button>
-            <!-- ✅ ADDED: Order Again button container -->
             <div id="orderAgainContainer" style="margin-top: 15px; display: none;">
                 <button class="order-again-btn" onclick="orderAgain()">ORDER AGAIN</button>
             </div>
@@ -707,7 +702,6 @@
     </div>
 
     <script>
-        // FINAL: Enhanced Audio system with working background music and softer spin sound
         class AudioSystem {
             constructor() {
                 this.audioContext = null;
@@ -984,17 +978,19 @@
             }
         }
 
-        // ✅ FIXED: Removed process.env and using correct action name from your Google Sheets script
+        // 🔥 CRITICAL FIX: Using the EXACT action name your Google Apps Script expects
         async function checkOrderIdUsage(email, orderNumber) {
             try {
                 console.log('🔍 Checking order usage for:', orderNumber, 'by email:', email);
                 
-                // ✅ FIXED: Using direct webhook URL instead of process.env
-                const response = await fetch('/.netlify/functions/check-order-usage', {
+                // 🔥 FIXED: Call your Google Sheets webhook directly with the EXACT action name
+                const response = await fetch('https://script.google.com/macros/s/AKfycbwFrAVCjrKyPNLLu9sZ_Z-bsvZ3II6YoZQqKhK8qO_9u5cPbVGnKBHHOa7KVR0nR1bS/exec', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'text/plain;charset=utf-8',
+                    },
                     body: JSON.stringify({ 
-                        action: 'checkOrderIdUsage', // ✅ FIXED: Using correct action name from your Google Sheets script
+                        action: 'checkOrderIdUsage', // 🔥 EXACT action name from your doPost function
                         email: email,
                         orderNumber: orderNumber
                     })
@@ -1022,7 +1018,6 @@
             }
         }
 
-        // ✅ FIXED: Spin function with order usage check and proper "Order Again" messaging
         async function spin() {
             if (spinning) {
                 console.log('⚠️ Spin already in progress');
@@ -1063,12 +1058,11 @@
                         return;
                     }
 
-                    // ✅ CRITICAL FIX: Check if order has already been used
+                    // 🔥 CRITICAL FIX: Check if order has already been used
                     const orderUsageCheck = await checkOrderIdUsage(email, orderNumber);
                     if (orderUsageCheck && !orderUsageCheck.canSpin) {
-                        // ✅ UPDATED: Show "Order Again" message and button
                         showOrderAlreadyUsedModal();
-                        spinBtn.style.display = 'none'; // Hide spin button
+                        spinBtn.style.display = 'none';
                         spinning = false;
                         return;
                     }
@@ -1130,7 +1124,6 @@
             }
         }
 
-        // ✅ ADDED: Function to show "Order Again" modal
         function showOrderAlreadyUsedModal() {
             const modal = document.getElementById('customModal');
             const messageDiv = document.getElementById('modalMessage');
@@ -1141,7 +1134,6 @@
             modal.style.display = 'flex';
         }
 
-        // ✅ ADDED: Order Again function
         function orderAgain() {
             window.location.href = 'https://pinkblue.in';
         }
@@ -1246,7 +1238,7 @@
             spinBtn.disabled = false;
             spinBtn.textContent = 'SPIN';
             spinBtn.style.opacity = '1';
-            spinBtn.style.display = 'block'; // ✅ ADDED: Show button again
+            spinBtn.style.display = 'block';
             spinBtn.style.background = 'linear-gradient(145deg, #ffd700 0%, #ffed4e 30%, #b8860b 100%)';
             spinBtn.classList.remove('spinning-state', 'prize-won');
         }
@@ -1257,13 +1249,13 @@
 
         function showCustomModal(message) {
             document.getElementById('modalMessage').textContent = message;
-            document.getElementById('orderAgainContainer').style.display = 'none'; // ✅ ADDED: Hide order again button for regular modals
+            document.getElementById('orderAgainContainer').style.display = 'none';
             document.getElementById('customModal').style.display = 'flex';
         }
 
         function closeCustomModal() {
             document.getElementById('customModal').style.display = 'none';
-            document.getElementById('orderAgainContainer').style.display = 'none'; // ✅ ADDED: Hide order again button when closing
+            document.getElementById('orderAgainContainer').style.display = 'none';
         }
 
         function returnToHome() {
@@ -1278,7 +1270,7 @@
 
         // Initialize everything
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('🎰 FINAL PB DAYS ARCADE - Fixed process.env error and added Order Again functionality!');
+            console.log('🎰 FINAL PB DAYS ARCADE - EXACT action name fixed!');
             
             initializeReels();
             
