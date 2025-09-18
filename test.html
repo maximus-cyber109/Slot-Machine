@@ -362,7 +362,7 @@
             backdrop-filter: blur(15px);
         }
         
-        /* ✅ ONLY CHANGED: Winner Card - BLACK background, white glowing texts, transparent product image */
+        /* ✅ Winner Card - BLACK background, Orbitron font, contained product image */
         .golden-card {
             position: absolute;
             top: 50%;
@@ -370,9 +370,9 @@
             transform: translate(-50%, -50%) scale(0);
             width: 380px;
             height: 500px;
-            background: #000000 !important; /* ONLY CHANGED: Black background */
+            background: #000000 !important;
             border-radius: 25px;
-            border: 8px solid #FFD700; /* ONLY CHANGED: Golden border */
+            border: 8px solid #FFD700;
             box-shadow: 0 0 80px rgba(255,215,0,1);
             z-index: 1000;
             display: flex;
@@ -382,6 +382,8 @@
             text-align: center;
             opacity: 0;
             transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            padding: 20px; /* Added padding to contain content */
+            overflow: hidden; /* Prevent content overflow */
         }
         
         .golden-card.show {
@@ -395,13 +397,14 @@
             100% { box-shadow: 0 0 120px rgba(255,215,0,1); }
         }
         
-        /* ONLY CHANGED: White glowing header */
+        /* ✅ CHANGED: Orbitron font for header */
         .eureka-header {
             font-size: 24px;
-            font-family: 'Press Start 2P', monospace;
-            color: #FFFFFF !important; /* ONLY CHANGED: White text */
+            font-family: 'Orbitron', monospace !important; /* Changed to Orbitron */
+            font-weight: 700;
+            color: #FFFFFF !important;
             margin-bottom: 15px;
-            text-shadow: 0 0 10px #FFFFFF, 0 0 20px #FFFFFF, 0 0 30px #FFFFFF !important; /* ONLY CHANGED: White glow */
+            text-shadow: 0 0 10px #FFFFFF, 0 0 20px #FFFFFF, 0 0 30px #FFFFFF !important;
             animation: headerShimmer 2s ease-in-out infinite alternate;
         }
         
@@ -410,17 +413,20 @@
             100% { text-shadow: 0 0 15px #FFFFFF, 0 0 30px #FFFFFF, 0 0 45px #FFFFFF; }
         }
         
-        /* ONLY CHANGED: Prize image - no background, white glow */
+        /* ✅ FIXED: Prize image contained inside card */
         .prize-image {
-            width: 120px;
-            height: 120px;
-            margin: 15px 0;
+            max-width: 90% !important; /* Constrain to card width */
+            max-height: 150px !important; /* Constrain to reasonable height */
+            width: auto !important;
+            height: auto !important;
+            margin: 15px auto;
             border-radius: 15px;
-            border: none !important; /* ONLY CHANGED: No border */
+            border: none !important;
             object-fit: contain;
-            background: none !important; /* ONLY CHANGED: No background */
-            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.8)) !important; /* ONLY CHANGED: White glow */
+            background: none !important;
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.8)) !important;
             animation: prizeGlow 2s ease-in-out infinite alternate;
+            display: block; /* Ensure proper block display */
         }
         
         @keyframes prizeGlow {
@@ -432,18 +438,20 @@
             }
         }
         
-        /* ONLY CHANGED: White glowing text boxes */
+        /* ✅ CHANGED: Orbitron font for text boxes */
         .prize-textbox {
-            background: transparent !important; /* ONLY CHANGED: No background */
-            border: none !important; /* ONLY CHANGED: No border */
+            background: transparent !important;
+            border: none !important;
             border-radius: 15px;
-            padding: 20px;
-            margin: 10px 0;
-            color: #FFFFFF !important; /* ONLY CHANGED: White text */
-            font-family: 'Press Start 2P', monospace;
+            padding: 15px 10px; /* Reduced padding */
+            margin: 8px 0;
+            color: #FFFFFF !important;
+            font-family: 'Orbitron', monospace !important; /* Changed to Orbitron */
+            font-weight: 400;
             font-size: 12px;
-            text-shadow: 0 0 10px #FFFFFF, 0 0 20px #FFFFFF !important; /* ONLY CHANGED: White glow */
-            max-width: 90%;
+            text-shadow: 0 0 10px #FFFFFF, 0 0 20px #FFFFFF !important;
+            max-width: 100%; /* Ensure text stays inside */
+            line-height: 1.3; /* Tighter line height */
         }
         
         .winner-buttons {
@@ -451,17 +459,17 @@
             gap: 10px;
             flex-wrap: wrap;
             justify-content: center;
-            margin-top: 20px;
+            margin-top: 15px; /* Reduced margin */
         }
         
         .golden-card-close, .return-home-winner {
             background: linear-gradient(145deg, #654321 0%, #5d4037 100%);
             color: #ffd700;
             border: none;
-            padding: 12px 24px;
+            padding: 10px 20px; /* Slightly smaller buttons */
             border-radius: 12px;
-            font-size: 10px;
-            font-family: 'Press Start 2P', monospace;
+            font-size: 9px; /* Smaller font */
+            font-family: 'Orbitron', monospace !important; /* Changed to Orbitron */
             cursor: pointer;
             transition: all 0.2s ease;
             text-transform: uppercase;
@@ -485,6 +493,20 @@
             .golden-card {
                 width: 320px;
                 height: 440px;
+                padding: 15px; /* Smaller padding on mobile */
+            }
+            
+            .prize-image {
+                max-height: 120px !important; /* Smaller on mobile */
+            }
+            
+            .prize-textbox {
+                font-size: 10px !important; /* Smaller text on mobile */
+                padding: 10px 8px !important;
+            }
+            
+            .eureka-header {
+                font-size: 20px !important; /* Smaller header on mobile */
             }
             
             .reels-overlay {
@@ -570,7 +592,7 @@
         </div>
     </div>
     
-    <!-- Winner card with ONLY styling changes -->
+    <!-- Winner card with proper image containment and Orbitron font -->
     <div class="golden-card" id="goldenCard">
         <div class="eureka-header">🏆 EUREKA! 🏆</div>
         
@@ -1080,7 +1102,7 @@
 
         // Initialize everything
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('🎰 Arcade System initialized with BLACK winner card and NO positioning changes');
+            console.log('🎰 Final Arcade System - Orbitron font, contained image, all functions intact!');
             
             initializeReels();
             
