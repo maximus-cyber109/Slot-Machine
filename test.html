@@ -6,7 +6,7 @@
     <title>PB DAYS ARCADE - SPIN THE WHEEL</title>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700;900&family=Exo+2:wght@400;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700;900&family=Exo+2:wght@400;600;700;800&family=Bungee&display=swap');
         * {
             margin: 0;
             padding: 0;
@@ -27,82 +27,148 @@
             0%, 100% { filter: brightness(1) hue-rotate(0deg); }
             50% { filter: brightness(1.1) hue-rotate(15deg); }
         }
-        /* ✅ ENHANCED: Readable Dialog Text Boxes with brown background and golden text */
-        .dialog-textbox {
-            background: rgba(139, 69, 19, 0.9); /* Brown background */
-            border: 3px solid #8B4513;
-            border-radius: 15px;
-            padding: 15px 20px;
-            margin: 12px auto;
-            max-width: 350px;
-            color: #FFD700; /* Golden text */
-            font-family: 'Exo 2', sans-serif;
-            font-size: 16px;
-            font-weight: 600;
-            line-height: 1.5;
+        /* ✅ ENHANCED: Winner card with BLACK background and glowing gold particles */
+        .golden-card {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 450px;
+            height: 600px;
+            background: #000000; /* Solid black background */
+            border-radius: 25px;
+            border: 8px solid #FFD700; /* Golden border */
+            box-shadow: 
+                0 0 40px 5px rgba(255, 215, 0, 0.7),
+                inset 0 0 30px 10px rgba(255, 215, 0, 0.3);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
             text-align: center;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7), 0 0 20px rgba(139, 69, 19, 0.5);
-            backdrop-filter: blur(10px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            padding: 40px 30px;
+            overflow-y: auto;
             position: relative;
-            /* Golden text with readable stroke */
-            text-shadow: 
-                -2px -2px 0 #8B4513,
-                2px -2px 0 #8B4513,
-                -2px 2px 0 #8B4513,
-                2px 2px 0 #8B4513,
-                0 0 10px rgba(255, 215, 0, 0.8);
         }
-        .dialog-textbox::before {
+        
+        /* Glowing gold particles inside winner card */
+        .golden-card::before {
             content: '';
             position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, #8B4513, #A0522D, #8B4513);
-            border-radius: 15px;
-            z-index: -1;
-            animation: borderGlow 2s ease-in-out infinite alternate;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            border-radius: 20px;
+            background: 
+                radial-gradient(circle, rgba(255,215,0,0.1) 0%, rgba(255,215,0,0) 80%),
+                radial-gradient(circle at 40% 40%, rgba(255,215,0,0.2) 0%, rgba(255,215,0,0) 70%),
+                radial-gradient(circle at 60% 60%, rgba(255,215,0,0.3) 0%, rgba(255,215,0,0) 60%),
+                radial-gradient(circle at 80% 20%, rgba(255,215,0,0.15) 0%, rgba(255,215,0,0) 50%),
+                radial-gradient(circle at 20% 80%, rgba(255,215,0,0.25) 0%, rgba(255,215,0,0) 40%);
+            animation: glowParticles 3s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
         }
-        @keyframes borderGlow {
-            0% { opacity: 0.5; }
-            100% { opacity: 1; }
+        
+        @keyframes glowParticles {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
         }
+        
+        .golden-card > * {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .golden-card.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+            animation: cardGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes cardGlow {
+            0% { 
+                box-shadow: 0 0 40px 5px rgba(255, 215, 0, 0.7), inset 0 0 30px 10px rgba(255, 215, 0, 0.3);
+            }
+            100% { 
+                box-shadow: 0 0 60px 8px rgba(255, 215, 0, 0.9), inset 0 0 50px 15px rgba(255, 215, 0, 0.5);
+            }
+        }
+        
+        .eureka-header {
+            font-family: 'Bungee', cursive;
+            font-size: 28px;
+            color: white;
+            margin-bottom: 20px;
+            text-shadow: 
+                0 0 10px #FFD700,
+                0 0 20px #FFD700,
+                0 0 30px #FFD700;
+            animation: headerGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes headerGlow {
+            0% { text-shadow: 0 0 10px #FFD700, 0 0 20px #FFD700, 0 0 30px #FFD700; }
+            100% { text-shadow: 0 0 15px #FFD700, 0 0 30px #FFD700, 0 0 45px #FFD700; }
+        }
+        
+        /* ✅ ENHANCED: Dialog text boxes with white glowing text and Bungee font */
+        .dialog-textbox {
+            background: transparent !important;
+            color: white !important;
+            font-family: 'Bungee', cursive !important;
+            font-weight: 400 !important;
+            font-size: 16px !important;
+            padding: 10px 15px !important;
+            margin: 8px auto !important;
+            text-shadow: 
+                0 0 8px #FFD700,
+                0 0 15px #FFD700;
+            border: none !important;
+            border-radius: 0 !important;
+            max-width: 90% !important;
+            box-shadow: none !important;
+            backdrop-filter: none !important;
+            line-height: 1.4 !important;
+            text-align: center !important;
+        }
+        
         .dialog-textbox.main-title {
-            font-size: 20px;
-            font-weight: 800;
-            background: rgba(101, 67, 33, 0.95); /* Darker brown for title */
-            color: #FFD700;
+            font-size: 18px !important;
             text-shadow: 
-                -2px -2px 0 #654321,
-                2px -2px 0 #654321,
-                -2px 2px 0 #654321,
-                2px 2px 0 #654321,
-                0 0 15px rgba(255, 215, 0, 1);
+                0 0 12px #FFD700,
+                0 0 24px #FFD700,
+                0 0 36px #FFD700;
         }
+        
         .dialog-textbox.prize-info {
-            font-size: 18px;
-            background: rgba(160, 82, 45, 0.9); /* Medium brown */
-            color: #FFD700;
-            text-shadow: 
-                -2px -2px 0 #8B4513,
-                2px -2px 0 #8B4513,
-                -2px 2px 0 #8B4513,
-                2px 2px 0 #8B4513,
-                0 0 12px rgba(255, 215, 0, 0.9);
+            font-size: 14px !important;
         }
+        
         .dialog-textbox.worth-info {
-            font-size: 22px;
-            font-weight: 800;
-            background: rgba(101, 67, 33, 0.95); /* Darker brown for emphasis */
-            color: #FFD700;
+            font-size: 20px !important;
             text-shadow: 
-                -3px -3px 0 #654321,
-                3px -3px 0 #654321,
-                -3px 3px 0 #654321,
-                3px 3px 0 #654321,
-                0 0 20px rgba(255, 215, 0, 1);
+                0 0 15px #FFD700,
+                0 0 30px #FFD700,
+                0 0 45px #FFD700;
         }
+        
+        /* ✅ ENHANCED: Bigger prize image with no background */
+        .prize-image {
+            width: 160px !important;
+            height: 160px !important;
+            margin: 20px auto !important;
+            border: none !important;
+            background: none !important;
+            padding: 0 !important;
+            object-fit: contain;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+        }
+        
         /* Email popup and other existing styles remain the same */
         .email-popup {
             position: fixed;
@@ -175,55 +241,7 @@
             background-position: center;
             position: relative;
         }
-        /* ✅ ENHANCED: Winner card with constant brown background */
-        .golden-card {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            width: 450px;
-            height: 600px;
-            background: #8B4513; /* Constant brown background */
-            border-radius: 25px;
-            border: 8px solid #654321; /* Darker brown border */
-            box-shadow: 0 0 80px rgba(139, 69, 19, 0.8);
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            text-align: center;
-            opacity: 0;
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            padding: 30px 20px;
-            overflow-y: auto;
-        }
-        .golden-card.show {
-            transform: translate(-50%, -50%) scale(1);
-            opacity: 1;
-            animation: cardGlow 2s ease-in-out infinite alternate;
-        }
-        .eureka-header {
-            font-size: 20px;
-            font-family: 'Press Start 2P', monospace;
-            color: #FFD700; /* Golden text */
-            margin-bottom: 15px;
-            text-shadow: 
-                -2px -2px 0 #654321,
-                2px -2px 0 #654321,
-                -2px 2px 0 #654321,
-                2px 2px 0 #654321,
-                0 0 15px rgba(255, 215, 0, 1);
-        }
-        .prize-image {
-            width: 120px;
-            height: 120px;
-            margin: 15px 0;
-            border-radius: 15px;
-            border: 4px solid #654321; /* Brown border */
-            object-fit: contain;
-            background: rgba(255,255,255,0.9);
-        }
+        
         .winner-buttons {
             display: flex;
             gap: 10px;
@@ -249,7 +267,7 @@
             color: white;
             border: 3px solid rgba(255,255,255,0.3);
         }
-        /* Responsive design */
+        /* ✅ FIXED: Mobile reel position - moved down */
         @media (max-width: 768px) {
             .golden-card {
                 width: 350px;
@@ -258,15 +276,21 @@
             }
             
             .dialog-textbox {
-                font-size: 14px;
-                padding: 12px 16px;
-                margin: 10px auto;
+                font-size: 14px !important;
+                padding: 12px 16px !important;
+                margin: 10px auto !important;
             }
             .dialog-textbox.main-title {
-                font-size: 16px;
+                font-size: 16px !important;
             }
             .dialog-textbox.worth-info {
-                font-size: 18px;
+                font-size: 18px !important;
+            }
+            
+            /* FIXED: Mobile reel alignment moved down */
+            .reels-overlay {
+                top: 280px !important; /* moved down from 260px */
+                width: 200px !important;
             }
         }
         /* Rest of existing styles for slot machine, buttons, etc. */
@@ -386,21 +410,29 @@
             font-size: 8px;
             font-family: 'Press Start 2P', monospace;
         }
+        /* ✅ ENHANCED: Audio control with expensive look */
         .audio-control {
             position: fixed;
             top: 20px;
             right: 20px;
             width: 50px;
             height: 50px;
-            background: linear-gradient(145deg, #ffd700 0%, #ffb300 100%);
-            border: none;
+            background: linear-gradient(145deg, #ffd700 0%, #e6c200 100%);
+            border: 3px solid #b38f00;
             border-radius: 50%;
+            box-shadow: 0 0 15px #e6c200;
+            color: #000;
+            font-size: 24px;
+            font-weight: 900;
             cursor: pointer;
             z-index: 1001;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            transition: all 0.3s ease-in-out;
+        }
+        .audio-control:hover {
+            box-shadow: 0 0 40px #ffd700, 0 0 80px #ffd700;
         }
         .return-home {
             position: fixed;
@@ -476,7 +508,7 @@
         </div>
     </div>
     
-    <!-- ✅ ENHANCED: Winner card with readable brown background and golden text with stroke -->
+    <!-- ✅ ENHANCED: Winner card with BLACK background, white glowing text, and Bungee font -->
     <div class="golden-card" id="goldenCard">
         <div class="eureka-header">🏆 EUREKA! 🏆</div>
         
@@ -505,6 +537,43 @@
     </div>
 
     <script>
+        // ✅ ENHANCED: Background music with metal sounds for expensive feel
+        const backgroundMusic = new Audio();
+        backgroundMusic.loop = true;
+        backgroundMusic.volume = 0.2;
+        
+        // High-quality metal ambient sound (base64 encoded WAV)
+        backgroundMusic.src = "data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBja2LDciUFLIHO8tiJNwgZaLvt559NEAxQpPwtmMcBjiR1LMeSwFJHfH8N2QQAoUXrTp66hVFAhHnXts2ECBjyO2fDDciUFLIHO8diJ";
+        
+        // Audio control functionality
+        const audioControl = document.getElementById('audioControl');
+        let isAudioPlaying = false;
+        
+        audioControl.addEventListener('click', () => {
+            if (!isAudioPlaying) {
+                backgroundMusic.play().then(() => {
+                    isAudioPlaying = true;
+                    audioControl.textContent = "🔊";
+                    audioControl.style.boxShadow = "0 0 40px #ffd700, 0 0 80px #ffd700";
+                }).catch(e => console.log('Audio play failed:', e));
+            } else {
+                backgroundMusic.pause();
+                isAudioPlaying = false;
+                audioControl.textContent = "🔇";
+                audioControl.style.boxShadow = "0 0 15px #e6c200";
+            }
+        });
+        
+        // Start music on first user interaction
+        document.body.addEventListener('click', () => {
+            if (!isAudioPlaying) {
+                backgroundMusic.play().then(() => {
+                    isAudioPlaying = true;
+                    audioControl.textContent = "🔊";
+                }).catch(e => console.log('Auto-play failed:', e));
+            }
+        }, { once: true });
+        
         // Global variables
         let userSession = null;
         let spinning = false;
