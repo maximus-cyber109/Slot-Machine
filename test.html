@@ -362,7 +362,7 @@
             backdrop-filter: blur(15px);
         }
         
-        /* Winner Card - YOUR EXACT SPECIFICATIONS */
+        /* ✅ UPDATED: Winner Card - BLACK background, white glowing texts, transparent product image */
         .golden-card {
             position: absolute;
             top: 50%;
@@ -370,10 +370,10 @@
             transform: translate(-50%, -50%) scale(0);
             width: 380px;
             height: 500px;
-            background: linear-gradient(145deg, #ffd700 0%, #ffed4e 20%, #b8860b 100%);
+            background: #000000 !important; /* Black background */
             border-radius: 25px;
-            border: 8px solid #8b4513;
-            box-shadow: 0 0 80px rgba(255,215,0,1);
+            border: 8px solid #FFD700; /* Golden border */
+            box-shadow: 0 0 80px rgba(255, 215, 0, 1), inset 0 0 30px rgba(255, 215, 0, 0.3);
             z-index: 1000;
             display: flex;
             flex-direction: column;
@@ -382,6 +382,37 @@
             text-align: center;
             opacity: 0;
             transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            position: relative;
+        }
+        
+        /* Glowing gold particles inside black winner card */
+        .golden-card::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            border-radius: 20px;
+            background: 
+                radial-gradient(circle, rgba(255,215,0,0.1) 0%, rgba(255,215,0,0) 80%),
+                radial-gradient(circle at 40% 40%, rgba(255,215,0,0.2) 0%, rgba(255,215,0,0) 70%),
+                radial-gradient(circle at 60% 60%, rgba(255,215,0,0.3) 0%, rgba(255,215,0,0) 60%),
+                radial-gradient(circle at 80% 20%, rgba(255,215,0,0.15) 0%, rgba(255,215,0,0) 50%),
+                radial-gradient(circle at 20% 80%, rgba(255,215,0,0.25) 0%, rgba(255,215,0,0) 40%);
+            animation: glowParticles 3s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        @keyframes glowParticles {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        
+        .golden-card > * {
+            position: relative;
+            z-index: 1;
         }
         
         .golden-card.show {
@@ -391,57 +422,69 @@
         }
         
         @keyframes cardGlow {
-            0% { box-shadow: 0 0 80px rgba(255,215,0,1); }
-            100% { box-shadow: 0 0 120px rgba(255,215,0,1); }
+            0% { 
+                box-shadow: 0 0 80px rgba(255, 215, 0, 1), inset 0 0 30px rgba(255, 215, 0, 0.3);
+            }
+            100% { 
+                box-shadow: 0 0 120px rgba(255, 215, 0, 1), inset 0 0 50px rgba(255, 215, 0, 0.5);
+            }
         }
         
+        /* ✅ UPDATED: White glowing header text */
         .eureka-header {
             font-size: 24px;
             font-family: 'Press Start 2P', monospace;
-            color: #8b4513;
+            color: #FFFFFF !important; /* White text */
             margin-bottom: 15px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            text-shadow: 
+                0 0 10px #FFFFFF,
+                0 0 20px #FFFFFF,
+                0 0 30px #FFFFFF !important; /* White glow */
             animation: headerShimmer 2s ease-in-out infinite alternate;
         }
         
         @keyframes headerShimmer {
-            0% { text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 10px rgba(255,215,0,0.8); }
-            100% { text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 20px rgba(255,255,255,0.9); }
+            0% { text-shadow: 0 0 10px #FFFFFF, 0 0 20px #FFFFFF, 0 0 30px #FFFFFF; }
+            100% { text-shadow: 0 0 15px #FFFFFF, 0 0 30px #FFFFFF, 0 0 45px #FFFFFF; }
         }
         
+        /* ✅ UPDATED: Prize image with NO background and white glow */
         .prize-image {
-            width: 120px;
-            height: 120px;
+            width: 160px !important;
+            height: 160px !important;
             margin: 15px 0;
             border-radius: 15px;
-            border: 4px solid #8b4513;
+            border: none !important; /* No border */
             object-fit: contain;
-            background: rgba(255,255,255,0.9);
+            background: none !important; /* No background */
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.8)) !important; /* White glow */
             animation: prizeGlow 2s ease-in-out infinite alternate;
         }
         
         @keyframes prizeGlow {
             0% { 
-                box-shadow: 0 0 20px rgba(255,215,0,0.8);
-                filter: brightness(1.2) drop-shadow(0 0 15px rgba(255,215,0,0.6));
+                filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.8));
             }
             100% { 
-                box-shadow: 0 0 40px rgba(255,215,0,1);
-                filter: brightness(1.4) drop-shadow(0 0 25px rgba(255,215,0,1));
+                filter: drop-shadow(0 0 25px rgba(255, 255, 255, 1));
             }
         }
         
+        /* ✅ UPDATED: White glowing text boxes */
         .prize-textbox {
-            background: linear-gradient(145deg, #8b4513 0%, #3e2723 100%);
-            border: 4px solid #a0522d;
-            border-radius: 15px;
-            padding: 20px;
-            margin: 10px 0;
-            color: #ffd700;
+            background: transparent !important; /* No background */
+            border: none !important; /* No border */
+            border-radius: 0;
+            padding: 15px;
+            margin: 8px 0;
+            color: #FFFFFF !important; /* White text */
             font-family: 'Press Start 2P', monospace;
             font-size: 12px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            text-shadow: 
+                0 0 10px #FFFFFF,
+                0 0 20px #FFFFFF !important; /* White glow */
             max-width: 90%;
+            line-height: 1.4;
         }
         
         .winner-buttons {
@@ -453,8 +496,8 @@
         }
         
         .golden-card-close, .return-home-winner {
-            background: linear-gradient(145deg, #654321 0%, #5d4037 100%);
-            color: #ffd700;
+            background: linear-gradient(145deg, #FFD700 0%, #FFB300 100%);
+            color: #000000;
             border: none;
             padding: 12px 24px;
             border-radius: 12px;
@@ -463,7 +506,7 @@
             cursor: pointer;
             transition: all 0.2s ease;
             text-transform: uppercase;
-            border: 3px solid #a0522d;
+            border: 3px solid rgba(255,255,255,0.3);
         }
         
         .return-home-winner {
@@ -508,6 +551,20 @@
             .popup-buttons button {
                 min-width: auto;
                 width: 100%;
+            }
+            
+            .prize-image {
+                width: 140px !important;
+                height: 140px !important;
+            }
+            
+            .prize-textbox {
+                font-size: 10px;
+                padding: 12px;
+            }
+            
+            .eureka-header {
+                font-size: 20px;
             }
         }
     </style>
@@ -568,7 +625,7 @@
         </div>
     </div>
     
-    <!-- Winner card -->
+    <!-- ✅ UPDATED: Winner card with black background and white glowing texts -->
     <div class="golden-card" id="goldenCard">
         <div class="eureka-header">🏆 EUREKA! 🏆</div>
         
@@ -1078,7 +1135,7 @@
 
         // Initialize everything
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('🎰 Fixed Arcade System initialized with proper alignment');
+            console.log('🎰 Fixed Arcade System initialized with black winner card');
             
             initializeReels();
             
