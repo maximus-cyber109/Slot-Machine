@@ -362,7 +362,7 @@
             backdrop-filter: blur(15px);
         }
         
-        /* ✅ Winner Card - FIXED text sizes and EUREKA positioning */
+        /* ✅ UPDATED: Winner Card - Lighter glow, bigger text and image */
         .golden-card {
             position: absolute;
             top: 50%;
@@ -382,7 +382,7 @@
             text-align: center;
             opacity: 0;
             transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            padding: 25px 20px 15px 20px; /* ✅ FIXED: Proper padding to prevent overflow */
+            padding: 25px 20px 15px 20px;
             overflow: hidden;
         }
         
@@ -397,30 +397,30 @@
             100% { box-shadow: 0 0 120px rgba(255,215,0,1); }
         }
         
-        /* ✅ FIXED: EUREKA header - proper size and positioning */
+        /* ✅ UPDATED: EUREKA header - lighter glow, slightly bigger */
         .eureka-header {
-            font-size: 20px !important; /* ✅ FIXED: Reduced from 24px to fit properly */
+            font-size: 22px !important; /* ✅ Increased from 20px */
             font-family: 'Orbitron', monospace !important;
             font-weight: 700;
             color: #FFFFFF !important;
             margin-bottom: 12px;
-            text-shadow: 0 0 10px #FFFFFF, 0 0 20px #FFFFFF, 0 0 30px #FFFFFF !important;
+            text-shadow: 0 0 6px rgba(255, 255, 255, 0.5), 0 0 12px rgba(255, 255, 255, 0.3) !important; /* ✅ Lighter glow */
             animation: headerShimmer 2s ease-in-out infinite alternate;
-            line-height: 1.1; /* ✅ FIXED: Tighter line height */
-            white-space: nowrap; /* ✅ FIXED: Prevent text wrapping */
-            max-width: 100%; /* ✅ FIXED: Constrain to card width */
-            overflow: visible; /* ✅ FIXED: Allow text to show fully */
+            line-height: 1.1;
+            white-space: nowrap;
+            max-width: 100%;
+            overflow: visible;
         }
         
         @keyframes headerShimmer {
-            0% { text-shadow: 0 0 10px #FFFFFF, 0 0 20px #FFFFFF, 0 0 30px #FFFFFF; }
-            100% { text-shadow: 0 0 15px #FFFFFF, 0 0 30px #FFFFFF, 0 0 45px #FFFFFF; }
+            0% { text-shadow: 0 0 6px rgba(255, 255, 255, 0.5), 0 0 12px rgba(255, 255, 255, 0.3); }
+            100% { text-shadow: 0 0 8px rgba(255, 255, 255, 0.6), 0 0 16px rgba(255, 255, 255, 0.4); }
         }
         
-        /* ✅ FIXED: Prize image contained inside card */
+        /* ✅ UPDATED: Prize image - bigger and lighter glow */
         .prize-image {
-            max-width: 90% !important;
-            max-height: 130px !important; /* ✅ FIXED: Slightly smaller to make room for bigger text */
+            max-width: 95% !important; /* ✅ Increased from 90% */
+            max-height: 160px !important; /* ✅ Increased from 130px */
             width: auto !important;
             height: auto !important;
             margin: 10px auto;
@@ -428,65 +428,65 @@
             border: none !important;
             object-fit: contain;
             background: none !important;
-            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.8)) !important;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5)) !important; /* ✅ Lighter glow */
             animation: prizeGlow 2s ease-in-out infinite alternate;
             display: block;
         }
         
         @keyframes prizeGlow {
             0% { 
-                filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.8));
+                filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
             }
             100% { 
-                filter: drop-shadow(0 0 25px rgba(255, 255, 255, 1));
+                filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.7));
             }
         }
         
-        /* ✅ FIXED: Bigger text in winner card */
+        /* ✅ UPDATED: Bigger text with lighter glow */
         .prize-textbox {
             background: transparent !important;
             border: none !important;
             border-radius: 15px;
-            padding: 8px 5px; /* ✅ FIXED: Reduced padding to save space */
-            margin: 6px 0; /* ✅ FIXED: Reduced margin */
+            padding: 8px 5px;
+            margin: 6px 0;
             color: #FFFFFF !important;
             font-family: 'Orbitron', monospace !important;
             font-weight: 400;
-            font-size: 14px !important; /* ✅ FIXED: Increased from 12px to 14px */
-            text-shadow: 0 0 10px #FFFFFF, 0 0 20px #FFFFFF !important;
+            font-size: 15px !important; /* ✅ Increased from 14px */
+            text-shadow: 0 0 6px rgba(255, 255, 255, 0.5), 0 0 10px rgba(255, 255, 255, 0.3) !important; /* ✅ Lighter glow */
             max-width: 100%;
             line-height: 1.3;
-            word-wrap: break-word; /* ✅ FIXED: Allow text to break if needed */
+            word-wrap: break-word;
         }
         
-        /* ✅ FIXED: Special sizing for different text elements */
+        /* ✅ UPDATED: Special sizing for different text elements */
         #prizeTitle {
-            font-size: 16px !important; /* ✅ FIXED: Main title bigger */
+            font-size: 17px !important; /* ✅ Increased from 16px */
             font-weight: 600 !important;
             margin: 10px 0 !important;
         }
         
         #prizeWorth {
-            font-size: 18px !important; /* ✅ FIXED: Prize worth biggest */
+            font-size: 20px !important; /* ✅ Increased from 18px */
             font-weight: 700 !important;
             margin: 12px 0 !important;
         }
         
         .winner-buttons {
             display: flex;
-            gap: 8px; /* ✅ FIXED: Smaller gap */
+            gap: 8px;
             flex-wrap: wrap;
             justify-content: center;
-            margin-top: 10px; /* ✅ FIXED: Reduced margin */
+            margin-top: 10px;
         }
         
         .golden-card-close, .return-home-winner {
             background: linear-gradient(145deg, #654321 0%, #5d4037 100%);
             color: #ffd700;
             border: none;
-            padding: 8px 16px; /* ✅ FIXED: Smaller buttons to save space */
+            padding: 8px 16px;
             border-radius: 12px;
-            font-size: 8px; /* ✅ FIXED: Smaller font for buttons */
+            font-size: 8px;
             font-family: 'Orbitron', monospace !important;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -500,7 +500,7 @@
             border: 3px solid rgba(255,255,255,0.3);
         }
         
-        /* Mobile Responsive - YOUR EXACT SPECIFICATIONS */
+        /* Mobile Responsive */
         @media (max-width: 768px) {
             .slot-machine-container {
                 width: 350px;
@@ -511,28 +511,28 @@
             .golden-card {
                 width: 320px;
                 height: 440px;
-                padding: 20px 15px 10px 15px; /* ✅ FIXED: Adjusted for mobile */
+                padding: 20px 15px 10px 15px;
             }
             
             .eureka-header {
-                font-size: 16px !important; /* ✅ FIXED: Smaller on mobile */
+                font-size: 18px !important; /* ✅ Adjusted for mobile */
             }
             
             .prize-image {
-                max-height: 100px !important; /* ✅ FIXED: Smaller on mobile */
+                max-height: 120px !important; /* ✅ Adjusted for mobile */
             }
             
             .prize-textbox {
-                font-size: 12px !important; /* ✅ FIXED: Adjusted for mobile */
+                font-size: 13px !important; /* ✅ Adjusted for mobile */
                 padding: 6px 4px !important;
             }
             
             #prizeTitle {
-                font-size: 13px !important; /* ✅ FIXED: Mobile title size */
+                font-size: 14px !important; /* ✅ Mobile title size */
             }
             
             #prizeWorth {
-                font-size: 15px !important; /* ✅ FIXED: Mobile worth size */
+                font-size: 16px !important; /* ✅ Mobile worth size */
             }
             
             .reels-overlay {
@@ -618,7 +618,7 @@
         </div>
     </div>
     
-    <!-- Winner card with bigger text and fixed EUREKA -->
+    <!-- Winner card -->
     <div class="golden-card" id="goldenCard">
         <div class="eureka-header">🏆 EUREKA! 🏆</div>
         
@@ -646,21 +646,14 @@
         </div>
     </div>
 
-    <!-- ✅ FIXED: Background music with proper autoplay and controls -->
-    <audio id="backgroundMusic" loop preload="auto">
-        <source src="https://cdn.freesound.org/previews/316/316847_5123451-lq.mp3" type="audio/mpeg">
-        <source src="https://www.soundjay.com/misc/sounds/arcade-music-loop.mp3" type="audio/mpeg">
-        <source src="data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjI5LjEwMAAAAAAAAAAAAAAA//OEAAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAAEAAABIADAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV6urq6urq6urq6urq6urq6urq6urq6urq6v////////////////////////////////8AAAAATGF2YzU4LjU0AAAAAAAAAAAAAAAAJAAAAAAAAAAAASDs90hvAAAAAAAAAAAAAAAAAAAA//OEZAAADwAABHiAAARYiABP+2Q8AAAaQAAAAgAAA0gAAAAAHVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU=" type="audio/mpeg">
-    </audio>
-
     <script>
-        // ✅ ENHANCED Audio system with arcade background music
+        // ✅ ENHANCED Audio system with working background music and new spin sound
         class AudioSystem {
             constructor() {
                 this.audioContext = null;
                 this.masterGain = null;
                 this.isMuted = false;
-                this.backgroundMusic = document.getElementById('backgroundMusic');
+                this.backgroundMusic = null;
                 this.musicStarted = false;
                 this.init();
             }
@@ -672,49 +665,79 @@
                     this.masterGain.connect(this.audioContext.destination);
                     this.masterGain.gain.setValueAtTime(0.3, this.audioContext.currentTime);
                     
-                    // ✅ FIXED: Proper background music setup
-                    if (this.backgroundMusic) {
-                        this.backgroundMusic.volume = 0.15; // Nice volume level
-                        this.backgroundMusic.loop = true;
-                        
-                        // Try to start music immediately
-                        this.startBackgroundMusic();
-                    }
+                    // ✅ FIXED: Create synthetic arcade background music
+                    this.createBackgroundMusic();
                     
-                    console.log('🎵 Audio system initialized with arcade background music');
+                    console.log('🎵 Audio system initialized with working background music');
                 } catch (error) {
                     console.log('Audio not supported:', error);
                 }
             }
 
-            // ✅ FIXED: Start background music
-            startBackgroundMusic() {
-                if (this.backgroundMusic && !this.musicStarted && !this.isMuted) {
-                    this.backgroundMusic.play().then(() => {
-                        this.musicStarted = true;
-                        console.log('🎵 Arcade background music started');
-                    }).catch(e => {
-                        console.log('Background music autoplay blocked, will start on user interaction');
-                        // Set up to start on first user interaction
-                        document.addEventListener('click', () => {
-                            if (!this.musicStarted && !this.isMuted) {
-                                this.backgroundMusic.play().then(() => {
-                                    this.musicStarted = true;
-                                    console.log('🎵 Background music started after user interaction');
-                                });
-                            }
-                        }, { once: true });
+            // ✅ FIXED: Create synthetic arcade-style background music
+            createBackgroundMusic() {
+                if (!this.audioContext || this.isMuted) return;
+
+                const playArcadeLoop = () => {
+                    if (this.isMuted || !this.audioContext) return;
+
+                    // Arcade-style chord progression
+                    const chords = [
+                        [261.63, 329.63, 392.00], // C Major
+                        [293.66, 369.99, 440.00], // D Major  
+                        [220.00, 277.18, 329.63], // A Major
+                        [246.94, 311.13, 369.99]  // B Major
+                    ];
+
+                    chords.forEach((chord, index) => {
+                        setTimeout(() => {
+                            if (this.isMuted || !this.audioContext) return;
+                            
+                            chord.forEach((freq, noteIndex) => {
+                                const osc = this.audioContext.createOscillator();
+                                const gain = this.audioContext.createGain();
+                                
+                                osc.connect(gain);
+                                gain.connect(this.masterGain);
+                                
+                                osc.frequency.setValueAtTime(freq, this.audioContext.currentTime);
+                                osc.type = 'square';
+                                
+                                gain.gain.setValueAtTime(0, this.audioContext.currentTime);
+                                gain.gain.exponentialRampToValueAtTime(0.03, this.audioContext.currentTime + 0.1);
+                                gain.gain.exponentialRampToValueAtTime(0.015, this.audioContext.currentTime + 0.8);
+                                gain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 1);
+                                
+                                osc.start();
+                                osc.stop(this.audioContext.currentTime + 1);
+                            });
+                        }, index * 1000);
                     });
-                }
+
+                    // Loop the music
+                    setTimeout(() => {
+                        if (!this.isMuted) playArcadeLoop();
+                    }, 4000);
+                };
+
+                // Start background music on first user interaction
+                document.addEventListener('click', () => {
+                    if (!this.musicStarted && !this.isMuted) {
+                        playArcadeLoop();
+                        this.musicStarted = true;
+                        console.log('🎵 Synthetic arcade background music started');
+                    }
+                }, { once: true });
             }
 
+            // ✅ NEW: Softer, cleaner spin sound
             playSpinSound() {
                 if (!this.audioContext || this.isMuted) return;
                 
                 try {
                     const now = this.audioContext.currentTime;
                     
-                    // Metal spinning sound
+                    // ✅ NEW: Softer, more pleasant spin sound
                     const osc = this.audioContext.createOscillator();
                     const gain = this.audioContext.createGain();
                     const filter = this.audioContext.createBiquadFilter();
@@ -723,56 +746,58 @@
                     filter.connect(gain);
                     gain.connect(this.masterGain);
                     
-                    osc.frequency.setValueAtTime(300, now);
-                    osc.frequency.exponentialRampToValueAtTime(800, now + 0.3);
-                    osc.frequency.exponentialRampToValueAtTime(200, now + 2.5);
-                    osc.type = 'sawtooth';
+                    // Smoother frequency sweep
+                    osc.frequency.setValueAtTime(440, now); // Start at A note
+                    osc.frequency.exponentialRampToValueAtTime(880, now + 0.3); // Go to higher A
+                    osc.frequency.exponentialRampToValueAtTime(220, now + 1.5); // Down to lower A
+                    osc.type = 'sine'; // Softer sine wave instead of sawtooth
                     
-                    filter.type = 'highpass';
-                    filter.frequency.setValueAtTime(500, now);
-                    filter.Q.setValueAtTime(15, now);
+                    // Gentler filter
+                    filter.type = 'lowpass';
+                    filter.frequency.setValueAtTime(2000, now);
+                    filter.Q.setValueAtTime(1, now);
                     
+                    // Smoother volume envelope
                     gain.gain.setValueAtTime(0, now);
-                    gain.gain.exponentialRampToValueAtTime(0.15, now + 0.05);
-                    gain.gain.exponentialRampToValueAtTime(0.1, now + 0.5);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + 2.5);
+                    gain.gain.exponentialRampToValueAtTime(0.08, now + 0.1);
+                    gain.gain.exponentialRampToValueAtTime(0.05, now + 0.8);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
                     
                     osc.start(now);
-                    osc.stop(now + 2.5);
+                    osc.stop(now + 1.5);
                     
-                    // Add metallic clicks
-                    for (let i = 0; i < 20; i++) {
-                        setTimeout(() => this.createMetallicClick(), i * 100);
+                    // Add gentle bell-like tones instead of harsh clicks
+                    for (let i = 0; i < 8; i++) {
+                        setTimeout(() => this.createSoftBell(), i * 150);
                     }
                 } catch (error) {
                     console.log('Spin sound error:', error);
                 }
             }
 
-            createMetallicClick() {
+            // ✅ NEW: Soft bell sound instead of harsh metallic clicks
+            createSoftBell() {
                 if (!this.audioContext || this.isMuted) return;
                 
                 const now = this.audioContext.currentTime;
-                const clickOsc = this.audioContext.createOscillator();
-                const clickGain = this.audioContext.createGain();
-                const clickFilter = this.audioContext.createBiquadFilter();
+                const bellOsc = this.audioContext.createOscillator();
+                const bellGain = this.audioContext.createGain();
                 
-                clickOsc.connect(clickFilter);
-                clickFilter.connect(clickGain);
-                clickGain.connect(this.masterGain);
+                bellOsc.connect(bellGain);
+                bellGain.connect(this.masterGain);
                 
-                clickOsc.frequency.setValueAtTime(1200 + Math.random() * 800, now);
-                clickOsc.type = 'square';
+                // Pleasant bell frequencies
+                const bellFreqs = [523.25, 659.25, 783.99, 1046.50]; // C, E, G, C
+                const freq = bellFreqs[Math.floor(Math.random() * bellFreqs.length)];
                 
-                clickFilter.type = 'bandpass';
-                clickFilter.frequency.setValueAtTime(2000, now);
-                clickFilter.Q.setValueAtTime(10, now);
+                bellOsc.frequency.setValueAtTime(freq, now);
+                bellOsc.type = 'sine';
                 
-                clickGain.gain.setValueAtTime(0.05, now);
-                clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+                bellGain.gain.setValueAtTime(0.02, now);
+                bellGain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
                 
-                clickOsc.start(now);
-                clickOsc.stop(now + 0.05);
+                bellOsc.start(now);
+                bellOsc.stop(now + 0.3);
             }
 
             playWinSound() {
@@ -793,7 +818,7 @@
                             osc.frequency.setValueAtTime(freq, this.audioContext.currentTime);
                             osc.type = 'sine';
                             
-                            gain.gain.setValueAtTime(0.2, this.audioContext.currentTime);
+                            gain.gain.setValueAtTime(0.15, this.audioContext.currentTime);
                             gain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.8);
                             
                             osc.start();
@@ -809,13 +834,6 @@
                 this.isMuted = !this.isMuted;
                 if (this.audioContext) {
                     this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : 0.3, this.audioContext.currentTime);
-                }
-                if (this.backgroundMusic) {
-                    if (this.isMuted) {
-                        this.backgroundMusic.pause();
-                    } else {
-                        this.backgroundMusic.play();
-                    }
                 }
                 return this.isMuted;
             }
@@ -937,7 +955,7 @@
             }
         }
 
-        // FIXED: Spin function with proper animation control
+        // Spin function with proper animation control
         async function spin() {
             if (spinning) {
                 console.log('⚠️ Spin already in progress');
@@ -985,13 +1003,11 @@
                 userSession = customerData;
                 spinBtn.textContent = 'SPINNING...';
                 
-                // Play spin sound
+                // ✅ Play new softer spin sound
                 audioSystem.playSpinSound();
 
-                // FIXED: Reel animation with proper stop control
                 const spinDurations = [1800, 2200, 2600];
                 
-                // Start spinning all reels
                 for (let i = 1; i <= 3; i++) {
                     const strip = document.getElementById(`reel${i}`);
                     if (strip) {
@@ -999,13 +1015,11 @@
                     }
                 }
 
-                // Stop reels one by one at different times
                 const reelPromises = spinDurations.map((duration, index) => {
                     return new Promise((resolve) => {
                         setTimeout(() => {
                             const strip = document.getElementById(`reel${index + 1}`);
                             if (strip) {
-                                // FIXED: Stop spinning animation properly
                                 strip.classList.remove('spinning');
                                 
                                 const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
@@ -1158,9 +1172,9 @@
             button.textContent = isMuted ? '🔇' : '🔊';
         }
 
-        // ✅ FIXED: Initialize everything with proper audio handling
+        // Initialize everything
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('🎰 Final PB DAYS ARCADE - Bigger text, fixed EUREKA, working background music!');
+            console.log('🎰 FINAL PB DAYS ARCADE - Perfect glow, bigger text/image, working music!');
             
             initializeReels();
             
@@ -1172,14 +1186,12 @@
                 document.getElementById('popupEmailInput').focus();
             }
 
-            // ✅ FIXED: Enable audio context and background music on user interaction
+            // Enable audio context on user interaction
             document.body.addEventListener('click', () => {
                 if (audioSystem.audioContext && audioSystem.audioContext.state === 'suspended') {
                     audioSystem.audioContext.resume();
                 }
-                // Start background music if not already started
-                audioSystem.startBackgroundMusic();
-            }, { once: false }); // Allow multiple tries
+            }, { once: false });
         });
     </script>
 </body>
