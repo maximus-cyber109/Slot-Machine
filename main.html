@@ -362,7 +362,7 @@
             backdrop-filter: blur(15px);
         }
         
-        /* ✅ UPDATED: Winner Card - Lighter glow, bigger text and image */
+        /* ✅ FINAL: Winner Card - Lighter glow, bigger text and image */
         .golden-card {
             position: absolute;
             top: 50%;
@@ -397,52 +397,57 @@
             100% { box-shadow: 0 0 120px rgba(255,215,0,1); }
         }
         
-        /* ✅ UPDATED: EUREKA header - lighter glow, slightly bigger */
+        /* ✅ FINAL: EUREKA header - lighter glow, proper size, no cutting */
         .eureka-header {
-            font-size: 22px !important; /* ✅ Increased from 20px */
+            font-size: 24px !important; /* ✅ Perfect size for visibility */
             font-family: 'Orbitron', monospace !important;
             font-weight: 700;
             color: #FFFFFF !important;
             margin-bottom: 12px;
-            text-shadow: 0 0 6px rgba(255, 255, 255, 0.5), 0 0 12px rgba(255, 255, 255, 0.3) !important; /* ✅ Lighter glow */
+            text-shadow: 0 0 6px rgba(255, 255, 255, 0.4), 0 0 10px rgba(255, 255, 255, 0.2) !important; /* ✅ Lighter glow */
             animation: headerShimmer 2s ease-in-out infinite alternate;
-            line-height: 1.1;
+            line-height: 1;
             white-space: nowrap;
             max-width: 100%;
             overflow: visible;
+            padding: 0 10px; /* ✅ Prevent text cutting */
+            box-sizing: border-box;
         }
         
         @keyframes headerShimmer {
-            0% { text-shadow: 0 0 6px rgba(255, 255, 255, 0.5), 0 0 12px rgba(255, 255, 255, 0.3); }
-            100% { text-shadow: 0 0 8px rgba(255, 255, 255, 0.6), 0 0 16px rgba(255, 255, 255, 0.4); }
+            0% { text-shadow: 0 0 6px rgba(255, 255, 255, 0.4), 0 0 10px rgba(255, 255, 255, 0.2); }
+            100% { text-shadow: 0 0 8px rgba(255, 255, 255, 0.5), 0 0 14px rgba(255, 255, 255, 0.3); }
         }
         
-        /* ✅ UPDATED: Prize image - bigger and lighter glow */
+        /* ✅ FINAL: Prize image - even bigger with lighter glow */
         .prize-image {
-            max-width: 95% !important; /* ✅ Increased from 90% */
-            max-height: 160px !important; /* ✅ Increased from 130px */
+            max-width: 96% !important; /* ✅ Bigger image */
+            max-height: 168px !important; /* ✅ Increased height */
             width: auto !important;
             height: auto !important;
-            margin: 10px auto;
+            margin: 12px auto; /* ✅ Better spacing */
             border-radius: 15px;
             border: none !important;
             object-fit: contain;
             background: none !important;
-            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5)) !important; /* ✅ Lighter glow */
-            animation: prizeGlow 2s ease-in-out infinite alternate;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.4)) !important; /* ✅ Lighter, more pleasant glow */
+            animation: prizeGlow 2.5s ease-in-out infinite;
             display: block;
         }
         
         @keyframes prizeGlow {
             0% { 
-                filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
+                filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.4));
+            }
+            50% { 
+                filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.5));
             }
             100% { 
-                filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.7));
+                filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.6));
             }
         }
         
-        /* ✅ UPDATED: Bigger text with lighter glow */
+        /* ✅ FINAL: Bigger text with lighter glow */
         .prize-textbox {
             background: transparent !important;
             border: none !important;
@@ -451,23 +456,23 @@
             margin: 6px 0;
             color: #FFFFFF !important;
             font-family: 'Orbitron', monospace !important;
-            font-weight: 400;
-            font-size: 15px !important; /* ✅ Increased from 14px */
-            text-shadow: 0 0 6px rgba(255, 255, 255, 0.5), 0 0 10px rgba(255, 255, 255, 0.3) !important; /* ✅ Lighter glow */
+            font-weight: 600 !important; /* ✅ Slightly heavier weight */
+            font-size: 16px !important; /* ✅ Increased from 15px */
+            text-shadow: 0 0 6px rgba(255, 255, 255, 0.4) !important; /* ✅ Lighter glow */
             max-width: 100%;
             line-height: 1.3;
             word-wrap: break-word;
         }
         
-        /* ✅ UPDATED: Special sizing for different text elements */
+        /* ✅ FINAL: Special sizing for different text elements */
         #prizeTitle {
-            font-size: 17px !important; /* ✅ Increased from 16px */
+            font-size: 18px !important; /* ✅ Increased from 17px */
             font-weight: 600 !important;
             margin: 10px 0 !important;
         }
         
         #prizeWorth {
-            font-size: 20px !important; /* ✅ Increased from 18px */
+            font-size: 22px !important; /* ✅ Increased from 20px */
             font-weight: 700 !important;
             margin: 12px 0 !important;
         }
@@ -515,24 +520,24 @@
             }
             
             .eureka-header {
-                font-size: 18px !important; /* ✅ Adjusted for mobile */
+                font-size: 20px !important; /* ✅ Adjusted for mobile */
             }
             
             .prize-image {
-                max-height: 120px !important; /* ✅ Adjusted for mobile */
+                max-height: 140px !important; /* ✅ Adjusted for mobile */
             }
             
             .prize-textbox {
-                font-size: 13px !important; /* ✅ Adjusted for mobile */
+                font-size: 14px !important; /* ✅ Adjusted for mobile */
                 padding: 6px 4px !important;
             }
             
             #prizeTitle {
-                font-size: 14px !important; /* ✅ Mobile title size */
+                font-size: 15px !important; /* ✅ Mobile title size */
             }
             
             #prizeWorth {
-                font-size: 16px !important; /* ✅ Mobile worth size */
+                font-size: 18px !important; /* ✅ Mobile worth size */
             }
             
             .reels-overlay {
@@ -647,13 +652,12 @@
     </div>
 
     <script>
-        // ✅ ENHANCED Audio system with working background music and new spin sound
+        // ✅ FINAL: Enhanced Audio system with working background music and softer spin sound
         class AudioSystem {
             constructor() {
                 this.audioContext = null;
                 this.masterGain = null;
                 this.isMuted = false;
-                this.backgroundMusic = null;
                 this.musicStarted = false;
                 this.init();
             }
@@ -665,7 +669,7 @@
                     this.masterGain.connect(this.audioContext.destination);
                     this.masterGain.gain.setValueAtTime(0.3, this.audioContext.currentTime);
                     
-                    // ✅ FIXED: Create synthetic arcade background music
+                    // Create synthetic arcade background music
                     this.createBackgroundMusic();
                     
                     console.log('🎵 Audio system initialized with working background music');
@@ -674,7 +678,7 @@
                 }
             }
 
-            // ✅ FIXED: Create synthetic arcade-style background music
+            // ✅ FIXED: Create synthetic arcade-style background music that actually works
             createBackgroundMusic() {
                 if (!this.audioContext || this.isMuted) return;
 
@@ -693,7 +697,7 @@
                         setTimeout(() => {
                             if (this.isMuted || !this.audioContext) return;
                             
-                            chord.forEach((freq, noteIndex) => {
+                            chord.forEach((freq) => {
                                 const osc = this.audioContext.createOscillator();
                                 const gain = this.audioContext.createGain();
                                 
@@ -704,8 +708,8 @@
                                 osc.type = 'square';
                                 
                                 gain.gain.setValueAtTime(0, this.audioContext.currentTime);
-                                gain.gain.exponentialRampToValueAtTime(0.03, this.audioContext.currentTime + 0.1);
-                                gain.gain.exponentialRampToValueAtTime(0.015, this.audioContext.currentTime + 0.8);
+                                gain.gain.exponentialRampToValueAtTime(0.02, this.audioContext.currentTime + 0.1);
+                                gain.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.8);
                                 gain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 1);
                                 
                                 osc.start();
@@ -730,52 +734,43 @@
                 }, { once: true });
             }
 
-            // ✅ NEW: Softer, cleaner spin sound
+            // ✅ FINAL: Even softer, more pleasant spin sound
             playSpinSound() {
                 if (!this.audioContext || this.isMuted) return;
                 
                 try {
                     const now = this.audioContext.currentTime;
                     
-                    // ✅ NEW: Softer, more pleasant spin sound
+                    // ✅ FINAL: Triangle wave for the softest, most pleasant sound
                     const osc = this.audioContext.createOscillator();
                     const gain = this.audioContext.createGain();
-                    const filter = this.audioContext.createBiquadFilter();
                     
-                    osc.connect(filter);
-                    filter.connect(gain);
+                    osc.connect(gain);
                     gain.connect(this.masterGain);
                     
-                    // Smoother frequency sweep
-                    osc.frequency.setValueAtTime(440, now); // Start at A note
-                    osc.frequency.exponentialRampToValueAtTime(880, now + 0.3); // Go to higher A
-                    osc.frequency.exponentialRampToValueAtTime(220, now + 1.5); // Down to lower A
-                    osc.type = 'sine'; // Softer sine wave instead of sawtooth
+                    // Even smoother frequency sweep with musical intervals
+                    osc.frequency.setValueAtTime(440, now); // A4
+                    osc.frequency.exponentialRampToValueAtTime(880, now + 0.4); // A5
+                    osc.frequency.exponentialRampToValueAtTime(220, now + 0.8); // A3
+                    osc.type = 'triangle'; // Smoothest waveform
                     
-                    // Gentler filter
-                    filter.type = 'lowpass';
-                    filter.frequency.setValueAtTime(2000, now);
-                    filter.Q.setValueAtTime(1, now);
-                    
-                    // Smoother volume envelope
-                    gain.gain.setValueAtTime(0, now);
-                    gain.gain.exponentialRampToValueAtTime(0.08, now + 0.1);
-                    gain.gain.exponentialRampToValueAtTime(0.05, now + 0.8);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
+                    // Ultra-smooth volume envelope
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
                     
                     osc.start(now);
-                    osc.stop(now + 1.5);
+                    osc.stop(now + 0.9);
                     
-                    // Add gentle bell-like tones instead of harsh clicks
-                    for (let i = 0; i < 8; i++) {
-                        setTimeout(() => this.createSoftBell(), i * 150);
+                    // Add very gentle bell-like harmonics
+                    for (let i = 0; i < 5; i++) {
+                        setTimeout(() => this.createSoftBell(), i * 180);
                     }
                 } catch (error) {
                     console.log('Spin sound error:', error);
                 }
             }
 
-            // ✅ NEW: Soft bell sound instead of harsh metallic clicks
+            // ✅ FINAL: Softest possible bell sound
             createSoftBell() {
                 if (!this.audioContext || this.isMuted) return;
                 
@@ -786,18 +781,18 @@
                 bellOsc.connect(bellGain);
                 bellGain.connect(this.masterGain);
                 
-                // Pleasant bell frequencies
-                const bellFreqs = [523.25, 659.25, 783.99, 1046.50]; // C, E, G, C
+                // Very pleasant bell frequencies (pentatonic scale)
+                const bellFreqs = [523.25, 587.33, 659.25, 783.99, 880.00]; // C, D, E, G, A
                 const freq = bellFreqs[Math.floor(Math.random() * bellFreqs.length)];
                 
                 bellOsc.frequency.setValueAtTime(freq, now);
-                bellOsc.type = 'sine';
+                bellOsc.type = 'sine'; // Pure sine for bell-like tone
                 
-                bellGain.gain.setValueAtTime(0.02, now);
-                bellGain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+                bellGain.gain.setValueAtTime(0.015, now); // Very quiet
+                bellGain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
                 
                 bellOsc.start(now);
-                bellOsc.stop(now + 0.3);
+                bellOsc.stop(now + 0.4);
             }
 
             playWinSound() {
@@ -947,6 +942,34 @@
             }
         }
 
+        // ✅ ADDED: Function to check if order has already been used
+        async function checkOrderUsage(email, orderNumber) {
+            try {
+                console.log('🔍 Checking order usage for:', orderNumber, 'by email:', email);
+                
+                const response = await fetch('/.netlify/functions/check-order-usage', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        email: email,
+                        orderNumber: orderNumber
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                console.log('📋 Order usage check result:', result);
+                
+                return result;
+            } catch (error) {
+                console.error('❌ Order usage check error:', error);
+                return { success: false, error: 'Failed to check order usage' };
+            }
+        }
+
         function initializeGameForUser(email, customerData) {
             if (checkIfOverrideUser(email)) {
                 document.getElementById('spinsLeft').textContent = '∞';
@@ -955,7 +978,7 @@
             }
         }
 
-        // Spin function with proper animation control
+        // ✅ FIXED: Spin function with order usage check to prevent duplicate spins
         async function spin() {
             if (spinning) {
                 console.log('⚠️ Spin already in progress');
@@ -987,7 +1010,28 @@
                         resetSpinButton();
                         return;
                     }
+
+                    const orderNumber = customerData.orderData?.increment_id;
+
+                    if (!orderNumber) {
+                        showCustomModal('No valid order number found.');
+                        resetSpinButton();
+                        return;
+                    }
+
+                    // ✅ CRITICAL FIX: Check if order has already been used
+                    const orderUsageCheck = await checkOrderUsage(email, orderNumber);
+                    if (orderUsageCheck && orderUsageCheck.success === false) {
+                        showCustomModal(orderUsageCheck.message || 'This order has already been used for spinning.');
+                        spinBtn.textContent = 'ORDER USED';
+                        spinBtn.disabled = true;
+                        spinBtn.style.opacity = '0.5';
+                        spinning = false;
+                        return;
+                    }
+
                 } else {
+                    // Override user logic remains the same
                     customerData = {
                         orderData: { 
                             increment_id: 'OVERRIDE_ORDER_' + Date.now(),
@@ -1003,7 +1047,7 @@
                 userSession = customerData;
                 spinBtn.textContent = 'SPINNING...';
                 
-                // ✅ Play new softer spin sound
+                // Play softer spin sound
                 audioSystem.playSpinSound();
 
                 const spinDurations = [1800, 2200, 2600];
@@ -1174,7 +1218,7 @@
 
         // Initialize everything
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('🎰 FINAL PB DAYS ARCADE - Perfect glow, bigger text/image, working music!');
+            console.log('🎰 FINAL PB DAYS ARCADE - Order usage check implemented!');
             
             initializeReels();
             
