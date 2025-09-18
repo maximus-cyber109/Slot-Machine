@@ -32,7 +32,7 @@ exports.handler = async (event, context) => {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
-                action: 'checkOrderUsage',
+                action: 'checkOrderIdUsage',
                 email: email,
                 orderNumber: orderNumber
             })
