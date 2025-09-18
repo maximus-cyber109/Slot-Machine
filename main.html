@@ -422,7 +422,7 @@
             user-select: none !important;
             opacity: 0.5;
             cursor: not-allowed;
-            background: linear-gradient(145deg, #888 0%, #666 100%);
+            background: linear-gradient(145deg, #888 0, #666 100%);
             animation: none;
         }
         
@@ -757,8 +757,6 @@
     </div>
 
     <script>
-        // ✅ NETLIFY FUNCTIONS INTEGRATION - All 3 functions are called properly
-        
         // Audio System
         class AudioSystem {
             constructor() {
@@ -931,10 +929,10 @@
 
         const audioSystem = new AudioSystem();
 
-        // Global variables
+        // ✅ FIXED: Global variables - NO email persistence
         let userSession = null;
         let spinning = false;
-        let userEmail = '';
+        let userEmail = ''; // ✅ This gets reset on every page load
         
         const symbols = [
             { name: '7', image: 'https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/7.png' },
@@ -965,7 +963,7 @@
             }
         }
 
-        // ✅ NETLIFY FUNCTION #1: Email validation and order checking
+        // ✅ FIXED: Email validation - NO localStorage saving
         async function submitEmailAndStart() {
             const emailInput = document.getElementById('popupEmailInput');
             const email = emailInput.value.trim();
@@ -978,14 +976,13 @@
             }
 
             try {
-                userEmail = email;
-                localStorage.setItem('arcadeEmail', email);
+                // ✅ REMOVED: localStorage.setItem('arcadeEmail', email);
+                userEmail = email; // ✅ Only store in memory for current session
                 
                 const originalText = startButton.textContent;
                 startButton.textContent = 'CHECKING...';
                 startButton.disabled = true;
                 
-                // ✅ CALLS: /.netlify/functions/get-customer-order
                 const customerData = await fetchCustomerData(email);
                 
                 if (!customerData || !customerData.orderData) {
@@ -995,15 +992,12 @@
                     return;
                 }
                 
-                // Check if order has already been used (for non-test users)
                 const isOverrideUser = checkIfOverrideUser(email);
                 if (!isOverrideUser) {
                     const orderNumber = customerData.orderData?.increment_id;
                     
                     if (orderNumber) {
                         console.log('🔍 Checking if order is already used...');
-                        
-                        // ✅ CALLS: /.netlify/functions/check-order-usage
                         const orderUsageCheck = await checkOrderUsage(email, orderNumber);
                         
                         if (orderUsageCheck && !orderUsageCheck.canSpin) {
@@ -1016,7 +1010,6 @@
                     }
                 }
                 
-                // All checks passed, proceed to game
                 startButton.textContent = originalText;
                 startButton.disabled = false;
                 document.getElementById('emailPopup').classList.add('hidden');
@@ -1046,7 +1039,6 @@
                    normalizedEmail.includes('testoverridevalli');
         }
 
-        // ✅ NETLIFY FUNCTION #1: Get customer order data
         async function fetchCustomerData(email) {
             try {
                 const response = await fetch('/.netlify/functions/get-customer-order', {
@@ -1076,7 +1068,6 @@
             }
         }
 
-        // ✅ NETLIFY FUNCTION #2: Check order usage
         async function checkOrderUsage(email, orderNumber) {
             try {
                 console.log('🔍 Checking order usage for:', orderNumber, 'by email:', email);
@@ -1101,7 +1092,6 @@
                 return result;
             } catch (error) {
                 console.error('❌ Order usage check error:', error);
-                // If order usage check fails, allow the spin (fail-safe)
                 return { success: true, canSpin: true, reason: 'Order usage check failed, allowing spin' };
             }
         }
@@ -1114,14 +1104,13 @@
             }
         }
 
-        // ✅ SPIN FUNCTION: Calls the prize allocation
         async function spin() {
             if (spinning) {
                 console.log('⚠️ Spin already in progress');
                 return false;
             }
             
-            const email = userEmail || localStorage.getItem('arcadeEmail');
+            const email = userEmail; // ✅ REMOVED: || localStorage.getItem('arcadeEmail')
             const spinBtn = document.getElementById('spinBtn');
             
             if (!email || !email.includes('@')) {
@@ -1192,8 +1181,6 @@
 
                 await Promise.all(reelPromises);
                 spinBtn.textContent = 'PROCESSING...';
-                
-                // ✅ CALLS: /.netlify/functions/allocate-prize
                 await processPrize(email, customerData);
 
                 return false;
@@ -1208,7 +1195,6 @@
             }
         }
 
-        // ✅ NETLIFY FUNCTION #3: Allocate prize and log to Google Sheets
         async function processPrize(email, customerData) {
             const spinBtn = document.getElementById('spinBtn');
             
@@ -1338,20 +1324,25 @@
             button.textContent = isMuted ? '🔇' : '🔊';
         }
 
-        // Initialize everything
+        // ✅ FIXED: Initialize - ALWAYS show email popup, NEVER check localStorage
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('🎰 PB DAYS ARCADE - Standalone with Netlify Functions Integration!');
+            console.log('🎰 PB DAYS ARCADE - Fresh Email Every Load!');
             
             try {
                 initializeReels();
                 
-                const storedEmail = localStorage.getItem('arcadeEmail');
-                if (storedEmail) {
-                    userEmail = storedEmail;
-                    document.getElementById('emailPopup').classList.add('hidden');
-                } else {
-                    document.getElementById('popupEmailInput').focus();
+                // ✅ REMOVED: localStorage.getItem('arcadeEmail') check
+                // ✅ ADDED: Clear any stored email and force popup
+                if (typeof localStorage !== 'undefined') {
+                    localStorage.removeItem('arcadeEmail'); // ✅ Clear any old stored emails
                 }
+                
+                userEmail = ''; // ✅ Reset email variable
+                
+                // ✅ ALWAYS show email popup on load
+                document.getElementById('emailPopup').classList.remove('hidden');
+                document.getElementById('popupEmailInput').focus();
+                document.getElementById('popupEmailInput').value = ''; // ✅ Clear any previous value
 
                 document.body.addEventListener('click', () => {
                     if (audioSystem.audioContext && audioSystem.audioContext.state === 'suspended') {
@@ -1359,7 +1350,7 @@
                     }
                 }, { once: false });
                 
-                console.log('✅ All systems initialized successfully');
+                console.log('✅ Email popup forced to show - no email persistence');
                 
             } catch (error) {
                 console.error('❌ Initialization error:', error);
