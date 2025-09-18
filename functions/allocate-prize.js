@@ -142,9 +142,10 @@ exports.handler = async (event, context) => {
 };
 
 // ✅ FIXED: WebEngage with correct authorization using only API key
+// ✅ CORRECTED: Use License Code in URL, API Key for auth
 async function sendWebEngageJourneyEvent(cleanEmail, prize, isTestUser, originalOrderData) {
     try {
-        console.log('📧 Sending WebEngage event with correct API key authorization...');
+        console.log('📧 Sending WebEngage event with correct License Code and API Key...');
         
         if (isTestUser) {
             console.log('🧪 Test user - logging event details instead of sending');
@@ -152,17 +153,14 @@ async function sendWebEngageJourneyEvent(cleanEmail, prize, isTestUser, original
             return true;
         }
         
-        // ✅ FIXED: Only use WEBENGAGE_API_KEY (no separate token needed)
-        const WEBENGAGE_API_KEY = process.env.WEBENGAGE_API_KEY;
+        // ✅ FIXED: Use separate License Code and API Key
+        const WEBENGAGE_LICENSE_CODE = process.env.WEBENGAGE_LICENSE_CODE || '82618240';
+        const WEBENGAGE_API_KEY = process.env.WEBENGAGE_API_KEY || '997ecae4-4632-4cb0-a65d-8427472e8f31';
         
-        if (!WEBENGAGE_API_KEY) {
-            console.error('❌ WEBENGAGE_API_KEY not found in environment variables');
-            return false;
-        }
-        
+        console.log('📧 WebEngage Config:');
+        console.log('   - License Code (URL):', WEBENGAGE_LICENSE_CODE);
+        console.log('   - API Key (Auth):', WEBENGAGE_API_KEY.substring(0, 8) + '...');
         console.log('📧 Sending to:', cleanEmail);
-        console.log('🎁 Prize:', cleanProductName(prize.name));
-        console.log('🔑 Using API Key for authorization');
         
         // ✅ Complete event payload with prize details
         const webEngagePayload = {
@@ -172,7 +170,6 @@ async function sendWebEngageJourneyEvent(cleanEmail, prize, isTestUser, original
             "eventData": {
                 // ✅ Prize details
                 "prize_name": cleanProductName(prize.name),
-                "prize_original_name": prize.name || 'Unknown Prize',
                 "prize_value": parseInt(prize.value) || 0,
                 "prize_image_url": prize.image || 'https://email-editor-resources.s3.amazonaws.com/images/82618240/stw-sep25/default-prize.png',
                 "prize_category": categorizePrize(prize.name, prize.value),
@@ -186,10 +183,6 @@ async function sendWebEngageJourneyEvent(cleanEmail, prize, isTestUser, original
                 // ✅ Campaign details
                 "campaign_name": "PB Days Arcade",
                 "campaign_type": "gamification",
-                "game_type": "slot_machine",
-                "promotion_code": "PBDAYS2025",
-                
-                // ✅ Customer details
                 "customer_email": cleanEmail,
                 "customer_name": getCustomerName(originalOrderData),
                 "customer_segment": (originalOrderData?.orderValue || 0) >= 10000 ? "premium" : "standard",
@@ -198,33 +191,28 @@ async function sendWebEngageJourneyEvent(cleanEmail, prize, isTestUser, original
                 "email_subject": `🎉 You Won: ${cleanProductName(prize.name)}!`,
                 "email_preheader": `Your ${categorizePrize(prize.name, prize.value)} prize worth ₹${prize.value} is confirmed! 🎁`,
                 "email_heading": "Congratulations! You're a Winner!",
-                "email_subheading": `You've won ${cleanProductName(prize.name)} worth ₹${prize.value}`,
-                "email_body": `Thank you for participating in PB Days Arcade! Your prize ${cleanProductName(prize.name)} worth ₹${prize.value} will be sent once your order #${originalOrderData?.orderNumber || 'N/A'} is delivered.`,
+                "email_body": `Thank you for participating in PB Days Arcade! Your prize ${cleanProductName(prize.name)} worth ₹${prize.value} will be sent once your order is delivered.`,
                 "cta_text": "View Your Prize",
                 "cta_url": "https://pinkblue.in/arcade-winners",
-                "footer_text": "PinkBlue - Your Dental Care Partner",
                 
                 // ✅ Event metadata
                 "event_timestamp": new Date().toISOString(),
-                "event_date": new Date().toISOString().split('T')[0],
                 "platform": "web",
-                "source": "pb_days_arcade",
-                "estimated_delivery": getEstimatedDelivery(),
-                "support_email": "support@pinkblue.in",
-                "website_url": "https://pinkblue.in"
+                "source": "pb_days_arcade"
             }
         };
         
         console.log('📤 WebEngage payload:', JSON.stringify(webEngagePayload, null, 2));
         
-        const webEngageEndpoint = `https://api.webengage.com/v1/accounts/${WEBENGAGE_API_KEY}/events`;
-        console.log('🎯 WebEngage endpoint:', webEngageEndpoint);
+        // ✅ CORRECTED: Use License Code in URL path
+        const webEngageEndpoint = `https://api.webengage.com/v1/accounts/${WEBENGAGE_LICENSE_CODE}/events`;
+        console.log('🎯 CORRECTED WebEngage endpoint:', webEngageEndpoint);
         
-        // ✅ CORRECTED: Use API key as Bearer token
+        // ✅ CORRECTED: Use API Key for authorization
         const webEngageResponse = await fetch(webEngageEndpoint, {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${WEBENGAGE_API_KEY}`, // ✅ API key as Bearer token
+                'Authorization': `Bearer ${WEBENGAGE_API_KEY}`, // ✅ API Key in auth header
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
                 'User-Agent': 'PBDaysArcade/1.0'
@@ -236,41 +224,41 @@ async function sendWebEngageJourneyEvent(cleanEmail, prize, isTestUser, original
         
         if (webEngageResponse.ok) {
             const webEngageResult = await webEngageResponse.json();
-            console.log('✅ WebEngage event sent successfully with complete details');
+            console.log('✅ WebEngage event sent successfully with correct credentials');
             console.log('📋 WebEngage response:', JSON.stringify(webEngageResult));
             console.log('🚀 Journey should trigger with complete event data');
-            
-            // ✅ Update user attributes for better personalization
-            await sendWebEngageUserAttributes(cleanEmail, prize, originalOrderData);
-            
             return true;
         } else {
             const errorText = await webEngageResponse.text();
-            console.error('❌ WebEngage failed:', errorText);
+            console.error('❌ WebEngage still failed:', errorText);
             console.error('❌ Response headers:', Object.fromEntries(webEngageResponse.headers.entries()));
             
-            // ✅ Try alternative authorization methods
-            console.log('🔄 Trying alternative authorization methods...');
-            return await tryAlternativeWebEngageAuth(webEngagePayload, WEBENGAGE_API_KEY, cleanEmail, prize);
+            // ✅ Try alternative authentication methods
+            console.log('🔄 Trying alternative auth methods...');
+            return await tryAlternativeWebEngageAuth(webEngagePayload, WEBENGAGE_LICENSE_CODE, WEBENGAGE_API_KEY, cleanEmail, prize);
         }
         
     } catch (error) {
         console.error('❌ WebEngage event error:', error.message);
-        console.error('❌ Full error stack:', error.stack);
         
         // ✅ Enhanced fallback logging
-        logWebEngageEventFallback(cleanEmail, prize, originalOrderData);
+        console.log('📨 WEBENGAGE EVENT FALLBACK:');
+        console.log('Email:', cleanEmail);
+        console.log('Prize:', cleanProductName(prize.name));
+        console.log('Value: ₹' + (prize.value || 0));
+        console.log('Campaign: PB Days Arcade');
+        
         return false;
     }
 }
 
-// ✅ Alternative authorization methods if Bearer fails
-async function tryAlternativeWebEngageAuth(payload, apiKey, cleanEmail, prize) {
+// ✅ Alternative authentication methods with correct License Code
+async function tryAlternativeWebEngageAuth(payload, licenseCode, apiKey, cleanEmail, prize) {
     try {
-        // Method 2: Try without "Bearer" prefix
+        // Method 2: Try without Bearer prefix
         console.log('🔄 Method 2: Direct API key without Bearer...');
         
-        const response2 = await fetch(`https://api.webengage.com/v1/accounts/${apiKey}/events`, {
+        const response2 = await fetch(`https://api.webengage.com/v1/accounts/${licenseCode}/events`, {
             method: 'POST',
             headers: {
                 'Authorization': apiKey, // ✅ Direct API key
@@ -284,36 +272,14 @@ async function tryAlternativeWebEngageAuth(payload, apiKey, cleanEmail, prize) {
         if (response2.ok) {
             const result2 = await response2.json();
             console.log('✅ Direct API key method worked');
-            console.log('📋 Method 2 response:', JSON.stringify(result2));
             return true;
         }
         
-        // Method 3: Try with API key in custom header
-        console.log('🔄 Method 3: X-API-Key header...');
-        
-        const response3 = await fetch(`https://api.webengage.com/v1/accounts/${apiKey}/events`, {
-            method: 'POST',
-            headers: {
-                'X-API-Key': apiKey,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(payload)
-        });
-        
-        console.log('📥 Method 3 response status:', response3.status);
-        
-        if (response3.ok) {
-            const result3 = await response3.json();
-            console.log('✅ X-API-Key header method worked');
-            console.log('📋 Method 3 response:', JSON.stringify(result3));
-            return true;
-        }
-        
-        // Method 4: Try Basic Auth format
-        console.log('🔄 Method 4: Basic Auth format...');
+        // Method 3: Try Basic Auth
+        console.log('🔄 Method 3: Basic Auth...');
         
         const basicAuth = Buffer.from(`${apiKey}:`).toString('base64');
-        const response4 = await fetch(`https://api.webengage.com/v1/accounts/${apiKey}/events`, {
+        const response3 = await fetch(`https://api.webengage.com/v1/accounts/${licenseCode}/events`, {
             method: 'POST',
             headers: {
                 'Authorization': `Basic ${basicAuth}`,
@@ -322,12 +288,29 @@ async function tryAlternativeWebEngageAuth(payload, apiKey, cleanEmail, prize) {
             body: JSON.stringify(payload)
         });
         
+        console.log('📥 Method 3 response status:', response3.status);
+        
+        if (response3.ok) {
+            console.log('✅ Basic Auth method worked');
+            return true;
+        }
+        
+        // Method 4: Try with API key in custom header
+        console.log('🔄 Method 4: X-API-Key header...');
+        
+        const response4 = await fetch(`https://api.webengage.com/v1/accounts/${licenseCode}/events`, {
+            method: 'POST',
+            headers: {
+                'X-API-Key': apiKey,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+        
         console.log('📥 Method 4 response status:', response4.status);
         
         if (response4.ok) {
-            const result4 = await response4.json();
-            console.log('✅ Basic Auth method worked');
-            console.log('📋 Method 4 response:', JSON.stringify(result4));
+            console.log('✅ X-API-Key header method worked');
             return true;
         }
         
@@ -340,59 +323,6 @@ async function tryAlternativeWebEngageAuth(payload, apiKey, cleanEmail, prize) {
     }
 }
 
-// ✅ UPDATED: User attributes with API key auth
-async function sendWebEngageUserAttributes(cleanEmail, prize, originalOrderData) {
-    try {
-        const WEBENGAGE_API_KEY = process.env.WEBENGAGE_API_KEY;
-        
-        if (!WEBENGAGE_API_KEY) {
-            console.log('⚠️ No WebEngage API key for user attributes');
-            return;
-        }
-        
-        const userAttributesPayload = {
-            "userId": cleanEmail,
-            "attributes": {
-                "last_prize_won": cleanProductName(prize.name),
-                "last_prize_value": prize.value || 0,
-                "last_order_value": originalOrderData?.orderValue || 0,
-                "arcade_participant": true,
-                "last_game_played": new Date().toISOString(),
-                "customer_segment": (originalOrderData?.orderValue || 0) >= 10000 ? "premium" : "standard",
-                "total_arcade_wins": 1,
-                "preferred_prize_category": categorizePrize(prize.name, prize.value),
-                "last_activity": new Date().toISOString()
-            }
-        };
-        
-        console.log('👤 Sending user attributes:', JSON.stringify(userAttributesPayload, null, 2));
-        
-        const attributesEndpoint = `https://api.webengage.com/v1/accounts/${WEBENGAGE_API_KEY}/users`;
-        
-        const response = await fetch(attributesEndpoint, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${WEBENGAGE_API_KEY}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(userAttributesPayload)
-        });
-        
-        console.log('👤 User attributes response status:', response.status);
-        
-        if (response.ok) {
-            const result = await response.json();
-            console.log('✅ User attributes sent successfully');
-            console.log('👤 Attributes response:', JSON.stringify(result));
-        } else {
-            const errorText = await response.text();
-            console.log('⚠️ User attributes failed (non-critical):', errorText);
-        }
-        
-    } catch (error) {
-        console.log('⚠️ User attributes error (non-critical):', error.message);
-    }
-}
 
 // ✅ Test user event logging
 function logTestUserEventDetails(cleanEmail, prize, originalOrderData) {
