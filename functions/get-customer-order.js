@@ -127,7 +127,7 @@ exports.handler = async (event, context) => {
                 };
             }
             
-            if (parseFloat(recentOrder.grand_total) >= 500) {
+            if (parseFloat(recentOrder.grand_total) >= 99) {
                 return {
                     statusCode: 200,
                     headers,
@@ -154,7 +154,7 @@ exports.handler = async (event, context) => {
                     headers,
                     body: JSON.stringify({
                         success: false,
-                        error: `Order amount ₹${recentOrder.grand_total} is below minimum ₹500`
+                        error: `Order amount ₹${recentOrder.grand_total} is below minimum ₹99`
                     })
                 };
             }
