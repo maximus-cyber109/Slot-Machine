@@ -237,11 +237,11 @@ function cleanProductName(prizeName) {
     if (!prizeName) return 'Mystery Prize';
     
     let cleanName = prizeName
-        .replace(/^[A-Z0-9_]+\s*[-_]\s*/i, '')
-        .replace(/^[A-Z]{2,}\s+/i, '')
-        .replace(/\s*[-_]\s*[A-Z0-9_]+$/i, '')
-        .replace(/\([^)]*\)$/g, '')
-        .trim();
+    //    .replace(/^[A-Z0-9_]+\s*[-_]\s*/i, '')
+      ///  .replace(/^[A-Z]{2,}\s+/i, '')
+       // .replace(/\s*[-_]\s*[A-Z0-9_]+$/i, '')
+       // .replace(/\([^)]*\)$/g, '')
+        ///.trim();
     
     if (!cleanName || cleanName.length < 3) {
         return prizeName;
