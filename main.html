@@ -1308,27 +1308,74 @@
     const modal = document.getElementById('customModal');
     const messageElement = document.getElementById('modalMessage');
     
-    // Check if this is an ineligible order message
-    if (message.includes('No eligible orders found')) {
+    // ✅ Check for ANY ineligible order message (not just one specific text)
+    const isIneligibleOrder = message.includes('No eligible orders found') || 
+                             message.includes('Orders older than 2 days') || 
+                             message.includes('below minimum') ||
+                             message.includes('place a new order');
+    
+    if (isIneligibleOrder) {
+        // Determine the specific issue for better messaging
+        let issueType = 'general';
+        let specificMessage = message;
+        
+        if (message.includes('Orders older than 2 days')) {
+            issueType = 'expired';
+            specificMessage = `Your recent order is too old to be eligible for PB DAYS ARCADE${email ? ` (${email})` : ''}.`;
+        } else if (message.includes('below minimum')) {
+            issueType = 'amount';
+            specificMessage = `Your order amount is below the minimum ₹1999 required${email ? ` (${email})` : ''}.`;
+        } else if (message.includes('No eligible orders found')) {
+            issueType = 'none';
+            specificMessage = `No eligible orders found${email ? ` for ${email}` : ''} from the last 2 days.`;
+        }
+        
         messageElement.innerHTML = `
-            <p>No eligible orders found${email ? ` for <strong>${email}</strong>` : ''} from the last 2 days.</p>
-            <p>Please place a new order to participate in PB DAYS ARCADE!</p>
-            <div style="margin-top: 25px; display: flex; flex-direction: column; gap: 10px;">
-                <button onclick="window.location.href='https://pinkblue.in'" 
-                        style="padding: 15px 25px; background: #8b4513; color: #ffd700; border: none; border-radius: 10px; cursor: pointer; font-family: 'Orbitron', monospace; font-size: 12px; font-weight: 600;">
-                    🛒 ORDER NOW
+            <p style="margin-bottom: 15px;">${specificMessage}</p>
+            <p style="margin-bottom: 25px; color: #ffd700;">Please place a new order to participate in PB DAYS ARCADE!</p>
+            <div style="display: flex; flex-direction: column; gap: 15px; width: 100%;">
+                <button onclick="window.open('https://pinkblue.in', '_blank')" 
+                        style="padding: 15px 25px; 
+                               background: #8b4513; 
+                               color: #ffd700; 
+                               border: none; 
+                               border-radius: 10px; 
+                               cursor: pointer; 
+                               font-family: 'Orbitron', monospace; 
+                               font-size: 12px; 
+                               font-weight: 600;
+                               pointer-events: auto;
+                               z-index: 10001;
+                               position: relative;
+                               width: 100%;
+                               transition: all 0.2s ease;">
+                    🛒 SHOP NOW (Min ₹1999)
                 </button>
                 <button onclick="retryWithDifferentEmail()" 
-                        style="padding: 15px 25px; background: #654321; color: #ffd700; border: none; border-radius: 10px; cursor: pointer; font-family: 'Orbitron', monospace; font-size: 12px; font-weight: 600;">
+                        style="padding: 15px 25px; 
+                               background: #654321; 
+                               color: #ffd700; 
+                               border: none; 
+                               border-radius: 10px; 
+                               cursor: pointer; 
+                               font-family: 'Orbitron', monospace; 
+                               font-size: 12px; 
+                               font-weight: 600;
+                               pointer-events: auto;
+                               z-index: 10001;
+                               position: relative;
+                               width: 100%;
+                               transition: all 0.2s ease;">
                     📧 TRY DIFFERENT EMAIL
                 </button>
             </div>
         `;
     } else {
-        messageElement.textContent = message;
+        messageElement.innerHTML = message;
     }
     
     modal.style.display = 'flex';
+    modal.style.zIndex = '10001';
 }
 
         function retryWithDifferentEmail() {
