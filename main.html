@@ -986,7 +986,7 @@
                 const customerData = await fetchCustomerData(email);
                 
                 if (!customerData || !customerData.orderData) {
-                    showCustomModal('No eligible orders found from the last 2 days. Please place a new order and try again!');
+                    showCustomModal('No eligible orders found from the last 2 days. Please place a new order and try again!',email);
                     startButton.textContent = originalText;
                     startButton.disabled = false;
                     return;
@@ -1304,13 +1304,50 @@
             document.getElementById('goldenCard').classList.remove('show');
         }
 
-        function showCustomModal(message) {
-            document.getElementById('modalMessage').textContent = message;
-            document.getElementById('customModal').style.display = 'flex';
+        function showCustomModal(message, email = null) {
+    const modal = document.getElementById('customModal');
+    const messageElement = document.getElementById('modalMessage');
+    
+    // Check if this is an ineligible order message
+    if (message.includes('No eligible orders found')) {
+        messageElement.innerHTML = `
+            <p>No eligible orders found${email ? ` for <strong>${email}</strong>` : ''} from the last 2 days.</p>
+            <p>Please place a new order to participate in PB DAYS ARCADE!</p>
+            <div style="margin-top: 25px; display: flex; flex-direction: column; gap: 10px;">
+                <button onclick="window.location.href='https://pinkblue.in'" 
+                        style="padding: 15px 25px; background: #8b4513; color: #ffd700; border: none; border-radius: 10px; cursor: pointer; font-family: 'Orbitron', monospace; font-size: 12px; font-weight: 600;">
+                    🛒 ORDER NOW
+                </button>
+                <button onclick="retryWithDifferentEmail()" 
+                        style="padding: 15px 25px; background: #654321; color: #ffd700; border: none; border-radius: 10px; cursor: pointer; font-family: 'Orbitron', monospace; font-size: 12px; font-weight: 600;">
+                    📧 TRY DIFFERENT EMAIL
+                </button>
+            </div>
+        `;
+    } else {
+        messageElement.textContent = message;
+    }
+    
+    modal.style.display = 'flex';
+}
+
         }
 
-        function closeCustomModal() {
-            document.getElementById('customModal').style.display = 'none';
+        function retryWithDifferentEmail() {
+    // Close the custom modal
+    closeCustomModal();
+    
+    // Clear the email input and refocus
+    const emailInput = document.getElementById('popupEmailInput');
+    if (emailInput) {
+        emailInput.value = '';
+        emailInput.focus();
+    }
+    
+    // Show the email popup again
+    document.getElementById('emailPopup').classList.remove('hidden');
+}
+
         }
 
         function returnToHome() {
