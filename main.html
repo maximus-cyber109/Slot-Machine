@@ -1304,8 +1304,7 @@
             document.getElementById('goldenCard').classList.remove('show');
         }
 
-        // ✅ REPLACE THE ENTIRE showCustomModal FUNCTION
-function showCustomModal(message, email = null) {
+        function showCustomModal(message, email = null) {
     const modal = document.getElementById('customModal');
     const messageElement = document.getElementById('modalMessage');
     
@@ -1320,63 +1319,74 @@ function showCustomModal(message, email = null) {
             <p style="margin-bottom: 15px;">${message}</p>
             <p style="margin-bottom: 25px; color: #8b4513;">Please place a new order to participate in PB DAYS ARCADE!</p>
             <div style="display: flex; flex-direction: column; gap: 15px; width: 100%;">
-                <button id="orderNowBtn" 
+                <button onclick="window.open('https://pinkblue.in', '_blank')" 
                         style="padding: 15px 25px; 
-                               background: #8b4513; 
-                               color: #ffd700; 
-                               border: none; 
-                               border-radius: 10px; 
-                               cursor: pointer; 
-                               font-family: 'Orbitron', monospace; 
-                               font-size: 12px; 
-                               font-weight: 600;
-                               width: 100%;">
+                               background: #8b4513 !important; 
+                               color: #ffd700 !important; 
+                               border: none !important; 
+                               border-radius: 10px !important; 
+                               cursor: pointer !important; 
+                               font-family: 'Orbitron', monospace !important; 
+                               font-size: 12px !important; 
+                               font-weight: 600 !important;
+                               width: 100% !important;
+                               z-index: 10010 !important;
+                               position: relative !important;
+                               pointer-events: auto !important;">
                     🛒 SHOP NOW (Min ₹1999)
                 </button>
-                <button id="retryEmailBtn" 
+                <button onclick="retryEmailGlobal()" 
                         style="padding: 15px 25px; 
-                               background: #654321; 
-                               color: #ffd700; 
-                               border: none; 
-                               border-radius: 10px; 
-                               cursor: pointer; 
-                               font-family: 'Orbitron', monospace; 
-                               font-size: 12px; 
-                               font-weight: 600;
-                               width: 100%;">
+                               background: #654321 !important; 
+                               color: #ffd700 !important; 
+                               border: none !important; 
+                               border-radius: 10px !important; 
+                               cursor: pointer !important; 
+                               font-family: 'Orbitron', monospace !important; 
+                               font-size: 12px !important; 
+                               font-weight: 600 !important;
+                               width: 100% !important;
+                               z-index: 10010 !important;
+                               position: relative !important;
+                               pointer-events: auto !important;">
                     📧 TRY DIFFERENT EMAIL
                 </button>
             </div>
         `;
-        
-        // Add event listeners after DOM is updated
-        setTimeout(() => {
-            const orderBtn = document.getElementById('orderNowBtn');
-            const retryBtn = document.getElementById('retryEmailBtn');
-            
-            if (orderBtn) {
-                orderBtn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    window.open('https://pinkblue.in', '_blank');
-                });
-            }
-            
-            if (retryBtn) {
-                retryBtn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    retryWithDifferentEmail();
-                });
-            }
-        }, 100);
-        
     } else {
-        messageElement.innerHTML = message;
+        messageElement.innerHTML = `
+            <div>${message}</div>
+            <button onclick="closeCustomModal()" 
+                    style="padding: 15px 25px; 
+                           background: #8b4513 !important; 
+                           color: #ffd700 !important; 
+                           border: none !important; 
+                           border-radius: 10px !important; 
+                           cursor: pointer !important; 
+                           font-family: 'Orbitron', monospace !important; 
+                           font-size: 12px !important; 
+                           font-weight: 600 !important;
+                           margin-top: 20px !important;
+                           z-index: 10010 !important;
+                           position: relative !important;
+                           pointer-events: auto !important;">
+                OK
+            </button>
+        `;
     }
     
     modal.style.display = 'flex';
     modal.style.zIndex = '10000';
 }
 
+// Add this global function
+function retryEmailGlobal() {
+    retryWithDifferentEmail();
+}
+
+function closeCustomModal() {
+    document.getElementById('customModal').style.display = 'none';
+}
         function retryWithDifferentEmail() {
     // Close the custom modal
     closeCustomModal();
