@@ -1320,7 +1320,7 @@ function showCustomModal(message, email = null) {
             <p style="margin-bottom: 15px;">${message}</p>
             <p style="margin-bottom: 25px; color: #8b4513;">Please place a new order to participate in PB DAYS ARCADE!</p>
             <div style="display: flex; flex-direction: column; gap: 15px; width: 100%;">
-                <button onclick="window.open('https://pinkblue.in', '_blank')" 
+                <button id="orderNowBtn" 
                         style="padding: 15px 25px; 
                                background: #8b4513; 
                                color: #ffd700; 
@@ -1333,7 +1333,7 @@ function showCustomModal(message, email = null) {
                                width: 100%;">
                     🛒 SHOP NOW (Min ₹1999)
                 </button>
-                <button onclick="window.retryEmailGlobal()" 
+                <button id="retryEmailBtn" 
                         style="padding: 15px 25px; 
                                background: #654321; 
                                color: #ffd700; 
@@ -1349,73 +1349,32 @@ function showCustomModal(message, email = null) {
             </div>
         `;
         
-        // Make sure the functions are globally accessible
-        window.retryEmailGlobal = function() {
-            retryWithDifferentEmail();
-        };
+        // Add event listeners after DOM is updated
+        setTimeout(() => {
+            const orderBtn = document.getElementById('orderNowBtn');
+            const retryBtn = document.getElementById('retryEmailBtn');
+            
+            if (orderBtn) {
+                orderBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    window.open('https://pinkblue.in', '_blank');
+                });
+            }
+            
+            if (retryBtn) {
+                retryBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    retryWithDifferentEmail();
+                });
+            }
+        }, 100);
         
     } else {
-        messageElement.innerHTML = `
-            ${message}
-            <div style="margin-top: 20px;">
-                <button onclick="window.closeModalGlobal()" 
-                        style="padding: 15px 25px; 
-                               background: #8b4513; 
-                               color: #ffd700; 
-                               border: none; 
-                               border-radius: 10px; 
-                               cursor: pointer; 
-                               font-family: 'Orbitron', monospace; 
-                               font-size: 12px; 
-                               font-weight: 600;">
-                    OK
-                </button>
-            </div>
-        `;
-        
-        // Make close function globally accessible
-        window.closeModalGlobal = function() {
-            closeCustomModal();
-        };
+        messageElement.innerHTML = message;
     }
     
     modal.style.display = 'flex';
-}
-
-// ✅ MAKE SURE THIS FUNCTION EXISTS
-function closeCustomModal() {
-    document.getElementById('customModal').style.display = 'none';
-}
-
-// ✅ MAKE SURE THIS FUNCTION EXISTS AND IS WORKING
-function retryWithDifferentEmail() {
-    console.log('Retry function called'); // Debug log
-    
-    // Close the custom modal
-    closeCustomModal();
-    
-    // Reset the submit button
-    const submitBtn = document.getElementById('submitEmailBtn');
-    if (submitBtn) {
-        submitBtn.innerHTML = '🎮 START PLAYING';
-        submitBtn.disabled = false;
-        submitBtn.style.background = '';
-        submitBtn.style.cursor = '';
-        submitBtn.style.opacity = '1';
-    }
-    
-    // Clear the email input and refocus
-    const emailInput = document.getElementById('popupEmailInput');
-    if (emailInput) {
-        emailInput.value = '';
-        emailInput.focus();
-    }
-    
-    // Show the email popup again
-    const emailPopup = document.getElementById('emailPopup');
-    if (emailPopup) {
-        emailPopup.classList.remove('hidden');
-    }
+    modal.style.zIndex = '10000';
 }
 
         function retryWithDifferentEmail() {
