@@ -64,13 +64,45 @@ exports.handler = async (event, context) => {
             };
         }
         
-        // ✅ Real Magento API call for all other emails (including syed.ahmed@theraoralcare.com)
+        // ✅ NEW: Special ONE-TIME override for avadhlalpuria@gmail.com
+        if (normalizedEmail === 'avadhlalpuria@gmail.com') {
+            console.log('✅ One-time override for avadhlalpuria@gmail.com - Order 000366442');
+            const mockOrderData = {
+                entity_id: '366442',
+                increment_id: '000366442',
+                grand_total: '18447.00',
+                status: 'complete',
+                created_at: new Date().toISOString(),
+                customer_email: 'avadhlalpuria@gmail.com',
+                customer_firstname: 'Avadhlal',
+                customer_lastname: 'Puria',
+                order_currency_code: 'INR',
+                // ✅ IMPORTANT: Mark as single-use override
+                special_override: true,
+                max_spins: 1
+            };
+            
+            return {
+                statusCode: 200,
+                headers,
+                body: JSON.stringify({
+                    success: true,
+                    orderData: mockOrderData,
+                    message: `Special override - order 000366442 eligible (₹18,447.00) - ONE SPIN ONLY`,
+                    detectionMethod: 'single_use_override',
+                    maxSpins: 1,
+                    isSpecialOverride: true
+                })
+            };
+        }
+        
+        // ✅ Real Magento API call for all other emails
         const API_TOKEN = process.env.MAGENTO_API_TOKEN || 't5xkjvxlgitd25cuhxixl9dflw008f4e';
         const BASE_URL = process.env.MAGENTO_BASE_URL || 'https://pinkblue.in/rest/V1';
         
         // ✅ ENHANCED: Look for orders from today or max 2 days ago
         const maxDaysAgo = new Date();
-        maxDaysAgo.setDate(maxDaysAgo.getDate() - 5);
+        maxDaysAgo.setDate(maxDaysAgo.getDate() - 2);
         maxDaysAgo.setHours(0, 0, 0, 0); // Start of day
         
         const searchUrl = `${BASE_URL}/orders?` +
