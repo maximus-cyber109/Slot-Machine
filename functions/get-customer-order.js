@@ -70,7 +70,7 @@ exports.handler = async (event, context) => {
         
         // ✅ ENHANCED: Look for orders from today or max 2 days ago
         const maxDaysAgo = new Date();
-        maxDaysAgo.setDate(maxDaysAgo.getDate() - 2);
+        maxDaysAgo.setDate(maxDaysAgo.getDate() - 5);
         maxDaysAgo.setHours(0, 0, 0, 0); // Start of day
         
         const searchUrl = `${BASE_URL}/orders?` +
