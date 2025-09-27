@@ -66,11 +66,11 @@ exports.handler = async (event, context) => {
         
         // ✅ NEW: Special ONE-TIME override for avadhlalpuria@gmail.com
         if (normalizedEmail === 'avadhlalpuria@gmail.com') {
-            console.log('✅ One-time override for avadhlalpuria@gmail.com - Order 000366442');
+            console.log('✅ One-time override for avadhlalpuria@gmail.com - Order 000366590');
             const mockOrderData = {
-                entity_id: '366442',
-                increment_id: '000366442',
-                grand_total: '18447.00',
+                entity_id: '366590',
+                increment_id: '000366590',
+                grand_total: '3662',
                 status: 'complete',
                 created_at: new Date().toISOString(),
                 customer_email: 'avadhlalpuria@gmail.com',
@@ -79,7 +79,7 @@ exports.handler = async (event, context) => {
                 order_currency_code: 'INR',
                 // ✅ IMPORTANT: Mark as single-use override
                 special_override: true,
-                max_spins: 1
+                max_spins: 2
             };
             
             return {
