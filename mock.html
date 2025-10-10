@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PB DAYS - Choose Your Specialties</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #000;
+            color: #fff;
+            min-height: 100vh;
+            line-height: 1.47059;
+            font-weight: 400;
+            letter-spacing: -0.022em;
+        }
+
+        .container {
+            max-width: 375px;
+            margin: 0 auto;
+            background: #000;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .header-section {
+            padding: 60px 24px 40px;
+            text-align: center;
+            background: linear-gradient(180deg, #1d1d1f 0%, #000 100%);
+            border-bottom: 0.5px solid #424245;
+        }
+
+        .pb-days-banner {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: #fff;
+            letter-spacing: -0.005em;
+        }
+
+        .date-banner {
+            color: #86868b;
+            font-size: 17px;
+            margin-bottom: 24px;
+            font-weight: 400;
+        }
+
+        .main-title {
+            font-size: 21px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 8px;
+            letter-spacing: 0.011em;
+        }
+
+        .subtitle {
+            color: #86868b;
+            font-size: 17px;
+            font-weight: 400;
+        }
+
+        .thank-you-section {
+            background: #fff;
+            color: #000;
+            padding: 32px 24px;
+            text-align: center;
+            border-bottom: 0.5px solid #d2d2d7;
+        }
+
+        .success-icon {
+            width: 56px;
+            height: 56px;
+            background: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 24px;
+        }
+
+        .thank-you-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.005em;
+        }
+
+        .thank-you-subtitle {
+            font-size: 17px;
+            color: #86868b;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        .masterbox-text {
+            font-size: 15px;
+            font-weight: 600;
+            background: #f5f5f7;
+            color: #000;
+            padding: 12px 20px;
+            border-radius: 20px;
+            display: inline-block;
+            letter-spacing: -0.016em;
+        }
+
+        .form-section {
+            padding: 32px 24px;
+            background: #000;
+        }
+
+        .form-title {
+            text-align: center;
+            color: #fff;
+            font-size: 24px;
+            margin-bottom: 8px;
+            font-weight: 600;
+            letter-spacing: -0.009em;
+        }
+
+        .form-subtitle {
+            text-align: center;
+            color: #86868b;
+            font-size: 17px;
+            margin-bottom: 32px;
+            font-weight: 400;
+        }
+
+        .specialties-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            margin-bottom: 32px;
+            background: #424245;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .specialty-item {
+            background: #1c1c1e;
+            padding: 20px 24px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 64px;
+        }
+
+        .specialty-item:first-child {
+            border-radius: 12px 12px 0 0;
+        }
+
+        .specialty-item:last-child {
+            border-radius: 0 0 12px 12px;
+        }
+
+        .specialty-item:only-child {
+            border-radius: 12px;
+        }
+
+        .specialty-item:hover {
+            background: #2c2c2e;
+        }
+
+        .specialty-item.selected {
+            background: #fff;
+            color: #000;
+        }
+
+        .specialty-item.selected:hover {
+            background: #f5f5f7;
+        }
+
+        .specialty-content {
+            flex-grow: 1;
+        }
+
+        .specialty-name {
+            font-size: 17px;
+            font-weight: 400;
+            color: inherit;
+            letter-spacing: -0.022em;
+        }
+
+        .specialty-item.selected .specialty-name {
+            color: #000;
+            font-weight: 500;
+        }
+
+        .specialty-checkbox {
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border: 2px solid #424245;
+            border-radius: 50%;
+            background: transparent;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            flex-shrink: 0;
+        }
+
+        .specialty-item.selected .specialty-checkbox {
+            border-color: #007aff;
+            background: #007aff;
+        }
+
+        .specialty-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .selection-counter {
+            text-align: center;
+            color: #86868b;
+            font-size: 15px;
+            margin-bottom: 24px;
+            font-weight: 400;
+        }
+
+        .selection-counter.active {
+            color: #007aff;
+        }
+
+        .submit-section {
+            padding: 0 24px 40px;
+            background: #000;
+        }
+
+        .submit-btn {
+            width: 100%;
+            height: 50px;
+            background: #007aff;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            font-size: 17px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+            letter-spacing: -0.022em;
+        }
+
+        .submit-btn:hover {
+            background: #0056b3;
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            background: #004085;
+        }
+
+        .submit-btn:disabled {
+            background: #424245;
+            color: #86868b;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .footer-info {
+            background: #1c1c1e;
+            padding: 24px;
+            text-align: center;
+            border-top: 0.5px solid #424245;
+        }
+
+        .footer-text {
+            color: #86868b;
+            font-size: 13px;
+            line-height: 1.38462;
+            margin-bottom: 16px;
+            font-weight: 400;
+        }
+
+        .promo-tags {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .promo-tag {
+            background: #424245;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+        }
+
+        .loading {
+            display: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top: 2px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Apple-style fade in animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .specialty-item {
+            animation: fadeInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        .specialty-item:nth-child(1) { animation-delay: 0.1s; }
+        .specialty-item:nth-child(2) { animation-delay: 0.15s; }
+        .specialty-item:nth-child(3) { animation-delay: 0.2s; }
+        .specialty-item:nth-child(4) { animation-delay: 0.25s; }
+        .specialty-item:nth-child(5) { animation-delay: 0.3s; }
+        .specialty-item:nth-child(6) { animation-delay: 0.35s; }
+        .specialty-item:nth-child(7) { animation-delay: 0.4s; }
+
+        /* Haptic feedback simulation */
+        .specialty-item:active {
+            transform: scale(0.98);
+        }
+
+        .submit-btn:active {
+            transform: scale(0.96);
+        }
+
+        @media (max-width: 320px) {
+            .container {
+                max-width: 100%;
+            }
+            
+            .header-section {
+                padding: 44px 20px 32px;
+            }
+            
+            .form-section, .submit-section {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header-section">
+            <div class="pb-days-banner">PB DAYS</div>
+            <div class="date-banner">October 15 – 17</div>
+            <div class="main-title">Choose Your Specialties</div>
+            <div class="subtitle">Get Your Custom MasterBox</div>
+        </div>
+
+        <!-- Thank You Section -->
+        <div class="thank-you-section">
+            <div class="success-icon">✓</div>
+            <div class="thank-you-title">Thank You</div>
+            <div class="thank-you-subtitle">Your order has been successfully placed</div>
+            <div class="masterbox-text">Custom MasterBox Awaits</div>
+        </div>
+
+        <!-- Form Section -->
+        <div class="form-section">
+            <h2 class="form-title">Select Your Specialties</h2>
+            <p class="form-subtitle">Choose all that apply</p>
+            
+            <form id="specialtyForm" action="/submit-specialties" method="POST">
+                <div class="selection-counter" id="selectionCounter">
+                    No specialties selected
+                </div>
+                
+                <div class="specialties-grid">
+                    <div class="specialty-item" onclick="toggleSpecialty('endodontist')">
+                        <div class="specialty-content">
+                            <div class="specialty-name">Endodontist</div>
+                        </div>
+                        <input type="checkbox" id="endodontist" name="specialties[]" value="Endodontist" class="specialty-checkbox">
+                    </div>
+                    
+                    <div class="specialty-item" onclick="toggleSpecialty('prosthodontist')">
+                        <div class="specialty-content">
+                            <div class="specialty-name">Prosthodontist</div>
+                        </div>
+                        <input type="checkbox" id="prosthodontist" name="specialties[]" value="Prosthodontist" class="specialty-checkbox">
+                    </div>
+                    
+                    <div class="specialty-item" onclick="toggleSpecialty('orthodontist')">
+                        <div class="specialty-content">
+                            <div class="specialty-name">Orthodontist</div>
+                        </div>
+                        <input type="checkbox" id="orthodontist" name="specialties[]" value="Orthodontist" class="specialty-checkbox">
+                    </div>
+                    
+                    <div class="specialty-item" onclick="toggleSpecialty('oral_surgeon')">
+                        <div class="specialty-content">
+                            <div class="specialty-name">Oral & Maxillofacial Surgeon</div>
+                        </div>
+                        <input type="checkbox" id="oral_surgeon" name="specialties[]" value="Oral And Maxillofacial Surgeon" class="specialty-checkbox">
+                    </div>
+                    
+                    <div class="specialty-item" onclick="toggleSpecialty('paedodontist')">
+                        <div class="specialty-content">
+                            <div class="specialty-name">Paedodontist</div>
+                        </div>
+                        <input type="checkbox" id="paedodontist" name="specialties[]" value="Paedodontist" class="specialty-checkbox">
+                    </div>
+                    
+                    <div class="specialty-item" onclick="toggleSpecialty('periodontist')">
+                        <div class="specialty-content">
+                            <div class="specialty-name">Periodontist</div>
+                        </div>
+                        <input type="checkbox" id="periodontist" name="specialties[]" value="Periodontist" class="specialty-checkbox">
+                    </div>
+                    
+                    <div class="specialty-item" onclick="toggleSpecialty('general_dentist')">
+                        <div class="specialty-content">
+                            <div class="specialty-name">General Dentist</div>
+                        </div>
+                        <input type="checkbox" id="general_dentist" name="specialties[]" value="General Dentist" class="specialty-checkbox">
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Submit Section -->
+        <div class="submit-section">
+            <button type="submit" class="submit-btn" id="submitBtn" onclick="submitForm()">
+                <span class="loading" id="loading"></span>
+                <span id="btnText">Create My MasterBox</span>
+            </button>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-info">
+            <div class="footer-text">
+                Your specialty information helps us curate the perfect products for your practice.
+            </div>
+            <div class="promo-tags">
+                <span class="promo-tag">SPECIALTY MASTERBOX</span>
+                <span class="promo-tag">SUPER DEALS</span>
+                <span class="promo-tag">HAPPY HOURS</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedCount = 0;
+
+        function toggleSpecialty(specialtyId) {
+            const checkbox = document.getElementById(specialtyId);
+            const item = checkbox.closest('.specialty-item');
+            
+            checkbox.checked = !checkbox.checked;
+            
+            if (checkbox.checked) {
+                item.classList.add('selected');
+                selectedCount++;
+            } else {
+                item.classList.remove('selected');
+                selectedCount--;
+            }
+            
+            updateCounter();
+            updateSubmitButton();
+            
+            // Add haptic feedback simulation
+            if (navigator.vibrate) {
+                navigator.vibrate(10);
+            }
+        }
+
+        function updateCounter() {
+            const counter = document.getElementById('selectionCounter');
+            if (selectedCount === 0) {
+                counter.textContent = 'No specialties selected';
+                counter.classList.remove('active');
+            } else if (selectedCount === 1) {
+                counter.textContent = '1 specialty selected';
+                counter.classList.add('active');
+            } else {
+                counter.textContent = `${selectedCount} specialties selected`;
+                counter.classList.add('active');
+            }
+        }
+
+        function updateSubmitButton() {
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            
+            if (selectedCount === 0) {
+                submitBtn.disabled = true;
+                btnText.textContent = 'Select Specialties';
+            } else {
+                submitBtn.disabled = false;
+                btnText.textContent = 'Create My MasterBox';
+            }
+        }
+
+        function submitForm() {
+            const checkedBoxes = document.querySelectorAll('input[name="specialties[]"]:checked');
+            
+            if (checkedBoxes.length === 0) {
+                return;
+            }
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const loading = document.getElementById('loading');
+            const btnText = document.getElementById('btnText');
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            loading.style.display = 'inline-block';
+            btnText.textContent = 'Creating...';
+            
+            // Collect form data
+            const selectedSpecialties = Array.from(checkedBoxes).map(cb => cb.value);
+            const formData = {
+                specialties: selectedSpecialties,
+                count: selectedSpecialties.length,
+                timestamp: new Date().toISOString(),
+                orderId: '{{ORDER_ID}}',
+                campaign: 'PB_DAYS_OCT_2025'
+            };
+            
+            console.log('Form data to submit:', formData);
+            
+            // Simulate form submission
+            setTimeout(() => {
+                btnText.textContent = 'Complete';
+                loading.style.display = 'none';
+                
+                setTimeout(() => {
+                    window.location.href = '/masterbox-confirmation';
+                }, 800);
+            }, 1500);
+        }
+
+        // Initialize
+        updateSubmitButton();
+    </script>
+</body>
+</html>
