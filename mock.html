@@ -39,7 +39,7 @@
         }
 
         .header-section {
-            padding: 60px 24px 30px;
+            padding: 50px 24px 20px;
             text-align: center;
             background: linear-gradient(180deg, #1d1d1f 0%, #000 100%);
             border-bottom: 0.5px solid #424245;
@@ -47,7 +47,7 @@
         }
 
         .pb-days-banner {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 700;
             margin-bottom: 4px;
             color: #fff;
@@ -56,39 +56,102 @@
 
         .date-banner {
             color: #86868b;
-            font-size: 15px;
-            margin-bottom: 20px;
+            font-size: 13px;
+            margin-bottom: 16px;
             font-weight: 400;
         }
 
         .main-title {
-            font-size: 20px;
+            font-size: 17px;
             font-weight: 600;
             color: #fff;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
             letter-spacing: 0.011em;
         }
 
         .subtitle {
             color: #86868b;
-            font-size: 15px;
+            font-size: 13px;
             font-weight: 400;
         }
 
+        .thank-you-section {
+            background: #fff;
+            color: #000;
+            padding: 20px 24px;
+            text-align: center;
+            border-bottom: 0.5px solid #d2d2d7;
+            flex-shrink: 0;
+        }
+
+        .success-icon-small {
+            width: 32px;
+            height: 32px;
+            background: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            font-size: 16px;
+            color: #fff;
+        }
+
+        .thank-you-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: -0.005em;
+        }
+
+        .thank-you-subtitle {
+            font-size: 13px;
+            color: #86868b;
+            margin-bottom: 12px;
+            font-weight: 400;
+        }
+
+        .masterbox-text {
+            font-size: 13px;
+            font-weight: 600;
+            background: #f5f5f7;
+            color: #000;
+            padding: 8px 16px;
+            border-radius: 16px;
+            display: inline-block;
+            letter-spacing: -0.016em;
+        }
+
         .form-section {
-            padding: 30px 24px;
+            padding: 20px 24px;
             background: #000;
             flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+        }
+
+        .form-title {
+            text-align: center;
+            color: #fff;
+            font-size: 17px;
+            margin-bottom: 6px;
+            font-weight: 600;
+            letter-spacing: -0.009em;
+        }
+
+        .form-subtitle {
+            text-align: center;
+            color: #86868b;
+            font-size: 13px;
+            margin-bottom: 16px;
+            font-weight: 400;
         }
 
         .selection-counter {
             text-align: center;
             color: #86868b;
-            font-size: 14px;
-            margin-bottom: 20px;
+            font-size: 12px;
+            margin-bottom: 16px;
             font-weight: 400;
         }
 
@@ -99,13 +162,14 @@
         .specialties-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 30px;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex: 1;
         }
 
         .specialty-item {
             background: #1c1c1e;
-            padding: 20px;
+            padding: 16px;
             border-radius: 12px;
             cursor: pointer;
             transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -114,7 +178,7 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            min-height: 100px;
+            min-height: 85px;
             position: relative;
         }
 
@@ -132,7 +196,7 @@
         }
 
         .specialty-name {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 500;
             color: inherit;
             letter-spacing: -0.022em;
@@ -146,14 +210,14 @@
 
         .specialty-checkbox {
             appearance: none;
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             border: 2px solid #424245;
             border-radius: 50%;
             background: transparent;
             position: absolute;
-            top: 12px;
-            right: 12px;
+            top: 10px;
+            right: 10px;
             cursor: pointer;
             transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
@@ -170,24 +234,24 @@
             left: 50%;
             transform: translate(-50%, -50%);
             color: #fff;
-            font-size: 12px;
+            font-size: 10px;
             font-weight: 600;
         }
 
         .submit-section {
-            padding: 0 24px 40px;
+            padding: 0 24px 32px;
             background: #000;
             flex-shrink: 0;
         }
 
         .submit-btn {
             width: 100%;
-            height: 50px;
+            height: 48px;
             background: #007aff;
             color: #fff;
             border: none;
-            border-radius: 25px;
-            font-size: 17px;
+            border-radius: 24px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -309,22 +373,45 @@
             }
             
             .specialty-item {
-                min-height: 90px;
-                padding: 16px;
+                min-height: 75px;
+                padding: 12px;
             }
         }
 
         @media (max-height: 667px) {
             .header-section {
-                padding: 50px 24px 20px;
+                padding: 40px 24px 16px;
+            }
+            
+            .thank-you-section {
+                padding: 16px 24px;
             }
             
             .form-section {
-                padding: 20px 24px;
+                padding: 16px 24px;
             }
             
             .specialty-item {
-                min-height: 85px;
+                min-height: 75px;
+            }
+        }
+
+        @media (max-height: 568px) {
+            .header-section {
+                padding: 30px 24px 12px;
+            }
+            
+            .pb-days-banner {
+                font-size: 20px;
+            }
+            
+            .specialty-item {
+                min-height: 65px;
+                padding: 12px;
+            }
+            
+            .specialty-name {
+                font-size: 11px;
             }
         }
     </style>
@@ -339,8 +426,19 @@
             <div class="subtitle">Get Your Custom MasterBox</div>
         </div>
 
+        <!-- Thank You Section -->
+        <div class="thank-you-section">
+            <div class="success-icon-small">✓</div>
+            <div class="thank-you-title">Thank You for Your Order!</div>
+            <div class="thank-you-subtitle">Your order has been successfully placed</div>
+            <div class="masterbox-text">Custom MasterBox Awaits</div>
+        </div>
+
         <!-- Form Section -->
         <div class="form-section" id="formSection">
+            <h2 class="form-title">Select Your Specialties</h2>
+            <p class="form-subtitle">Choose all that apply to create your perfect MasterBox</p>
+            
             <div class="selection-counter" id="selectionCounter">
                 No specialties selected
             </div>
