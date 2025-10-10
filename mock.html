@@ -11,11 +11,18 @@
             box-sizing: border-box;
         }
 
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background: #000;
             color: #fff;
-            min-height: 100vh;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
             line-height: 1.47059;
             font-weight: 400;
             letter-spacing: -0.022em;
@@ -25,19 +32,22 @@
             max-width: 375px;
             margin: 0 auto;
             background: #000;
-            min-height: 100vh;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
             position: relative;
         }
 
         .header-section {
-            padding: 60px 24px 40px;
+            padding: 60px 24px 30px;
             text-align: center;
             background: linear-gradient(180deg, #1d1d1f 0%, #000 100%);
             border-bottom: 0.5px solid #424245;
+            flex-shrink: 0;
         }
 
         .pb-days-banner {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 700;
             margin-bottom: 4px;
             color: #fff;
@@ -46,13 +56,13 @@
 
         .date-banner {
             color: #86868b;
-            font-size: 17px;
-            margin-bottom: 24px;
+            font-size: 15px;
+            margin-bottom: 20px;
             font-weight: 400;
         }
 
         .main-title {
-            font-size: 21px;
+            font-size: 20px;
             font-weight: 600;
             color: #fff;
             margin-bottom: 8px;
@@ -61,109 +71,51 @@
 
         .subtitle {
             color: #86868b;
-            font-size: 17px;
+            font-size: 15px;
             font-weight: 400;
         }
 
-        .thank-you-section {
-            background: #fff;
-            color: #000;
-            padding: 32px 24px;
-            text-align: center;
-            border-bottom: 0.5px solid #d2d2d7;
-        }
-
-        .success-icon {
-            width: 56px;
-            height: 56px;
+        .form-section {
+            padding: 30px 24px;
             background: #000;
-            border-radius: 50%;
+            flex: 1;
             display: flex;
-            align-items: center;
+            flex-direction: column;
             justify-content: center;
-            margin: 0 auto 16px;
-            font-size: 24px;
         }
 
-        .thank-you-title {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            letter-spacing: -0.005em;
-        }
-
-        .thank-you-subtitle {
-            font-size: 17px;
+        .selection-counter {
+            text-align: center;
             color: #86868b;
+            font-size: 14px;
             margin-bottom: 20px;
             font-weight: 400;
         }
 
-        .masterbox-text {
-            font-size: 15px;
-            font-weight: 600;
-            background: #f5f5f7;
-            color: #000;
-            padding: 12px 20px;
-            border-radius: 20px;
-            display: inline-block;
-            letter-spacing: -0.016em;
-        }
-
-        .form-section {
-            padding: 32px 24px;
-            background: #000;
-        }
-
-        .form-title {
-            text-align: center;
-            color: #fff;
-            font-size: 24px;
-            margin-bottom: 8px;
-            font-weight: 600;
-            letter-spacing: -0.009em;
-        }
-
-        .form-subtitle {
-            text-align: center;
-            color: #86868b;
-            font-size: 17px;
-            margin-bottom: 32px;
-            font-weight: 400;
+        .selection-counter.active {
+            color: #007aff;
         }
 
         .specialties-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 1px;
-            margin-bottom: 32px;
-            background: #424245;
-            border-radius: 12px;
-            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 30px;
         }
 
         .specialty-item {
             background: #1c1c1e;
-            padding: 20px 24px;
-            position: relative;
+            padding: 20px;
+            border-radius: 12px;
             cursor: pointer;
             transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: space-between;
-            min-height: 64px;
-        }
-
-        .specialty-item:first-child {
-            border-radius: 12px 12px 0 0;
-        }
-
-        .specialty-item:last-child {
-            border-radius: 0 0 12px 12px;
-        }
-
-        .specialty-item:only-child {
-            border-radius: 12px;
+            justify-content: center;
+            text-align: center;
+            min-height: 100px;
+            position: relative;
         }
 
         .specialty-item:hover {
@@ -179,33 +131,31 @@
             background: #f5f5f7;
         }
 
-        .specialty-content {
-            flex-grow: 1;
-        }
-
         .specialty-name {
-            font-size: 17px;
-            font-weight: 400;
+            font-size: 14px;
+            font-weight: 500;
             color: inherit;
             letter-spacing: -0.022em;
+            line-height: 1.2;
         }
 
         .specialty-item.selected .specialty-name {
             color: #000;
-            font-weight: 500;
+            font-weight: 600;
         }
 
         .specialty-checkbox {
             appearance: none;
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             border: 2px solid #424245;
             border-radius: 50%;
             background: transparent;
-            position: relative;
+            position: absolute;
+            top: 12px;
+            right: 12px;
             cursor: pointer;
             transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            flex-shrink: 0;
         }
 
         .specialty-item.selected .specialty-checkbox {
@@ -220,25 +170,14 @@
             left: 50%;
             transform: translate(-50%, -50%);
             color: #fff;
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 600;
-        }
-
-        .selection-counter {
-            text-align: center;
-            color: #86868b;
-            font-size: 15px;
-            margin-bottom: 24px;
-            font-weight: 400;
-        }
-
-        .selection-counter.active {
-            color: #007aff;
         }
 
         .submit-section {
             padding: 0 24px 40px;
             background: #000;
+            flex-shrink: 0;
         }
 
         .submit-btn {
@@ -249,7 +188,7 @@
             border: none;
             border-radius: 25px;
             font-size: 17px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             position: relative;
@@ -263,7 +202,7 @@
         }
 
         .submit-btn:active {
-            transform: translateY(0);
+            transform: scale(0.98);
             background: #004085;
         }
 
@@ -274,36 +213,65 @@
             transform: none;
         }
 
-        .footer-info {
-            background: #1c1c1e;
-            padding: 24px;
-            text-align: center;
-            border-top: 0.5px solid #424245;
-        }
-
-        .footer-text {
-            color: #86868b;
-            font-size: 13px;
-            line-height: 1.38462;
-            margin-bottom: 16px;
-            font-weight: 400;
-        }
-
-        .promo-tags {
-            display: flex;
+        /* Success Screen */
+        .success-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
             justify-content: center;
-            gap: 8px;
-            flex-wrap: wrap;
+            text-align: center;
+            padding: 40px 24px;
+            flex: 1;
         }
 
-        .promo-tag {
-            background: #424245;
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: #fff;
+            color: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            font-size: 32px;
+            animation: successPop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes successPop {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
             color: #fff;
-            padding: 6px 12px;
-            border-radius: 16px;
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 0.06em;
+        }
+
+        .success-message {
+            font-size: 17px;
+            color: #86868b;
+            line-height: 1.4;
+            margin-bottom: 20px;
+            max-width: 280px;
+        }
+
+        .success-highlight {
+            font-size: 15px;
+            font-weight: 600;
+            background: #fff;
+            color: #000;
+            padding: 12px 20px;
+            border-radius: 20px;
+            display: inline-block;
         }
 
         .loading {
@@ -322,33 +290,9 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Apple-style fade in animation */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .specialty-item {
-            animation: fadeInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-        }
-
-        .specialty-item:nth-child(1) { animation-delay: 0.1s; }
-        .specialty-item:nth-child(2) { animation-delay: 0.15s; }
-        .specialty-item:nth-child(3) { animation-delay: 0.2s; }
-        .specialty-item:nth-child(4) { animation-delay: 0.25s; }
-        .specialty-item:nth-child(5) { animation-delay: 0.3s; }
-        .specialty-item:nth-child(6) { animation-delay: 0.35s; }
-        .specialty-item:nth-child(7) { animation-delay: 0.4s; }
-
         /* Haptic feedback simulation */
         .specialty-item:active {
-            transform: scale(0.98);
+            transform: scale(0.95);
         }
 
         .submit-btn:active {
@@ -360,13 +304,27 @@
                 max-width: 100%;
             }
             
-            .header-section {
-                padding: 44px 20px 32px;
+            .specialties-grid {
+                gap: 8px;
             }
             
-            .form-section, .submit-section {
-                padding-left: 20px;
-                padding-right: 20px;
+            .specialty-item {
+                min-height: 90px;
+                padding: 16px;
+            }
+        }
+
+        @media (max-height: 667px) {
+            .header-section {
+                padding: 50px 24px 20px;
+            }
+            
+            .form-section {
+                padding: 20px 24px;
+            }
+            
+            .specialty-item {
+                min-height: 85px;
             }
         }
     </style>
@@ -381,95 +339,68 @@
             <div class="subtitle">Get Your Custom MasterBox</div>
         </div>
 
-        <!-- Thank You Section -->
-        <div class="thank-you-section">
-            <div class="success-icon">✓</div>
-            <div class="thank-you-title">Thank You</div>
-            <div class="thank-you-subtitle">Your order has been successfully placed</div>
-            <div class="masterbox-text">Custom MasterBox Awaits</div>
-        </div>
-
         <!-- Form Section -->
-        <div class="form-section">
-            <h2 class="form-title">Select Your Specialties</h2>
-            <p class="form-subtitle">Choose all that apply</p>
+        <div class="form-section" id="formSection">
+            <div class="selection-counter" id="selectionCounter">
+                No specialties selected
+            </div>
             
             <form id="specialtyForm" action="/submit-specialties" method="POST">
-                <div class="selection-counter" id="selectionCounter">
-                    No specialties selected
-                </div>
-                
                 <div class="specialties-grid">
                     <div class="specialty-item" onclick="toggleSpecialty('endodontist')">
-                        <div class="specialty-content">
-                            <div class="specialty-name">Endodontist</div>
-                        </div>
+                        <div class="specialty-name">Endodontist</div>
                         <input type="checkbox" id="endodontist" name="specialties[]" value="Endodontist" class="specialty-checkbox">
                     </div>
                     
                     <div class="specialty-item" onclick="toggleSpecialty('prosthodontist')">
-                        <div class="specialty-content">
-                            <div class="specialty-name">Prosthodontist</div>
-                        </div>
+                        <div class="specialty-name">Prosthodontist</div>
                         <input type="checkbox" id="prosthodontist" name="specialties[]" value="Prosthodontist" class="specialty-checkbox">
                     </div>
                     
                     <div class="specialty-item" onclick="toggleSpecialty('orthodontist')">
-                        <div class="specialty-content">
-                            <div class="specialty-name">Orthodontist</div>
-                        </div>
+                        <div class="specialty-name">Orthodontist</div>
                         <input type="checkbox" id="orthodontist" name="specialties[]" value="Orthodontist" class="specialty-checkbox">
                     </div>
                     
                     <div class="specialty-item" onclick="toggleSpecialty('oral_surgeon')">
-                        <div class="specialty-content">
-                            <div class="specialty-name">Oral & Maxillofacial Surgeon</div>
-                        </div>
+                        <div class="specialty-name">Oral & Maxillofacial Surgeon</div>
                         <input type="checkbox" id="oral_surgeon" name="specialties[]" value="Oral And Maxillofacial Surgeon" class="specialty-checkbox">
                     </div>
                     
                     <div class="specialty-item" onclick="toggleSpecialty('paedodontist')">
-                        <div class="specialty-content">
-                            <div class="specialty-name">Paedodontist</div>
-                        </div>
+                        <div class="specialty-name">Paedodontist</div>
                         <input type="checkbox" id="paedodontist" name="specialties[]" value="Paedodontist" class="specialty-checkbox">
                     </div>
                     
                     <div class="specialty-item" onclick="toggleSpecialty('periodontist')">
-                        <div class="specialty-content">
-                            <div class="specialty-name">Periodontist</div>
-                        </div>
+                        <div class="specialty-name">Periodontist</div>
                         <input type="checkbox" id="periodontist" name="specialties[]" value="Periodontist" class="specialty-checkbox">
                     </div>
                     
                     <div class="specialty-item" onclick="toggleSpecialty('general_dentist')">
-                        <div class="specialty-content">
-                            <div class="specialty-name">General Dentist</div>
-                        </div>
+                        <div class="specialty-name">General Dentist</div>
                         <input type="checkbox" id="general_dentist" name="specialties[]" value="General Dentist" class="specialty-checkbox">
                     </div>
                 </div>
             </form>
         </div>
 
+        <!-- Success Screen -->
+        <div class="success-screen" id="successScreen">
+            <div class="success-icon">✓</div>
+            <div class="success-title">Thank You!</div>
+            <div class="success-message">
+                Your MasterBox will be delivered after your order is delivered
+            </div>
+            <div class="success-highlight">Custom MasterBox Confirmed</div>
+        </div>
+
         <!-- Submit Section -->
-        <div class="submit-section">
+        <div class="submit-section" id="submitSection">
             <button type="submit" class="submit-btn" id="submitBtn" onclick="submitForm()">
                 <span class="loading" id="loading"></span>
                 <span id="btnText">Create My MasterBox</span>
             </button>
-        </div>
-
-        <!-- Footer -->
-        <div class="footer-info">
-            <div class="footer-text">
-                Your specialty information helps us curate the perfect products for your practice.
-            </div>
-            <div class="promo-tags">
-                <span class="promo-tag">SPECIALTY MASTERBOX</span>
-                <span class="promo-tag">SUPER DEALS</span>
-                <span class="promo-tag">HAPPY HOURS</span>
-            </div>
         </div>
     </div>
 
@@ -540,7 +471,7 @@
             // Show loading state
             submitBtn.disabled = true;
             loading.style.display = 'inline-block';
-            btnText.textContent = 'Creating...';
+            btnText.textContent = 'Processing...';
             
             // Collect form data
             const selectedSpecialties = Array.from(checkedBoxes).map(cb => cb.value);
@@ -554,15 +485,12 @@
             
             console.log('Form data to submit:', formData);
             
-            // Simulate form submission
+            // Show success screen after brief loading
             setTimeout(() => {
-                btnText.textContent = 'Complete';
-                loading.style.display = 'none';
-                
-                setTimeout(() => {
-                    window.location.href = '/masterbox-confirmation';
-                }, 800);
-            }, 1500);
+                document.getElementById('formSection').style.display = 'none';
+                document.getElementById('submitSection').style.display = 'none';
+                document.getElementById('successScreen').style.display = 'flex';
+            }, 1000);
         }
 
         // Initialize
